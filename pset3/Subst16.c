@@ -18,18 +18,27 @@ void parseFlags(char* flags, Ruleptr ruleptr)
     }
 
     int i;
+
+     // default to -1 for next rule indices
+    ruleptr->onSuccessRuleIndex = -1;
+    ruleptr->onFailureRuleIndex = -1;
+
     for(i = 1; i < strlen(flags); i++) { // strlen doesnt include null terminator
+        
 	if(flags[i] == 'g' || flags[i] == 'q' || flags[i] == 'r') {
 		ruleptr->filter = flags[i];
 	}
-
-	else if(flags[i] == 'S' && flags[i+1]) {
-    		ruleptr->onSuccessRuleIndex = (int) flags[i+1];
+	else if(flags[i] == 'S') {
+    		if(isdigit(flags[i+1])) ruleptr->onSuccessRuleIndex = flags[i+1]-'0'; // ascii numbers start at 48 ('0')
+            else ruleptr->onSuccessRuleIndex = 0;
 	}
- 	else if(flags[i] == 'F' && flags[i+1]) {
-    		ruleptr->onFailureRuleIndex = (int) flags[i+1];		
+ 	else if(flags[i] == 'F') {
+    		if(isdigit(flags[i+1])) ruleptr->onFailureRuleIndex = flags[i+1]-'0';
+            else ruleptr->onSuccessRuleIndex = 0;
 	}
    }
+
+   printf("for this flag the onSuccessRuleIndex is %d\n", ruleptr->onSuccessRuleIndex);
 
    if(!ruleptr->filter) {
 	ruleptr->filter = 'q';
@@ -57,13 +66,60 @@ char *inputString(FILE* fp, size_t size){
     return realloc(str, sizeof(char)*len);
 }
 
+/* 
+ * str_replace: finds a substring and replaces all `from` occurrences with `to` according to flag specifier
+ */
+char *str_replace(char *orig, char *from, char *to, char flag) {
+    char *result; /* the return string */
+    char *ins;    /* the next insert point */
+    char *tmp;    /* temporary */
+    int len_from;  /* length of from */
+    int len_to; /* length of to */
+    int len_front; /* distance between from and end of last from */
+    int count;    /* number of replacements */
+
+    if (!orig)
+        return NULL;
+    if (!from)
+        from = "";
+    len_from = strlen(from);
+    if (!to)
+        to = "";
+    len_to = strlen(to);
+
+    ins = orig;
+    for (count = 0; (tmp = strstr(ins, from)); ++count) {
+        if(flag == 'q' && count == 1) {
+           break;
+        }
+        ins = tmp + len_from;
+    }
+
+    tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
+
+    if (!result)
+        return NULL;
+
+    while (count--) {
+        ins = strstr(orig, from);
+        len_front = ins - orig;
+        tmp = strncpy(tmp, orig, len_front) + len_front;
+        tmp = strcpy(tmp, to) + len_to;
+        orig += len_front + len_from; // move to next "end of from"
+    }
+    strcpy(tmp, orig);
+    return result;
+}
+
 int main(int argc, char *argv[])
 {
     int i;
-    int numRules = argc-1/3; // number of rules 
+    int numRules = (argc-1)/3; // number of rules 
     int ruleIdx = 0; // index of rule (ptr) in array of rule pointers 
     Ruleptr rules[numRules]; // create an array of rule pointers
     Ruleptr currentRulePtr; // pointer to current rule
+
+    printf("NUM RULES IS %d\n", numRules);
 
     // initialize rules array
     memset(rules, 0, numRules * sizeof(Ruleptr));
@@ -110,53 +166,43 @@ int main(int argc, char *argv[])
 
     /* Read from stdin and apply filters */
 
-    char *input;
-    int c;
     int j = 0;
     currentRulePtr = rules[j];
+    char *input;
 
     // read input and save to char array
     input = inputString(stdin, 10);
-    printf("Input is the following: %s\n", input);
+    char *res;
 
-/*    while((c = getchar()) != EOF) {
-	switch(currentRulePtr->filter) {
+    for(int i = 0; i < strlen(input); i++) {
+         printf("INPUT IS %s\n", input);
+         printf("FROM IS %s\n", currentRulePtr->FROM);
+         printf("TO IS %s\n", currentRulePtr->TO);
 
-	case 'g':
+        res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
+        input = res;        
+        if(res) {
+            if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
+                currentRulePtr = rules[currentRulePtr->onSuccessRuleIndex];
+            } else {
+                printf("BREAK ME SUCCESS\n");
+                break;
+            }
+        }
+        else {
+             if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
+                currentRulePtr = rules[currentRulePtr->onFailureRuleIndex];
+            } else {
+                printf("BREAK ME FAIL\n");
+                break;
+            }
+        }
+    }
 
-
-
-	break;
-
-
-
-	case 'q':
-
-	if(c == currentRulePtr->FROM[0] && currentRulePtr->numFilters < 1) {
-		int i;
-		char *FROM = currentRulePtr->FROM;
-
-		for (i = 1; i < strlen(FROM); i++) {
-			if((c = getchar()) != FROM[i]) {
-				ungetchar(c);
-				break;
-			}
-		}
-	}
-
-	break;
-
-
-	case 'r':
-
-
-
-	break;
-
-
-
-	}
-    } */
+    for(int idx = 0; res && idx < strlen(res); idx++) {
+        putchar(res[idx]);
+    }
+    putchar('\n');
 
     free(input);
 
