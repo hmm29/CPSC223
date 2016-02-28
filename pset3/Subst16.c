@@ -144,18 +144,15 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             }
             ins = tmp + len_from;
 
-                matched = malloc(3 * sizeof(*matched));
-                matched = strncpy(matched, tmp, 2);
-                matched[2] = '\0';
-                printf("and the matched string is %s\n", matched);
+            matched = malloc(3 * sizeof(*matched));
+            matched = strncpy(matched, tmp, 2);
+            matched[2] = '\0';
 
-                if(strchr(to, '^')) {
-                    to_cpy = to; // reset to
-                    printf("FUCK and to is %s and to_cpy is %s\n",to, to_cpy);
-                    to_cpy = str_replace(to_cpy, "^", matched, 'q');
-                    printf("New to_cpy is %s and to is %s\n", to_cpy, to);
-                    len_to = strlen(to_cpy);
-            }
+            if(strchr(to, '^')) {
+                to_cpy = to; // reset to_cpy
+                to_cpy = str_replace(to_cpy, "^", matched, 'q');
+                len_to = strlen(to_cpy);
+        }
         }
 
         tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
@@ -168,6 +165,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = strncpy(tmp, orig, len_front) + len_front;
             tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
+
+            // printf("result at end is now %s because orig is %s\n", result, orig);
         }
         strcpy(tmp, orig);
     }
@@ -250,26 +249,33 @@ int main(int argc, char *argv[])
 
         if (strcmp(input, res) == 0) {  // if no change
             if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
-                currentRulePtr = rules[currentRulePtr->onFailureRuleIndex];
-                j = currentRulePtr->onFailureRuleIndex;
+                if(currentRulePtr->onFailureRuleIndex > -1) {
+                    j = currentRulePtr->onFailureRuleIndex;
+                    currentRulePtr = rules[j];
+                }
             } 
             // if no Sn or Fm rule specified, go to next rule if it exists
             else if(currentRulePtr->onFailureRuleIndex == -1 && j+1 < numRules) {
-                 currentRulePtr = rules[j+1];
+                 currentRulePtr = rules[++j];
             }
             else {
-                //printf("BREAK ME FAIL\n");
                 break;
             }
         } else if(res) {
-            input = res;      
+            input = res;
+            i = 0; // reset iterator
+            // printf("result is now %s and jump to rule %d and current rule is %d with index success of %d\n", res, currentRulePtr->onSuccessRuleIndex, j, rules[j]->onSuccessRuleIndex);
             if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
-                currentRulePtr = rules[currentRulePtr->onSuccessRuleIndex];
-                j = currentRulePtr->onSuccessRuleIndex;
+                if(currentRulePtr->onSuccessRuleIndex > -1) {
+                    j = currentRulePtr->onSuccessRuleIndex;
+                    currentRulePtr = rules[j];
+                }
+                //printf("New rule index success is %d and i is %d\n", j, i);
             } 
             // if no Sn or Fm rule specified, go to next rule if it exists
             else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
-                currentRulePtr = rules[j+1];
+                //printf("hey miller to rule %d because j is %d\n", j+1, j);
+                currentRulePtr = rules[++j];
             }
             else {
                 //printf("BREAK ME SUCCESS\n");

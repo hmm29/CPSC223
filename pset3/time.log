@@ -7,9 +7,9 @@ Date    Started     Spent    Work Completed
 2/24    8:45	    2:30     Started writing program   
 2/25    7:00        1:05     Plan out flag parsing and prepare to write code
 2/28	11:30	    5:40     Program Rule struct declarations, and flag parsing
-2/29    1:00        3:55
+2/29    1:00        5:55
                     ----
-                    13:35     TOTAL Time Spent
+                    15:35     TOTAL Time Spent
 
 I discussed my solution with no one.
 Major difficulties: understanding how these string functions work and passing char* pointers
