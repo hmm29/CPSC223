@@ -1,0 +1,30 @@
+/*
+ * File: Subst16.h
+ * Programmer: Harrison Miller
+ * Description: this file contains function prototypes for the functions defined and called in Subst16.c.
+ */
+
+#ifndef SUBST16_H
+#define SUBST16_H
+
+#include <stdbool.h>
+
+typedef struct rule {
+ 	char *FROM;
+	char *TO;
+	char filter;
+	int onSuccessRuleIndex;
+	int onFailureRuleIndex;
+	bool succeeded;
+	bool failed;
+} Rule;
+
+typedef struct rule *Ruleptr;
+
+void parseFlags(char *flags, Ruleptr ruleptr);
+
+
+
+
+#endif
+/* end SUBST16_H */

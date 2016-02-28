@@ -1,0 +1,22 @@
+ESTIMATE of time to complete assignment: 6-8 hours
+
+        Time        Time
+Date    Started     Spent    Work Completed
+----    -------     ----     --------------
+1/24    3:02PM      0:30     Read assignment & guidelines for grading programming style
+1/27    5:55PM      0:42     Read relevant pages of KR; devised algorithm for finite-state machine reader    
+1/28	8:17PM	    2:00     Come up with algorithm and begin coding counter
+1/28	10:21PM	    1:00     Finally understand number of states and how to handle lines splices, comments, char constants, and string				
+1/29	12:39AM	    2:30     Finished algorithm and added edge cases, now for debugging
+1/29	1:21AM	    0:42     Made Makefile and did debugging on code			
+1/29	2:10AM      0:30     Finally debugging code and passing tests. Seems I needed to add more putchar()'s.
+1/31	7:11PM	    1:31     Reviewed solution, debugged, tested using public script	
+                    ----
+                    9:25     TOTAL Time Spent
+
+I discussed my solution with Haohang Xu, the TF for the course. I went over my program logic with her and she kindly encouraged me to really think about how components of the program interact and to not think of them as isolated. She also encouraged me to print out state in my code so I can visibly see that my program is behaving how I intend it to behave.
+
+No major difficulties encountered. Mainly using time to understand the problem and address all the requirements.
+Most major difficulty encountered thus far involved figuring out number of states for my machine and what boolean values I needed to let it know when to copy literal escape sequences.
+Minor difficulty with learning ins and outs of Makefile.
+Overall, an awesome problem set! I really liked having to think about edge cases and learning how to use the ungetchar macro to peek ahead was my favorite part.
