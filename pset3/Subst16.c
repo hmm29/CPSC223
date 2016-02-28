@@ -36,10 +36,32 @@ void parseFlags(char* flags, Ruleptr ruleptr)
    }
 }
 
+/* 
+ * inputString: reads input from stdin and saves to character array   
+ */
+
+char *inputString(FILE* fp, size_t size){
+    char *str;
+    int ch;
+    size_t len = 0;
+    str = realloc(NULL, sizeof(*str)*size); // initial size from size arg
+    if(!str) return str;
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+        str[len++]=ch;
+        if(len==size){
+            str = realloc(str, sizeof(*str)*(size+=16));
+            if(!str)return str;
+        }
+    }
+    str[len++]='\0';
+    return realloc(str, sizeof(char)*len);
+}
+
 int main(int argc, char *argv[])
 {
-    int i, ruleIdx = 0;
+    int i;
     int numRules = argc-1/3; // number of rules 
+    int ruleIdx = 0; // index of rule (ptr) in array of rule pointers 
     Ruleptr rules[numRules]; // create an array of rule pointers
     Ruleptr currentRulePtr; // pointer to current rule
 
@@ -52,11 +74,11 @@ int main(int argc, char *argv[])
 
     if(!(strcmp(argv[0],"Subst16") == 0 || strcmp(argv[0], "./Subst16") == 0)) {
         fprintf(stderr, "Incorrect file name");
-	exit(EXIT_FAILURE);
+	    exit(EXIT_FAILURE);
     }
 
     if(argc < 4) {
-	fprintf(stderr, "Incorrect number of arguments in %s", argv[0]);
+	    fprintf(stderr, "Incorrect number of arguments in %s", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -68,10 +90,10 @@ int main(int argc, char *argv[])
         if(i % 3 == 1) {
             /* error check for TO, make sure its a string and that it contains valid characters */
             currentRulePtr = malloc(sizeof(Rule)); // create new rule
-	    currentRulePtr->FROM = argv[i];          
+	        currentRulePtr->FROM = argv[i];          
         }
         else if(i % 3 == 2) {
-             /* error check for TO, make sure its a string and that it contains valid characters */
+            /* error check for TO, make sure its a string and that it contains valid characters */
             currentRulePtr->TO = argv[i];
         }
         else if(i % 3 == 0) {
@@ -88,9 +110,14 @@ int main(int argc, char *argv[])
 
     /* Read from stdin and apply filters */
 
+    char *input;
     int c;
     int j = 0;
     currentRulePtr = rules[j];
+
+    // read input and save to char array
+    input = inputString(stdin, 10);
+    printf("Input is the following: %s\n", input);
 
 /*    while((c = getchar()) != EOF) {
 	switch(currentRulePtr->filter) {
@@ -130,6 +157,8 @@ int main(int argc, char *argv[])
 
 	}
     } */
+
+    free(input);
 
     return EXIT_SUCCESS;
 }
