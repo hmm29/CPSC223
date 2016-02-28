@@ -20,8 +20,7 @@ void parseFlags(char* flags, Ruleptr ruleptr)
     int i;
 
      // default to -1 for next rule indices
-    ruleptr->onSuccessRuleIndex = -1;
-    ruleptr->onFailureRuleIndex = -1;
+    ruleptr->onSuccessRuleIndex = ruleptr->onFailureRuleIndex = -1;
 
     for(i = 1; i < strlen(flags); i++) { // strlen doesnt include null terminator
         
@@ -29,12 +28,34 @@ void parseFlags(char* flags, Ruleptr ruleptr)
 		ruleptr->filter = flags[i];
 	}
 	else if(flags[i] == 'S') {
-    		if(isdigit(flags[i+1])) ruleptr->onSuccessRuleIndex = flags[i+1]-'0'; // ascii numbers start at 48 ('0')
+    		if(isdigit(flags[i+1])) {
+                if(isdigit(flags[i+2])) {
+                    int n;
+                    char num[10]; // reasonable upper bound on length of index number
+                    for(n = 0; isdigit(flags[i+1+n]); n++) { // account for indices > 9
+                        num[n] = flags[i+1+n];
+                    }
+                    num[n] = '\0';
+                    ruleptr->onSuccessRuleIndex = atoi(num);
+                } 
+                else ruleptr->onSuccessRuleIndex = flags[i+1]-'0';
+            } // ascii numbers start at 48 ('0')
             else ruleptr->onSuccessRuleIndex = 0;
 	}
  	else if(flags[i] == 'F') {
-    		if(isdigit(flags[i+1])) ruleptr->onFailureRuleIndex = flags[i+1]-'0';
-            else ruleptr->onSuccessRuleIndex = 0;
+    		if(isdigit(flags[i+1])) {
+                if(isdigit(flags[i+2])) {
+                    int n;
+                    char num[10]; // reasonable upper bound on length of index number
+                    for(n = 0; isdigit(flags[i+1+n]); n++) { // account for indices > 9
+                        num[n] = flags[i+1+n];
+                    }
+                    num[n] = '\0';
+                    ruleptr->onFailureRuleIndex = atoi(num);
+                } 
+                else ruleptr->onFailureRuleIndex = flags[i+1]-'0';
+            }
+            else ruleptr->onFailureRuleIndex = 0;
 	}
    }
 
@@ -129,12 +150,12 @@ int main(int argc, char *argv[])
      */
 
     if(!(strcmp(argv[0],"Subst16") == 0 || strcmp(argv[0], "./Subst16") == 0)) {
-        fprintf(stderr, "Incorrect file name");
+        fprintf(stderr, "Incorrect file name.\n");
 	    exit(EXIT_FAILURE);
     }
 
-    if(argc < 4) {
-	    fprintf(stderr, "Incorrect number of arguments in %s", argv[0]);
+    if(argc < 4 || (argc-1)%3 > 0) {
+	    fprintf(stderr, "Incorrect number of arguments in %s.\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -159,11 +180,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    // FROM wildcard parsing 
-
-    // TO insert matched character parsing
-
-
     /* Read from stdin and apply filters */
 
     int j = 0;
@@ -175,25 +191,33 @@ int main(int argc, char *argv[])
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
-         printf("INPUT IS %s\n", input);
-         printf("FROM IS %s\n", currentRulePtr->FROM);
-         printf("TO IS %s\n", currentRulePtr->TO);
-
         res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
-        input = res;        
-        if(res) {
-            if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
-                currentRulePtr = rules[currentRulePtr->onSuccessRuleIndex];
-            } else {
-                printf("BREAK ME SUCCESS\n");
+
+        if (strcmp(input, res) == 0) {  // if no change
+            if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
+                currentRulePtr = rules[currentRulePtr->onFailureRuleIndex];
+                j = currentRulePtr->onFailureRuleIndex;
+            } 
+            // if no Sn or Fm rule specified, go to next rule if it exists
+            else if(currentRulePtr->onFailureRuleIndex == -1 && j+1 < numRules) {
+                 currentRulePtr = rules[j+1];
+            }
+            else {
+                printf("BREAK ME FAIL\n");
                 break;
             }
-        }
-        else {
-             if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
-                currentRulePtr = rules[currentRulePtr->onFailureRuleIndex];
-            } else {
-                printf("BREAK ME FAIL\n");
+        } else if(res) {
+            input = res;      
+            if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
+                currentRulePtr = rules[currentRulePtr->onSuccessRuleIndex];
+                j = currentRulePtr->onSuccessRuleIndex;
+            } 
+            // if no Sn or Fm rule specified, go to next rule if it exists
+            else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
+                currentRulePtr = rules[j+1];
+            }
+            else {
+                printf("BREAK ME SUCCESS\n");
                 break;
             }
         }
