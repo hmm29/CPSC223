@@ -91,9 +91,9 @@ char *inputString(FILE* fp, size_t size){
  * str_replace: finds a substring and replaces all `from` occurrences with `to` according to flag specifier
  */
 char *str_replace(char *orig, char *from, char *to, char flag) {
-    char *result; /* the return string */
-    char *ins;    /* the next insert point */
-    char *tmp;    /* temporary */
+    char *result = NULL; /* the return string */
+    char *ins = NULL;    /* the next insert point */
+    char *tmp = NULL;    /* temporary */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -108,26 +108,45 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         to = "";
     len_to = strlen(to);
 
-    ins = orig;
-    for (count = 0; (tmp = strstr(ins, from)); ++count) {
-        if(flag == 'q' && count == 1) {
-           break;
+    if(flag == 'g' || flag == 'q') {
+        ins = orig;
+        for (count = 0; (tmp = strstr(ins, from)); ++count) {
+            if(flag == 'q' && count == 1) {
+               break;
+            }
+            ins = tmp + len_from;
         }
-        ins = tmp + len_from;
+
+        tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
+
+        if (!result) return NULL;
+
+        while (count--) {
+            ins = strstr(orig, from);
+            len_front = ins - orig;
+            tmp = strncpy(tmp, orig, len_front) + len_front;
+            tmp = strcpy(tmp, to) + len_to;
+            orig += len_front + len_from; // move to next "end of from"
+        }
+    }
+    else if(flag == 'r') {
+        while(strstr(orig, from)) { // while there is a leftmost occurrence of from 
+            printf("ORIG is %s.\n", orig);
+            ins = strstr(orig, from); // first occurrence of from in ins
+
+            tmp = result = malloc(strlen(orig) + (len_to - len_from));
+
+            if (!result) return NULL;
+
+            len_front = ins - orig;
+            tmp = strncpy(tmp, orig, len_front) + len_front;
+            tmp = strcpy(tmp, to) + len_to;
+            printf("then new orig is %s\n", orig + len_front);
+            orig += len_front + len_from; // move to next "end of from"
+            printf("LAST ORIG IS %s\n", orig);
+        }
     }
 
-    tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
-
-    if (!result)
-        return NULL;
-
-    while (count--) {
-        ins = strstr(orig, from);
-        len_front = ins - orig;
-        tmp = strncpy(tmp, orig, len_front) + len_front;
-        tmp = strcpy(tmp, to) + len_to;
-        orig += len_front + len_from; // move to next "end of from"
-    }
     strcpy(tmp, orig);
     return result;
 }
