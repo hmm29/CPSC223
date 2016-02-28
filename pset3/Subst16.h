@@ -21,6 +21,7 @@ typedef struct rule {
 
 typedef struct rule *Ruleptr;
 
+char *copylastn(char *dest,char *src,int n);
 void parseFlags(char *flags, Ruleptr ruleptr);
 char *inputString(FILE* fp, size_t size);
 char *str_replace(char *orig, char *from, char *to, char flag);

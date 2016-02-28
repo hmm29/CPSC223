@@ -11,6 +11,12 @@ Description:
 #include <ctype.h>
 #include "Subst16.h"
 
+char *copylastn(char *dest,char *src,int n)
+{
+        strncpy(dest+(strlen(dest)-strlen(src)), src, strlen(src));
+        return dest;
+}
+
 void parseFlags(char* flags, Ruleptr ruleptr)
 {
     if(flags[0] != '-') {
@@ -58,8 +64,6 @@ void parseFlags(char* flags, Ruleptr ruleptr)
             else ruleptr->onFailureRuleIndex = 0;
 	}
    }
-
-   printf("for this flag the onSuccessRuleIndex is %d\n", ruleptr->onSuccessRuleIndex);
 
    if(!ruleptr->filter) {
 	ruleptr->filter = 'q';
@@ -128,26 +132,21 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = strcpy(tmp, to) + len_to;
             orig += len_front + len_from; // move to next "end of from"
         }
+        strcpy(tmp, orig);
     }
     else if(flag == 'r') {
-        while(strstr(orig, from)) { // while there is a leftmost occurrence of from 
-            printf("ORIG is %s.\n", orig);
-            ins = strstr(orig, from); // first occurrence of from in ins
+        tmp = result = malloc(strlen(orig) + (len_to - len_from));
+        if (!result) return NULL;
+       tmp = strcpy(tmp, orig);
 
-            tmp = result = malloc(strlen(orig) + (len_to - len_from));
-
-            if (!result) return NULL;
-
-            len_front = ins - orig;
-            tmp = strncpy(tmp, orig, len_front) + len_front;
-            tmp = strcpy(tmp, to) + len_to;
-            printf("then new orig is %s\n", orig + len_front);
-            orig += len_front + len_from; // move to next "end of from"
-            printf("LAST ORIG IS %s\n", orig);
+        while(strstr(tmp, from)) { // while there is a leftmost occurrence of from
+            ins = strstr(tmp, from);
+            tmp = str_replace(tmp + (ins-tmp), from, to, 'q');
+            result = copylastn(result, tmp, strlen(tmp));
         }
+        // printf("last result IS awesomely %s.\n", result);
     }
 
-    strcpy(tmp, orig);
     return result;
 }
 
@@ -159,7 +158,7 @@ int main(int argc, char *argv[])
     Ruleptr rules[numRules]; // create an array of rule pointers
     Ruleptr currentRulePtr; // pointer to current rule
 
-    printf("NUM RULES IS %d\n", numRules);
+    //printf("NUM RULES IS %d\n", numRules);
 
     // initialize rules array
     memset(rules, 0, numRules * sizeof(Ruleptr));
@@ -222,7 +221,7 @@ int main(int argc, char *argv[])
                  currentRulePtr = rules[j+1];
             }
             else {
-                printf("BREAK ME FAIL\n");
+                //printf("BREAK ME FAIL\n");
                 break;
             }
         } else if(res) {
@@ -236,7 +235,7 @@ int main(int argc, char *argv[])
                 currentRulePtr = rules[j+1];
             }
             else {
-                printf("BREAK ME SUCCESS\n");
+                //printf("BREAK ME SUCCESS\n");
                 break;
             }
         }
