@@ -11,6 +11,23 @@ Description:
 #include <ctype.h>
 #include "Subst16.h"
 
+char* StrStr(const char *str, const char *target) 
+{
+  if (!*target) return NULL;
+  char *p1 = (char*)str;
+  while (*p1) {
+    char *p1Begin = p1, *p2 = (char*)target;
+    while (*p1 && *p2 && (*p1 == *p2 || *p2 == '.')) {  
+      p1++;
+      p2++;
+    }
+    if (!*p2)
+      return p1Begin;
+    p1 = p1Begin + 1;
+  }
+  return NULL;
+}
+
 char *copylastn(char *dest,char *src,int n)
 {
         strncpy(dest+(strlen(dest)-strlen(src)), src, strlen(src));
@@ -98,6 +115,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     char *result = NULL; /* the return string */
     char *ins = NULL;    /* the next insert point */
     char *tmp = NULL;    /* temporary */
+    char *matched = NULL; /* matched string */
+    char *to_cpy = NULL; /* copy of to argument */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -112,13 +131,31 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         to = "";
     len_to = strlen(to);
 
+    // copy to to_cpy
+    to_cpy = malloc(strlen(to) + 1);
+    strcpy(to_cpy, to);
+    to_cpy[strlen(to)] = '\0';
+
     if(flag == 'g' || flag == 'q') {
         ins = orig;
-        for (count = 0; (tmp = strstr(ins, from)); ++count) {
+        for (count = 0; (tmp = StrStr(ins, from)); ++count) {
             if(flag == 'q' && count == 1) {
                break;
             }
             ins = tmp + len_from;
+
+                matched = malloc(3 * sizeof(*matched));
+                matched = strncpy(matched, tmp, 2);
+                matched[2] = '\0';
+                printf("and the matched string is %s\n", matched);
+
+                if(strchr(to, '^')) {
+                    to_cpy = to; // reset to
+                    printf("FUCK and to is %s and to_cpy is %s\n",to, to_cpy);
+                    to_cpy = str_replace(to_cpy, "^", matched, 'q');
+                    printf("New to_cpy is %s and to is %s\n", to_cpy, to);
+                    len_to = strlen(to_cpy);
+            }
         }
 
         tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
@@ -126,10 +163,10 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
-            ins = strstr(orig, from);
+            ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
-            tmp = strcpy(tmp, to) + len_to;
+            tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
         }
         strcpy(tmp, orig);
@@ -139,8 +176,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
        tmp = strcpy(tmp, orig);
 
-        while(strstr(tmp, from)) { // while there is a leftmost occurrence of from
-            ins = strstr(tmp, from);
+        while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
+            ins = StrStr(tmp, from);
             tmp = str_replace(tmp + (ins-tmp), from, to, 'q');
             result = copylastn(result, tmp, strlen(tmp));
         }
