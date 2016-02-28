@@ -26,7 +26,7 @@ void parseFlags(char* flags, Ruleptr ruleptr)
     int i;
 
      // default to -1 for next rule indices
-    ruleptr->onSuccessRuleIndex = ruleptr->onFailureRuleIndex = -1;
+    ruleptr->onSuccessRuleIndex = ruleptr->onFailureRuleIndex = ruleptr->filter = -1;
 
     for(i = 1; i < strlen(flags); i++) { // strlen doesnt include null terminator
         
@@ -65,7 +65,7 @@ void parseFlags(char* flags, Ruleptr ruleptr)
 	}
    }
 
-   if(!ruleptr->filter) {
+   if(ruleptr->filter == -1) {
 	ruleptr->filter = 'q';
    }
 }
