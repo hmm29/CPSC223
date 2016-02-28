@@ -10,7 +10,7 @@ CC=gcc
 
 # Specify flags and other macros
 CFLAGS=-std=c99 -g3 -Wall -pedantic
-HWK3=/c/cs223/Hwk3
+Hwk3=/c/cs223/Hwk3
 
 # Rule to build executable from object files
 Subst16: Subst16.o Hwk3/getLine.o
@@ -22,4 +22,4 @@ Subst16: Subst16.o Hwk3/getLine.o
 
 # Rule to clean up directory
 clean:
-	rm -f *.o Subst
+	rm -f *.o Subst16
