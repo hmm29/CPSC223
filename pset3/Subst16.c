@@ -10,6 +10,7 @@ Description:
 #include <stdbool.h>
 #include <ctype.h>
 #include "Subst16.h"
+#include "/c/cs223/Hwk3/getLine.h"
 
 char* StrStr(const char *str, const char *target) 
 {
@@ -204,12 +205,12 @@ int main(int argc, char *argv[])
      */
 
     if(!(strcmp(argv[0],"Subst16") == 0 || strcmp(argv[0], "./Subst16") == 0)) {
-        fprintf(stderr, "Incorrect file name.\n");
+        //fprintf(stderr, "Incorrect file name.\n");
 	    exit(EXIT_FAILURE);
     }
 
     if(argc < 4 || (argc-1)%3 > 0) {
-	    fprintf(stderr, "Incorrect number of arguments in %s.\n", argv[0]);
+	    //fprintf(stderr, "Incorrect number of arguments in %s.\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -241,7 +242,7 @@ int main(int argc, char *argv[])
     char *input;
 
     // read input and save to char array
-    input = inputString(stdin, 10);
+    input = getLine(stdin);
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
