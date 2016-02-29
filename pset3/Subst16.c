@@ -143,12 +143,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 to_cpy = to; // reset to_cpy
                 to_cpy = str_replace(to_cpy, "^", matched, 'q');
                 len_to = strlen(to_cpy);
-                printf("to_cpy is now %s because to is %s\n", to_cpy, to);
                 matches[count] = to_cpy;
-                printf("Matches in count %d is now %s\n", count, matches[count]);
             }
-
-            printf("init matched before free is now %s\n", matches[0]);
 
             free(matched);
         }
@@ -165,18 +161,14 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
         if (!result) return NULL;
 
-        printf("to_cpy before loop is now %s\n", matches[0]);
-
         int i = 0;
         while (i < count) {
-            printf("to_cpy  in loop is now %s when count is %d\n", matches[i], i);
             if(matches[i]) to_cpy = matches[i];
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
             tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
-            printf("result at end is now %s because orig is %s\n", result, orig);
             i++;
         }
         strcpy(tmp, orig);
@@ -200,7 +192,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             result = copylastn(result, tmp, strlen(tmp));
             tmp = realloc(tmp, strlen(orig)+1);
         }
-        printf("result at end is now %s because orig is %s\n", result, orig);
     }
 
     free(to_cpy);
