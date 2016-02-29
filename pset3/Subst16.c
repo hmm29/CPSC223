@@ -189,6 +189,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     }
 
     free(to_cpy);
+    printf("result is %s\n", result);
     return result;
 }
 
