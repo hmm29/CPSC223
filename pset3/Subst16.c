@@ -265,7 +265,6 @@ int main(int argc, char *argv[])
                         break;
                     }
                 } else if(res) {
-                    free(input);
                     input = res;
                     i = 0; // reset iterator
                     if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
