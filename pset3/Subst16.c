@@ -245,7 +245,11 @@ int main(int argc, char *argv[])
     char *res;
 
     while((input = getLine(stdin)) != NULL) {
-            if(input == NULL) printf("realloc failed");
+            if(input == NULL) {
+                free(input);
+                break;
+            }
+
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
             for(int i = 0; i < strlen(input); i++) {
