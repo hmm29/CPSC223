@@ -165,7 +165,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         int len_tmp;
 
         len_tmp = strlen(orig) + (len_to - len_from);
-        tmp = result = malloc(len_tmp+1);
+        tmp = result = malloc(len_tmp+2);
         if (!result) return NULL;
 
         for(int i = 0; i < len_tmp; i++) {
