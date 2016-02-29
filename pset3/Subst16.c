@@ -291,13 +291,13 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
-        free(input);
     }
 
         // free everything
     for(int r = 0; r < numRules; r++) {
         free(rules[r]);
     }
+    free(input);
 
     return EXIT_SUCCESS;
 }
