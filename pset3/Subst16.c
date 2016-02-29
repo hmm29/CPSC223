@@ -261,12 +261,6 @@ int main(int argc, char *argv[])
             res = NULL;
 
             for(int i = 0; i < strlen(input); i++) {
-                if(input[i] == NULL) {
-                    break;
-                    free(res);
-                    free(input);
-                    exit(EXIT_FAILURE);
-                }
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
@@ -307,7 +301,7 @@ int main(int argc, char *argv[])
         for(int idx = 0; res && idx < strlen(res); idx++) {
             putchar(res[idx]);
         }
-        putchar('\n');
+        printf("\n");
 
         free(res);
         free(input);
