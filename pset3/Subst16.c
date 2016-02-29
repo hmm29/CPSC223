@@ -135,7 +135,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             matched = strncpy(matched, tmp, 2);
             matched[2] = '\0';
 
-            if(strchr(to, '^') && count == 0) {
+            if(strchr(to, '^')) {
                 to_cpy = to; // reset to_cpy
                 to_cpy = str_replace(to_cpy, "^", matched, 'q');
                 len_to = strlen(to_cpy);
@@ -164,6 +164,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
             printf("result at end is now %s because orig is %s\n", result, orig);
+            to_cpy = NULL;
         }
         strcpy(tmp, orig);
     }
