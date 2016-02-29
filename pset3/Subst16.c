@@ -284,14 +284,14 @@ int main(int argc, char *argv[])
                         break;
                     }
                 }
-
-               free(input);
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
             putchar(res[idx]);
         }
         putchar('\n');
+
+        free(input);
     }
 
         // free everything
