@@ -27,7 +27,7 @@ char* StrStr(const char *str, const char *target)
     char *p1_begin = p1, 
     *p2 = (char*)target;
     while (*p1 && *p2 && (*p1 == *p2 || *p2 == '.')) {
-      if(*p1 == '@' && *(p+1) == '.') {
+      if(*p1 == '@' && *(p1+1) == '.') {
         p1+=2;
       }  
       p1++;
