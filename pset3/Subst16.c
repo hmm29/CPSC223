@@ -60,12 +60,13 @@ void parseFlags(char* flags, Ruleptr ruleptr)
     		if(isdigit(flags[i+1])) {
                 if(isdigit(flags[i+2])) {
                     int n;
+                    char *ptr;
                     char num[10]; // reasonable upper bound on length of index number
                     for(n = 0; isdigit(flags[i+1+n]); n++) { // account for indices > 9
                         num[n] = flags[i+1+n];
                     }
                     num[n] = '\0';
-                    ruleptr->onSuccessRuleIndex = strtol(num);
+                    ruleptr->onSuccessRuleIndex = strtol(num, &ptr, 10);
                 } 
                 else ruleptr->onSuccessRuleIndex = flags[i+1]-'0';
             } // ascii numbers start at 48 ('0')
@@ -75,12 +76,13 @@ void parseFlags(char* flags, Ruleptr ruleptr)
     		if(isdigit(flags[i+1])) {
                 if(isdigit(flags[i+2])) {
                     int n;
+                    char *ptr;
                     char num[10]; // reasonable upper bound on length of index number
                     for(n = 0; isdigit(flags[i+1+n]); n++) { // account for indices > 9
                         num[n] = flags[i+1+n];
                     }
                     num[n] = '\0';
-                    ruleptr->onFailureRuleIndex = strtol(num);
+                    ruleptr->onFailureRuleIndex = strtol(num, &ptr, 10);
                 } 
                 else ruleptr->onFailureRuleIndex = flags[i+1]-'0';
             }
