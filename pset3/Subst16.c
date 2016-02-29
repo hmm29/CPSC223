@@ -186,7 +186,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = realloc(tmp, strlen(orig)+1);
         }
         // printf("last result IS awesomely %s.\n", result);
-        free(tmp);
     }
 
     free(to_cpy);
