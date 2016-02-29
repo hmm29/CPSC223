@@ -169,7 +169,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
         int i = 0;
         while (count--) {
-            printf("to_cpy  in loop is now %s\n", matches[0]);
+            printf("to_cpy  in loop is now %s when count is %d\n", matches[0], count);
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
