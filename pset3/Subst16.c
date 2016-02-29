@@ -148,6 +148,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 printf("Matches in count %d is now %s\n", count, matches[count]);
             }
 
+            printf("init matched before free is now %s\n", matches[0]);
+
             free(matched);
         }
 
@@ -163,9 +165,11 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
         if (!result) return NULL;
 
+        printf("to_cpy before loop is now %s\n", matches[0]);
+
         int i = 0;
         while (count--) {
-            printf("to_cpy is now %s\n", matches[1]);
+            printf("to_cpy  in loop is now %s\n", matches[0]);
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
