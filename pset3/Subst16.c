@@ -283,7 +283,10 @@ int main(int argc, char *argv[])
                         break;
                     }
                     free(input);
-                    input = res;
+                    input = realloc(input, strlen(res)+1);
+                    input = strcpy(input, res);
+                    free(res);
+
                 }
             }
 
