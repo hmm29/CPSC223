@@ -115,10 +115,9 @@ char *inputString(FILE* fp, size_t size){
 char *str_replace(char *orig, char *from, char *to, char flag) {
     char *result = NULL; /* the return string */
     char *ins = NULL;    /* the next insert point */
-    char *tmp = NULL;    /* tmp buffer */
+    char *tmp = NULL;    /* temporary */
     char *matched = NULL; /* matched string */
     char *to_cpy = NULL; /* copy of to argument */
-    int len_tmp; /* length of tmp buffer */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -159,18 +158,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             free(matched);
         }
 
-        len_tmp = strlen(orig) + (len_to-len_from) * count + 1;
-        tmp = result = malloc(len_tmp);
-        if (!result) return NULL;
+        tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
 
-        if(strlen(tmp) < strlen(orig)) {
-            tmp = realloc(tmp, len_tmp);
-        }
-        // initialize tmp array
-        for(int i = 0; i < len_tmp; i++) {
-            tmp[i] = '\0';
-        }
-        tmp = strcpy(tmp, orig);
+        if (!result) return NULL;
 
         while (count--) {
             ins = StrStr(orig, from);
@@ -184,18 +174,20 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         strcpy(tmp, orig);
     }
     else if(flag == 'r') {
+        int len_tmp;
+
         len_tmp = strlen(orig) + (len_to - len_from);
         tmp = result = malloc(len_tmp);
         if (!result) return NULL;
 
-        if(strlen(tmp) < strlen(orig)) {
-            tmp = realloc(tmp, len_tmp);
-        }
-              // initialize tmp array
         for(int i = 0; i < len_tmp; i++) {
             tmp[i] = '\0';
         }
-        tmp = strcpy(tmp, orig);
+
+        if(strlen(tmp) < strlen(orig)) {
+            tmp = realloc(tmp, strlen(orig) + 1);
+        }
+            tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
             ins = StrStr(tmp, from);
