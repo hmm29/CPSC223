@@ -250,7 +250,6 @@ int main(int argc, char *argv[])
 
             for(int i = 0; i < strlen(input); i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
-
                 if (strcmp(input, res) == 0) {  // if no change
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
@@ -268,7 +267,6 @@ int main(int argc, char *argv[])
                 } else if(res) {
                     input = res;
                     i = 0; // reset iterator
-                    // printf("result is now %s and jump to rule %d and current rule is %d with index success of %d\n", res, currentRulePtr->onSuccessRuleIndex, j, rules[j]->onSuccessRuleIndex);
                     if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
                         if(currentRulePtr->onSuccessRuleIndex > -1) {
                             j = currentRulePtr->onSuccessRuleIndex;
