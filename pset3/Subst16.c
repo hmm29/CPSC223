@@ -123,12 +123,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     strcpy(to_cpy, to);
     to_cpy[strlen(to)] = '\0';
 
-    if(result && tmp) {
-       result = tmp = realloc(result, strlen(orig) + (len_to - len_from) * count + 1);
-    } else {
-        result = tmp = malloc(strlen(orig) + (len_to - len_from) * count + 1);
-    }
-
     if(flag == 'g' || flag == 'q') {
         ins = orig;
         for (count = 0; (tmp = StrStr(ins, from)); ++count) {
@@ -148,6 +142,12 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             }
 
             free(matched);
+        }
+
+        if(result && tmp) {
+           result = tmp = realloc(result, strlen(orig) + (len_to - len_from) * count + 1);
+        } else {
+            result = tmp = malloc(strlen(orig) + (len_to - len_from) * count + 1);
         }
 
         for(int i = 0; i < strlen(orig) + (len_to - len_from) * count + 1; i++) {
