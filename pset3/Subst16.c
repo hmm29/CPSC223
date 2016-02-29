@@ -139,6 +139,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 to_cpy = to; // reset to_cpy
                 to_cpy = str_replace(to_cpy, "^", matched, 'q');
                 len_to = strlen(to_cpy);
+                printf("to_cpy is now %s because to is %s\n", to_cpy, to);
             }
 
             free(matched);
