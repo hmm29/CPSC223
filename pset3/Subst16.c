@@ -285,6 +285,8 @@ int main(int argc, char *argv[])
                         break;
                     }
                 }
+
+                input = realloc(input, strlen(res));
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
