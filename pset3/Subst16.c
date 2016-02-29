@@ -181,13 +181,12 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             ins = StrStr(tmp, from);
             tmp = str_replace(tmp + (ins-tmp), from, to, 'q');
             result = copylastn(result, tmp, strlen(tmp));
+            free(tmp);
         }
         // printf("last result IS awesomely %s.\n", result);
     }
 
     free(to_cpy);
-    free(tmp);
-
     return result;
 }
 
