@@ -284,7 +284,6 @@ int main(int argc, char *argv[])
                     }
                     free(input);
                     input = realloc(input, strlen(res)+1);
-                    input = strcpy(input, res);
                     free(res);
 
                 }
