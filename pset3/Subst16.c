@@ -178,6 +178,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
+            tmp = strcpy(tmp, orig);
             ins = StrStr(tmp, from);
             tmp = str_replace(tmp + (ins-tmp), from, to, 'q');
             result = copylastn(result, tmp, strlen(tmp));
@@ -240,64 +241,63 @@ int main(int argc, char *argv[])
     int j = 0;
     currentRulePtr = rules[j];
     char *input;
-
-    // read input and save to char array
-    input = getLine(stdin);
-    if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
-
     char *res;
 
-    for(int i = 0; i < strlen(input); i++) {
-        res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
+    while((input = getLine(stdin))) {
+            if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
-        if (strcmp(input, res) == 0) {  // if no change
-            if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
-                if(currentRulePtr->onFailureRuleIndex > -1) {
-                    j = currentRulePtr->onFailureRuleIndex;
-                    currentRulePtr = rules[j];
+            for(int i = 0; i < strlen(input); i++) {
+                res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
+
+                if (strcmp(input, res) == 0) {  // if no change
+                    if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
+                        if(currentRulePtr->onFailureRuleIndex > -1) {
+                            j = currentRulePtr->onFailureRuleIndex;
+                            currentRulePtr = rules[j];
+                        }
+                    } 
+                    // if no Sn or Fm rule specified, go to next rule if it exists
+                    else if(currentRulePtr->onFailureRuleIndex == -1 && j+1 < numRules) {
+                         currentRulePtr = rules[++j];
+                    }
+                    else {
+                        break;
+                    }
+                } else if(res) {
+                    input = res;
+                    i = 0; // reset iterator
+                    // printf("result is now %s and jump to rule %d and current rule is %d with index success of %d\n", res, currentRulePtr->onSuccessRuleIndex, j, rules[j]->onSuccessRuleIndex);
+                    if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
+                        if(currentRulePtr->onSuccessRuleIndex > -1) {
+                            j = currentRulePtr->onSuccessRuleIndex;
+                            currentRulePtr = rules[j];
+                        }
+                        //printf("New rule index success is %d and i is %d\n", j, i);
+                    } 
+                    // if no Sn or Fm rule specified, go to next rule if it exists
+                    else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
+                        //printf("hey miller to rule %d because j is %d\n", j+1, j);
+                        currentRulePtr = rules[++j];
+                    }
+                    else {
+                        //printf("BREAK ME SUCCESS\n");
+                        break;
+                    }
                 }
-            } 
-            // if no Sn or Fm rule specified, go to next rule if it exists
-            else if(currentRulePtr->onFailureRuleIndex == -1 && j+1 < numRules) {
-                 currentRulePtr = rules[++j];
             }
-            else {
-                break;
-            }
-        } else if(res) {
-            input = res;
-            i = 0; // reset iterator
-            // printf("result is now %s and jump to rule %d and current rule is %d with index success of %d\n", res, currentRulePtr->onSuccessRuleIndex, j, rules[j]->onSuccessRuleIndex);
-            if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
-                if(currentRulePtr->onSuccessRuleIndex > -1) {
-                    j = currentRulePtr->onSuccessRuleIndex;
-                    currentRulePtr = rules[j];
-                }
-                //printf("New rule index success is %d and i is %d\n", j, i);
-            } 
-            // if no Sn or Fm rule specified, go to next rule if it exists
-            else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
-                //printf("hey miller to rule %d because j is %d\n", j+1, j);
-                currentRulePtr = rules[++j];
-            }
-            else {
-                //printf("BREAK ME SUCCESS\n");
-                break;
-            }
+
+        for(int idx = 0; res && idx < strlen(res); idx++) {
+            putchar(res[idx]);
         }
-    }
+        putchar('\n');
 
-    for(int idx = 0; res && idx < strlen(res); idx++) {
-        putchar(res[idx]);
-    }
-    putchar('\n');
+        // free everything
+        for(int r = 0; r < numRules; r++) {
+            free(rules[r]);
+        }
 
-    // free everything
-    for(int r = 0; r < numRules; r++) {
-        free(rules[r]);
+        free(input);
     }
-
-    free(input);
 
     return EXIT_SUCCESS;
 }
