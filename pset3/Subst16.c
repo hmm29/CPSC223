@@ -98,7 +98,7 @@ char *inputString(FILE* fp, size_t size){
     size_t len = 0;
     str = realloc(NULL, sizeof(*str)*size); // initial size from size arg
     if(!str) return str;
-    while(EOF!=(ch=fgetc(fp)) && ch != '\n' && getLine(fp) != NULL){
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
         str[len++]=ch;
         if(len==size){
             str = realloc(str, sizeof(*str)*(size+=16));
@@ -115,9 +115,10 @@ char *inputString(FILE* fp, size_t size){
 char *str_replace(char *orig, char *from, char *to, char flag) {
     char *result = NULL; /* the return string */
     char *ins = NULL;    /* the next insert point */
-    char *tmp = NULL;    /* temporary */
+    char *tmp = NULL;    /* tmp buffer */
     char *matched = NULL; /* matched string */
     char *to_cpy = NULL; /* copy of to argument */
+    int len_tmp; /* length of tmp buffer */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -158,9 +159,18 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             free(matched);
         }
 
-        tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
-
+        len_tmp = strlen(orig) + (len_to-len_from) * count + 1;
+        tmp = result = malloc(len_tmp);
         if (!result) return NULL;
+
+        if(strlen(tmp) < strlen(orig)) {
+            tmp = realloc(tmp, len_tmp);
+        }
+        // initialize tmp array
+        for(int i = 0; i < len_tmp; i++) {
+            tmp[i] = '\0';
+        }
+        tmp = strcpy(tmp, orig);
 
         while (count--) {
             ins = StrStr(orig, from);
@@ -174,21 +184,18 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         strcpy(tmp, orig);
     }
     else if(flag == 'r') {
-        int len_tmp;
-
         len_tmp = strlen(orig) + (len_to - len_from);
         tmp = result = malloc(len_tmp);
         if (!result) return NULL;
 
-        // initialize tmp array
+        if(strlen(tmp) < strlen(orig)) {
+            tmp = realloc(tmp, len_tmp);
+        }
+              // initialize tmp array
         for(int i = 0; i < len_tmp; i++) {
             tmp[i] = '\0';
         }
-
-        if(strlen(tmp) < strlen(orig)) {
-            tmp = realloc(tmp, strlen(orig) + 1);
-        }
-            tmp = strcpy(tmp, orig);
+        tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
             ins = StrStr(tmp, from);
