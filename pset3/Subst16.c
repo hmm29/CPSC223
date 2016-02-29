@@ -283,12 +283,12 @@ int main(int argc, char *argv[])
                     free(input);
                     input = res;
                 }
-
-                for(int idx = 0; res && idx < strlen(res); idx++) {
-                    putchar(res[idx]);
-                }
-                putchar('\n');
             }
+
+        for(int idx = 0; res && idx < strlen(res); idx++) {
+            putchar(res[idx]);
+        }
+        putchar('\n');
 
         free(res);
         free(input);
