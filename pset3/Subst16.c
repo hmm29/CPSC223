@@ -236,6 +236,7 @@ int main(int argc, char *argv[])
             /* error check for TO, make sure its a string and that it contains valid characters */
             currentRulePtr->TO = argv[i];
             if(strlen(currentRulePtr->TO) < strlen(currentRulePtr->FROM)) {
+                break;
                 exit(EXIT_FAILURE);
             }
         }
