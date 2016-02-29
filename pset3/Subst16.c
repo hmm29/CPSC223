@@ -175,7 +175,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         // if(strlen(tmp) < strlen(orig)) {
         //     tmp = realloc(tmp, strlen(orig) + 1);
         // }
-            tmp = strcpy(tmp, orig);
+
+        //tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
             ins = StrStr(tmp, from);
