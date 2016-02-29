@@ -235,11 +235,6 @@ int main(int argc, char *argv[])
         else if(i % 3 == 2) {
             /* error check for TO, make sure its a string and that it contains valid characters */
             currentRulePtr->TO = argv[i];
-
-            if(strlen(currentRulePtr->FROM) < strlen(currentRulePtr->TO)) {
-                break;
-                exit(EXIT_FAILURE);
-            }
         }
         else if(i % 3 == 0) {
             /* error check for flags - make sure it starts with a dash and has no spaces/odd characters */
