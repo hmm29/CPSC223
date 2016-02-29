@@ -222,6 +222,14 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
+    //make sure to is not less than from
+    for (int i = -2; i < argc; i+3) {
+        if(strlen(argc[i+3])  < strlen(argc[i+4])) // if from is less than to
+        {
+            exit(EXIT_FAILURE);
+        }
+    }
+
     /* Rule parsing 
      * Creates an array of pointers to rules in order 
      */
