@@ -144,8 +144,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
         if(result && tmp) {
            result = tmp = realloc(result, strlen(orig) + (len_to - len_from) * count + 1);
-        }
+        } else {
         result = tmp = malloc(strlen(orig) + (len_to - len_from) * count + 1);
+        }
 
         for(int i = 0; i < strlen(orig) + (len_to - len_from) * count + 1; i++) {
             tmp[i] = '\0';
