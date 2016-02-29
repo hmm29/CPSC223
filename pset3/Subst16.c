@@ -184,9 +184,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = realloc(tmp, strlen(orig)+1);
         }
         // printf("last result IS awesomely %s.\n", result);
-        free(tmp);
     }
 
+    free(tmp);
     free(to_cpy);
     return result;
 }
@@ -244,11 +244,6 @@ int main(int argc, char *argv[])
     char *res;
 
     while((input = getLine(stdin)) != NULL) {
-            if(input == NULL) {
-                free(input);
-                break;
-            }
-
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
             for(int i = 0; i < strlen(input); i++) {
@@ -268,6 +263,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                 } else if(res) {
+                    free(input);
                     input = res;
                     i = 0; // reset iterator
                     if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
