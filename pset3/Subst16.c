@@ -162,7 +162,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             orig += len_front + len_from; // move to next "end of from"
             // printf("result at end is now %s because orig is %s\n", result, orig);
         }
-        free(tmp);
         strcpy(tmp, orig);
     }
     else if(flag == 'r') {
@@ -191,7 +190,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         // printf("last result IS awesomely %s.\n", result);
         free(tmp);
     }
-
+    
     free(to_cpy);
     return result;
 }
