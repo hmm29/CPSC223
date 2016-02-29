@@ -222,7 +222,6 @@ int main(int argc, char *argv[])
     for(int p = 1; p < argc; p+=3) {
         if(strlen(argv[p])  < strlen(argv[p+1])) // if from is less than to
         {
-            fprintf(stderr, "Length of FROM less than length of TO in one of the rules.\n");;
             exit(EXIT_FAILURE);
         }
     }
@@ -262,6 +261,12 @@ int main(int argc, char *argv[])
             res = NULL;
 
             for(int i = 0; i < strlen(input); i++) {
+                if(input[i] == NULL) {
+                    break;
+                    free(res);
+                    free(input);
+                    exit(EXIT_FAILURE);
+                }
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
