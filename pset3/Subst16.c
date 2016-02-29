@@ -168,9 +168,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         printf("to_cpy before loop is now %s\n", matches[0]);
 
         int i = 0;
-        while (count--) {
-            printf("to_cpy  in loop is now %s when count is %d\n", matches[count], count);
-            if(matches[count]) to_cpy = matches[count];
+        while (i < count) {
+            printf("to_cpy  in loop is now %s when count is %d\n", matches[i], i);
+            if(matches[i]) to_cpy = matches[i];
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
