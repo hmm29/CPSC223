@@ -145,7 +145,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if(result && tmp) {
            result = tmp = realloc(result, strlen(orig) + (len_to - len_from) * count + 1);
         } else {
-        result = tmp = malloc(strlen(orig) + (len_to - len_from) * count + 1);
+            result = tmp = malloc(strlen(orig) + (len_to - len_from) * count + 1);
         }
 
         for(int i = 0; i < strlen(orig) + (len_to - len_from) * count + 1; i++) {
@@ -160,9 +160,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = strncpy(tmp, orig, len_front) + len_front;
             tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
-
             // printf("result at end is now %s because orig is %s\n", result, orig);
         }
+        free(tmp);
         strcpy(tmp, orig);
     }
     else if(flag == 'r') {
@@ -193,7 +193,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     }
 
     free(to_cpy);
-
     return result;
 }
 
