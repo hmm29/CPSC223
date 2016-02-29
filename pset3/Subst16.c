@@ -250,9 +250,8 @@ int main(int argc, char *argv[])
 
             for(int i = 0; i < strlen(input); i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
-
+                free(input);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
-
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
                             j = currentRulePtr->onFailureRuleIndex;
@@ -284,9 +283,9 @@ int main(int argc, char *argv[])
                         //printf("BREAK ME SUCCESS\n");
                         break;
                     }
+                    free(input);
                     input = res;
                 }
-                free(input);
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
