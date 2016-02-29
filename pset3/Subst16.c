@@ -131,6 +131,11 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             }
             ins = tmp + len_from;
 
+            matched = malloc(3 * sizeof(*matched));
+            matched = strncpy(matched, tmp, 2);
+            matched[2] = '\0';
+
+            free(matched);
         }
 
         if(result && tmp) {
@@ -146,18 +151,12 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
-            matched = malloc(3 * sizeof(*matched));
-            matched = strncpy(matched, tmp, 2);
-            matched[2] = '\0';
-
             if(strchr(to, '^')) {
                 to_cpy = to; // reset to_cpy
-                to_cpy = str_replace(to_cpy, "^", matched, 'q');
+                to_cpy = str_replace(to_cpy, "^", from, 'q');
                 len_to = strlen(to_cpy);
                 printf("to_cpy is now %s because to is %s\n", to_cpy, to);
             }
-
-            free(matched);
 
             ins = StrStr(orig, from);
             len_front = ins - orig;
