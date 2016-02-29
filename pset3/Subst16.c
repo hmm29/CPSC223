@@ -250,6 +250,7 @@ int main(int argc, char *argv[])
             for(int i = 0; i < strlen(input); i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
+                    free(res);
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
                             j = currentRulePtr->onFailureRuleIndex;
@@ -264,6 +265,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                 } else if(res) {
+                    free(input);
                     input = res;
                     i = 0; // reset iterator
                     if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
