@@ -235,8 +235,7 @@ int main(int argc, char *argv[])
         else if(i % 3 == 2) {
             /* error check for TO, make sure its a string and that it contains valid characters */
             currentRulePtr->TO = argv[i];
-            if(strlen(currentRulePtr->TO) < strlen(currentRulePtr->FROM)) {
-                break;
+            if(strlen(currentRulePtr->FROM) < strlen(currentRulePtr->TO)) {
                 exit(EXIT_FAILURE);
             }
         }
