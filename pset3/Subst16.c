@@ -31,6 +31,13 @@ char* StrStr(const char *str, const char *target)
 
 char *copylastn(char *dest,char *src,int n)
 {
+    if (!src)
+        src = "";
+    len_src = strlen(src);
+    if (!dest)
+        dest = "";
+    len_dest = strlen(dest);
+
         strncpy(dest+(strlen(dest)-strlen(src)), src, strlen(src));
         return dest;
 }
@@ -160,6 +167,10 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
         tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
 
+        for(int i = 0; i < strlen(orig) + (len_to - len_from) * count + 1; i++) {
+            tmp[i] = '\0';
+        }
+
         if (!result) return NULL;
 
         while (count--) {
@@ -177,7 +188,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         int len_tmp;
 
         len_tmp = strlen(orig) + (len_to - len_from);
-        tmp = result = malloc(len_tmp);
+        tmp = result = malloc(len_tmp+1);
         if (!result) return NULL;
 
         for(int i = 0; i < len_tmp; i++) {
