@@ -195,7 +195,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     }
 
     free(to_cpy);
-    printf("result is %s\n", result);
     return result;
 }
 
@@ -207,7 +206,6 @@ int main(int argc, char *argv[])
     Ruleptr rules[numRules]; // create an array of rule pointers
     Ruleptr currentRulePtr; // pointer to current rule
 
-    //printf("NUM RULES IS %d\n", numRules);
 
     // initialize rules array
     memset(rules, 0, numRules * sizeof(Ruleptr));
