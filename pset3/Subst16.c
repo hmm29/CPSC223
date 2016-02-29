@@ -250,6 +250,7 @@ int main(int argc, char *argv[])
             for(int i = 0; i < strlen(input); i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
+                    free(input);
                     free(res);
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
