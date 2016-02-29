@@ -283,7 +283,6 @@ int main(int argc, char *argv[])
                         //printf("BREAK ME SUCCESS\n");
                         break;
                     }
-                    free(input);
                     input = res;
                 }
             }
