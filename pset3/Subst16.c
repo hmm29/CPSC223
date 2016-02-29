@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
 
     // free everything
     for(int r = 0; r < numRules; r++) {
-        free(rules[p]);
+        free(rules[r]);
     }
 
     free(input);
