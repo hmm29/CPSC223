@@ -154,7 +154,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         while (count--) {
             ins = StrStr(orig, from);
             len_front = ins - orig;
-            free(tmp);
             tmp = strncpy(tmp, orig, len_front) + len_front;
             tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
