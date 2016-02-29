@@ -98,7 +98,7 @@ char *inputString(FILE* fp, size_t size){
     size_t len = 0;
     str = realloc(NULL, sizeof(*str)*size); // initial size from size arg
     if(!str) return str;
-    while(getLine(fp) != 0){
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
         str[len++]=ch;
         if(len==size){
             str = realloc(str, sizeof(*str)*(size+=16));
@@ -249,12 +249,7 @@ int main(int argc, char *argv[])
     char *input;
 
     // read input and save to char array
-    input = getLine(stdin);
-
-    if(input == NULL) {
-        return;
-    }
-
+    input = inputString(stdin,10);
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
@@ -304,7 +299,7 @@ int main(int argc, char *argv[])
 
     // free everything
     for(int r = 0; r < numRules; r++) {
-        free(rules[p]);
+        free(rules[r]);
     }
 
     free(input);
