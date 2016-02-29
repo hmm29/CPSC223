@@ -290,10 +290,10 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
-        int len = strlen(res);
         free(res);
-        res = NULL;
         free(input);
+
+        res = input;
     }
 
         // free everything
