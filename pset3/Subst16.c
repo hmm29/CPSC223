@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
     char *input;
     char *res;
 
-    while((input = getLine(stdin))) {
+    while((input = getLine(stdin)) != NULL) {
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
             for(int i = 0; i < strlen(input); i++) {
@@ -284,14 +284,14 @@ int main(int argc, char *argv[])
                         break;
                     }
                 }
+
+               free(input);
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
             putchar(res[idx]);
         }
         putchar('\n');
-
-        free(input);
     }
 
         // free everything
