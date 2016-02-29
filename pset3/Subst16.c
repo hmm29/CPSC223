@@ -142,7 +142,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             free(matched);
         }
 
-        if(result) free(result);
         tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
 
         for(int i = 0; i < strlen(orig) + (len_to - len_from) * count + 1; i++) {
@@ -185,10 +184,10 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = realloc(tmp, strlen(orig)+1);
         }
         // printf("last result IS awesomely %s.\n", result);
-        free(tmp);
     }
 
     free(to_cpy);
+    free(tmp);
 
     return result;
 }
