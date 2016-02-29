@@ -36,6 +36,9 @@ char *copylastn(char *dest, char *src,int n)
     if (!dest)
         dest = "";
 
+        dest = realloc(dest, strlen(dest));
+        src = realloc(src, strlen(src));
+
         strncpy(dest+(strlen(dest)-strlen(src)), src, strlen(src));
         return dest;
 }
@@ -247,6 +250,7 @@ int main(int argc, char *argv[])
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
             for(int i = 0; i < strlen(input); i++) {
+                input = realloc(input, strlen(input));
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
 
                 if (strcmp(input, res) == 0) {  // if no change
