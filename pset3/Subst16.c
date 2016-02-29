@@ -290,13 +290,12 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
-        free(res);
         free(input);
 
     }
 
 
-            free(res);
+    free(res);
 
 
         // free everything
