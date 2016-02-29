@@ -32,7 +32,7 @@ char* StrStr(const char *str, const char *target)
 char *copylastn(char *dest,char *src,int n)
 {
     int len_src, len_dest;
-    
+
     if (!src)
         src = "";
     len_src = strlen(src);
@@ -95,27 +95,6 @@ void parseFlags(char* flags, Ruleptr ruleptr)
    if(ruleptr->filter == -1) {
 	ruleptr->filter = 'q';
    }
-}
-
-/* 
- * inputString: reads input from stdin and saves to character array   
- */
-
-char *inputString(FILE* fp, size_t size){
-    char *str;
-    int ch;
-    size_t len = 0;
-    str = realloc(NULL, sizeof(*str)*size); // initial size from size arg
-    if(!str) return str;
-    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
-        str[len++]=ch;
-        if(len==size){
-            str = realloc(str, sizeof(*str)*(size+=16));
-            if(!str)return str;
-        }
-    }
-    str[len++]='\0';
-    return realloc(str, sizeof(char)*len);
 }
 
 /* 
@@ -263,13 +242,14 @@ int main(int argc, char *argv[])
     }
 
     /* Read from stdin and apply filters */
-
     int j = 0;
     currentRulePtr = rules[j];
     char *input;
 
     // read input and save to char array
-    input = inputString(stdin,10);
+    input = getLine(stdin);
+    input[strlen(input)] = '\0';
+
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
