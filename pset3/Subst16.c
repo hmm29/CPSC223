@@ -160,7 +160,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
             // printf("result at end is now %s because orig is %s\n", result, orig);
         }
-        strcpy(tmp, orig);
+                free(tmp);
     }
     else if(flag == 'r') {
         int len_tmp;
