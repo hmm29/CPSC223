@@ -104,7 +104,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     char *tmp = NULL;    /* temporary */
     char *matched = NULL; /* matched string */
     char *to_cpy = NULL; /* copy of to argument */
-    char **matchArr = NULL; /* array of matches found for caret */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -124,9 +123,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     strcpy(to_cpy, to);
     to_cpy[strlen(to)] = '\0';
 
-    // array of matches 
-    int len_matchArr = 100;
-    matchArr = malloc(len_matchArr * sizeof(*matchArr));
+    int matches[orig/from];
+    memset(matches, 0, orig/from * sizeof(char*));
 
     if(flag == 'g' || flag == 'q') {
         ins = orig;
@@ -145,11 +143,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 to_cpy = str_replace(to_cpy, "^", matched, 'q');
                 len_to = strlen(to_cpy);
                 printf("to_cpy is now %s because to is %s\n", to_cpy, to);
-                if(count == len_matchArr-1) {
-                    matchArr = realloc(matchArr, len_matchArr*2);
-                }
-                printf("to_cpy is %s\n", to_cpy);
-                matchArr[count] = to_cpy; // save the different matched strings in arr
+                matches[count] = to_cpy;
+                printf("Matches in count is now %s\n", matches[count]);
             }
 
             free(matched);
@@ -168,8 +163,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
-            to_cpy = matchArr[count];
-            printf("to_cpy is %s\n", matchArr[count]);
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
@@ -202,7 +195,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     }
 
     free(to_cpy);
-    free(matchArr);
     printf("result is %s\n", result);
     return result;
 }
