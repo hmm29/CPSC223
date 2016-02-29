@@ -265,7 +265,9 @@ int main(int argc, char *argv[])
                         break;
                     }
                 } else if(res) {
+                    input = realloc(input, strlen(res)+1)
                     strcpy(input, res);
+                    input[srtlen(res)] = '\0';
                     free(res);
 
                     i = 0; // reset iterator
