@@ -292,10 +292,7 @@ int main(int argc, char *argv[])
         putchar('\n');
 
         // free everything
-        for(int r = 0; r < numRules; r++) {
-            free(rules[r]);
-        }
-
+        free(rules);
         free(input);
     }
 
