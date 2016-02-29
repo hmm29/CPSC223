@@ -275,7 +275,6 @@ int main(int argc, char *argv[])
                     } 
                     // if no Sn or Fm rule specified, go to next rule if it exists
                     else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
-                        //printf("hey miller to rule %d because j is %d\n", j+1, j);
                         currentRulePtr = rules[++j];
                     }
                     else {
