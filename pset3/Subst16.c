@@ -178,7 +178,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
-            tmp = strcpy(tmp, orig);
             ins = StrStr(tmp, from);
             tmp = str_replace(tmp + (ins-tmp), from, to, 'q');
             result = copylastn(result, tmp, strlen(tmp));
