@@ -98,7 +98,7 @@ char *inputString(FILE* fp, size_t size){
     size_t len = 0;
     str = realloc(NULL, sizeof(*str)*size); // initial size from size arg
     if(!str) return str;
-    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+    while(getLine(fp) != 0){
         str[len++]=ch;
         if(len==size){
             str = realloc(str, sizeof(*str)*(size+=16));
@@ -176,7 +176,11 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     else if(flag == 'r') {
         tmp = result = malloc(strlen(orig) + (len_to - len_from));
         if (!result) return NULL;
-       tmp = strcpy(tmp, orig);
+
+        if(strlen(tmp) < strlen(orig)) {
+            tmp = realloc(tmp, strlen(orig) + 1);
+        }
+            tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
             ins = StrStr(tmp, from);
@@ -245,7 +249,12 @@ int main(int argc, char *argv[])
     char *input;
 
     // read input and save to char array
-    input = inputString(stdin,10);
+    input = getLine(stdin);
+
+    if(input == NULL) {
+        return;
+    }
+
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
