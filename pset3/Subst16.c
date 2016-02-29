@@ -223,8 +223,8 @@ int main(int argc, char *argv[])
     }
 
     //make sure to is not less than from
-    for(int p = -2; p < argc; p+3) {
-        if(strlen(argv[p+3])  < strlen(argv[p+4])) // if from is less than to
+    for(int p = 1; p < argc; p+3) {
+        if(strlen(argv[p])  < strlen(argv[p+1])) // if from is less than to
         {
             exit(EXIT_FAILURE);
         }
