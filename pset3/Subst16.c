@@ -206,10 +206,6 @@ int main(int argc, char *argv[])
     Ruleptr rules[numRules]; // create an array of rule pointers
     Ruleptr currentRulePtr; // pointer to current rule
 
-
-    // initialize rules array
-    memset(rules, 0, numRules * sizeof(Ruleptr));
-
     /* Argument checking
      * Ensure correct number and type of arguments
      */
@@ -226,9 +222,13 @@ int main(int argc, char *argv[])
     for(int p = 1; p < argc; p+=3) {
         if(strlen(argv[p])  < strlen(argv[p+1])) // if from is less than to
         {
+            fprintf(stderr, "Length of FROM less than length of TO in one of the rules.\n");;
             exit(EXIT_FAILURE);
         }
     }
+
+    // initialize rules array
+    memset(rules, 0, numRules * sizeof(Ruleptr));
 
     /* Rule parsing 
      * Creates an array of pointers to rules in order 
