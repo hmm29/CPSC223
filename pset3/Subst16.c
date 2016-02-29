@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
     int j = 0;
     currentRulePtr = rules[j];
     char *input;
-    char *res;
+    char *res = NULL;
 
     while((input = getLine(stdin)) != NULL) {
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
