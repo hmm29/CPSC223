@@ -153,7 +153,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 to_cpy = to; // reset to_cpy
                 to_cpy = str_replace(to_cpy, "^", matched, 'q');
                 len_to = strlen(to_cpy);
-        }
+            }
+
+            free(matched);
         }
 
         tmp = result = malloc(strlen(orig) + (len_to - len_from) * count + 1);
@@ -180,9 +182,12 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             ins = StrStr(tmp, from);
             tmp = str_replace(tmp + (ins-tmp), from, to, 'q');
             result = copylastn(result, tmp, strlen(tmp));
+            free(tmp);
         }
         // printf("last result IS awesomely %s.\n", result);
     }
+
+    free(to_cpy);
 
     return result;
 }
@@ -205,12 +210,10 @@ int main(int argc, char *argv[])
      */
 
     if(!(strcmp(argv[0],"Subst16") == 0 || strcmp(argv[0], "./Subst16") == 0)) {
-        //fprintf(stderr, "Incorrect file name.\n");
 	    exit(EXIT_FAILURE);
     }
 
     if(argc < 4 || (argc-1)%3 > 0) {
-	    //fprintf(stderr, "Incorrect number of arguments in %s.\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -242,7 +245,7 @@ int main(int argc, char *argv[])
     char *input;
 
     // read input and save to char array
-    input = getLine(stdin);
+    input = inputString(getLine(stdin), 10);
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
@@ -289,6 +292,11 @@ int main(int argc, char *argv[])
         putchar(res[idx]);
     }
     putchar('\n');
+
+    // free everything
+    for(int r = 0; r < numRules; r++) {
+        free(rules[p]);
+    }
 
     free(input);
 
