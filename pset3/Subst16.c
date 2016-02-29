@@ -104,7 +104,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     char *tmp = NULL;    /* temporary */
     char *matched = NULL; /* matched string */
     char *to_cpy = NULL; /* copy of to argument */
-    char *matchArr = NULL; /* matches found for caret */
+    char **matchArr = NULL; /* array of matches found for caret */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -126,7 +126,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
     // array of matches 
     int len_matchArr = 100;
-    matchArr = malloc(len_matchArr * sizeof(matchArr*));
+    matchArr = malloc(len_matchArr * sizeof(*matchArr));
 
     if(flag == 'g' || flag == 'q') {
         ins = orig;
@@ -148,7 +148,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 if(count == len_matchArr-1) {
                     matchArr = realloc(matchArr, len_matchArr*2);
                 }
-                matchArr[count] == to_cpy;
+                matchArr[count] = to_cpy; // save the different matched strings in arr
             }
 
             free(matched);
@@ -170,7 +170,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
-            tmp = strcpy(tmp, matchArr[count]) + len_to;
+            tmp = strcpy(tmp, (const char *) matchArr[count]) + len_to;
             orig += len_front + len_from; // move to next "end of from"
             printf("result at end is now %s because orig is %s\n", result, orig);
         }
