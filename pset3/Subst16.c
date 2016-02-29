@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 
     // read input and save to char array
     input = getLine(stdin);
-    input[strlen(input)] = '\0';
+    if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
     char *res;
 
