@@ -31,6 +31,8 @@ char* StrStr(const char *str, const char *target)
 
 char *copylastn(char *dest,char *src,int n)
 {
+    int len_src, len_dest;
+    
     if (!src)
         src = "";
     len_src = strlen(src);
