@@ -148,6 +148,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 if(count == len_matchArr-1) {
                     matchArr = realloc(matchArr, len_matchArr*2);
                 }
+                printf("to_cpy is %s\n", to_cpy);
                 matchArr[count] = to_cpy; // save the different matched strings in arr
             }
 
