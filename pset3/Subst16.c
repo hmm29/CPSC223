@@ -290,9 +290,11 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
-        free(res);
         free(input);
     }
+
+   free(res);
+
 
         // free everything
     for(int r = 0; r < numRules; r++) {
