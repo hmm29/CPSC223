@@ -283,9 +283,7 @@ int main(int argc, char *argv[])
                         break;
                     }
                     free(input);
-                    input = realloc(input, strlen(res)+1);
-                    free(res);
-
+                    input = res;
                 }
             }
 
