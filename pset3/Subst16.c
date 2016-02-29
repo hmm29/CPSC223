@@ -104,6 +104,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     char *tmp = NULL;    /* temporary */
     char *matched = NULL; /* matched string */
     char *to_cpy = NULL; /* copy of to argument */
+    char *matchArr = NULL; /* matches found for caret */
     int len_from;  /* length of from */
     int len_to; /* length of to */
     int len_front; /* distance between from and end of last from */
@@ -123,6 +124,10 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     strcpy(to_cpy, to);
     to_cpy[strlen(to)] = '\0';
 
+    // array of matches 
+    int len_matchArr = 100;
+    matchArr = malloc(len_matchArr * sizeof(matchArr*));
+
     if(flag == 'g' || flag == 'q') {
         ins = orig;
         for (count = 0; (tmp = StrStr(ins, from)); ++count) {
@@ -135,12 +140,16 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             matched = strncpy(matched, tmp, 2);
             matched[2] = '\0';
 
-            // if(strchr(to, '^')) {
-            //     to_cpy = to; // reset to_cpy
-            //     to_cpy = str_replace(to_cpy, "^", matched, 'q');
-            //     len_to = strlen(to_cpy);
-            //     printf("to_cpy is now %s because to is %s\n", to_cpy, to);
-            // }
+            if(strchr(to, '^')) {
+                to_cpy = to; // reset to_cpy
+                to_cpy = str_replace(to_cpy, "^", matched, 'q');
+                len_to = strlen(to_cpy);
+                printf("to_cpy is now %s because to is %s\n", to_cpy, to);
+                if(count == len_matchArr-1) {
+                    matchArr = realloc(matchArr, len_matchArr*2);
+                }
+                matchArr[count] == to_cpy;
+            }
 
             free(matched);
         }
@@ -158,17 +167,10 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
-            if(strchr(to, '^')) {
-                to_cpy = to; // reset to_cpy
-                to_cpy = str_replace(to_cpy, "^", matched, 'q');
-                len_to = strlen(to_cpy);
-                printf("to_cpy is now %s because to is %s\n", to_cpy, to);
-            }
-
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
-            tmp = strcpy(tmp, to_cpy) + len_to;
+            tmp = strcpy(tmp, matchArr[count]) + len_to;
             orig += len_front + len_from; // move to next "end of from"
             printf("result at end is now %s because orig is %s\n", result, orig);
         }
@@ -197,6 +199,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     }
 
     free(to_cpy);
+    free(matchArr);
     printf("result is %s\n", result);
     return result;
 }
