@@ -168,6 +168,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
 
         while (count--) {
             to_cpy = matchArr[count];
+            printf("to_cpy is %s\n", matchArr[count]);
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
