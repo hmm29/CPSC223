@@ -287,7 +287,6 @@ int main(int argc, char *argv[])
     char *res = NULL;
 
     while((input = getLine(stdin)) != NULL) {
-            if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
             res = NULL;
 
             for(int i = 0; i < strlen(input); i++) {
