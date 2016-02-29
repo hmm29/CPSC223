@@ -65,7 +65,7 @@ void parseFlags(char* flags, Ruleptr ruleptr)
                         num[n] = flags[i+1+n];
                     }
                     num[n] = '\0';
-                    ruleptr->onSuccessRuleIndex = atoi(num);
+                    ruleptr->onSuccessRuleIndex = strtol(num);
                 } 
                 else ruleptr->onSuccessRuleIndex = flags[i+1]-'0';
             } // ascii numbers start at 48 ('0')
@@ -80,7 +80,7 @@ void parseFlags(char* flags, Ruleptr ruleptr)
                         num[n] = flags[i+1+n];
                     }
                     num[n] = '\0';
-                    ruleptr->onFailureRuleIndex = atoi(num);
+                    ruleptr->onFailureRuleIndex = strtol(num);
                 } 
                 else ruleptr->onFailureRuleIndex = flags[i+1]-'0';
             }
@@ -175,10 +175,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp[i] = '\0';
         }
 
-        // if(strlen(tmp) < strlen(orig)) {
-        //     tmp = realloc(tmp, strlen(orig) + 1);
-        // }
-
         tmp = strcpy(tmp, orig);
 
         while(StrStr(tmp, from)) { // while there is a leftmost occurrence of from
@@ -190,7 +186,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         // printf("last result IS awesomely %s.\n", result);
         free(tmp);
     }
-    
+
     free(to_cpy);
     return result;
 }
