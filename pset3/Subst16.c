@@ -148,6 +148,8 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             tmp[i] = '\0';
         }
 
+        free(tmp);
+
         if (!result) return NULL;
 
         while (count--) {
