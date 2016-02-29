@@ -249,7 +249,7 @@ int main(int argc, char *argv[])
 
             for(int i = 0; i < strlen(input); i++) {
                 if(res != NULL) free(res);
-                res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
+                res = realloc(res, strlen(str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter));
                 if (input && res && strcmp(input, res) == 0) {  // if no change
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
