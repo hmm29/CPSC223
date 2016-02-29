@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
     char *input;
 
     // read input and save to char array
-    input = getLine(stdin);
+    input = inputString(stdin,10);
     char *res;
 
     for(int i = 0; i < strlen(input); i++) {
