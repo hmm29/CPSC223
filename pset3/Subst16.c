@@ -161,7 +161,6 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             // printf("result at end is now %s because orig is %s\n", result, orig);
         }
         strcpy(tmp, orig);
-        free(orig);
     }
     else if(flag == 'r') {
         int len_tmp;
@@ -251,7 +250,9 @@ int main(int argc, char *argv[])
 
             for(int i = 0; i < strlen(input); i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
+
                 if (input && res && strcmp(input, res) == 0) {  // if no change
+
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
                             j = currentRulePtr->onFailureRuleIndex;
@@ -286,6 +287,7 @@ int main(int argc, char *argv[])
                     free(input);
                     input = res;
                 }
+                free(input);
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
