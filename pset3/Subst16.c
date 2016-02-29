@@ -123,8 +123,9 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     strcpy(to_cpy, to);
     to_cpy[strlen(to)] = '\0';
 
-    int matches[orig/from];
-    memset(matches, 0, orig/from * sizeof(char*));
+    int max_num_matches = orig/from;
+    char *matches[max_num_matches];
+    memset(matches, 0, max_num_matches * sizeof(char*));
 
     if(flag == 'g' || flag == 'q') {
         ins = orig;
