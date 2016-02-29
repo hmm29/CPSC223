@@ -290,6 +290,7 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
+        free(res);
         free(input);
 
     }
