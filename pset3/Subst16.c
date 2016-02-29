@@ -285,18 +285,18 @@ int main(int argc, char *argv[])
                 }
             }
 
-        if(res) {
         for(int idx = 0; res && idx < strlen(res); idx++) {
             putchar(res[idx]);
         }
         putchar('\n');
-        }
 
-        free(res);
         free(input);
 
-        res = input;
     }
+
+
+            free(res);
+
 
         // free everything
     for(int r = 0; r < numRules; r++) {
