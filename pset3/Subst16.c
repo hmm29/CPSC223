@@ -246,6 +246,7 @@ int main(int argc, char *argv[])
 
     while((input = getLine(stdin)) != NULL) {
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
+            res = NULL;
 
             for(int i = 0; i < strlen(input); i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
@@ -285,16 +286,11 @@ int main(int argc, char *argv[])
                 }
             }
 
-        if(!res) {
-            res = "";
-        }    
-
         for(int idx = 0; res && idx < strlen(res); idx++) {
             putchar(res[idx]);
         }
         putchar('\n');
 
-        res = realloc(res, 0);
         free(res);
         free(input);
     }
