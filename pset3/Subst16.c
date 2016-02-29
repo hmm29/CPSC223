@@ -283,6 +283,8 @@ int main(int argc, char *argv[])
                     free(input);
                     input = res;
                 }
+                free(res)
+                res = NULL;
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
@@ -290,10 +292,7 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
-        free(res);
         free(input);
-
-        res = NULL;
     }
 
         // free everything
