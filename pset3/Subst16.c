@@ -98,7 +98,7 @@ char *inputString(FILE* fp, size_t size){
     size_t len = 0;
     str = realloc(NULL, sizeof(*str)*size); // initial size from size arg
     if(!str) return str;
-    while(EOF!=(ch=fgetc(fp)) && ch != '\n'){
+    while(EOF!=(ch=fgetc(fp)) && ch != '\n' && getLine(fp) != NULL){
         str[len++]=ch;
         if(len==size){
             str = realloc(str, sizeof(*str)*(size+=16));
@@ -174,8 +174,16 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         strcpy(tmp, orig);
     }
     else if(flag == 'r') {
-        tmp = result = malloc(strlen(orig) + (len_to - len_from));
+        int len_tmp;
+
+        len_tmp = strlen(orig) + (len_to - len_from);
+        tmp = result = malloc(len_tmp);
         if (!result) return NULL;
+
+        // initialize tmp array
+        for(int i = 0; i < len_tmp; i++) {
+            tmp[i] = '\0';
+        }
 
         if(strlen(tmp) < strlen(orig)) {
             tmp = realloc(tmp, strlen(orig) + 1);
