@@ -123,7 +123,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
     strcpy(to_cpy, to);
     to_cpy[strlen(to)] = '\0';
 
-    int max_num_matches = orig/from;
+    int max_num_matches = strlen(orig)/strlen(from);
     char *matches[max_num_matches];
     memset(matches, 0, max_num_matches * sizeof(char*));
 
