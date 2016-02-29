@@ -296,6 +296,7 @@ int main(int argc, char *argv[])
             free(rules[r]);
         }
 
+        free(res);
         free(input);
     }
 
