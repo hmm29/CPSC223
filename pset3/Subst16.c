@@ -248,14 +248,6 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    //make sure to is not less than from
-    for(int p = 1; p < argc; p+=3) {
-        if(strlen(argv[p])  < strlen(argv[p+1])) // if from is less than to
-        {
-            exit(EXIT_FAILURE);
-        }
-    }
-
     // initialize rules array
     memset(rules, 0, numRules * sizeof(Ruleptr));
 
