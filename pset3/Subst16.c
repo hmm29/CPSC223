@@ -167,10 +167,11 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
+            to_cpy = matchArr[count];
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
-            tmp = strcpy(tmp, (const char *) matchArr[count]) + len_to;
+            tmp = strcpy(tmp, to_cpy) + len_to;
             orig += len_front + len_from; // move to next "end of from"
             printf("result at end is now %s because orig is %s\n", result, orig);
         }
