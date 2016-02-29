@@ -145,7 +145,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
                 len_to = strlen(to_cpy);
                 printf("to_cpy is now %s because to is %s\n", to_cpy, to);
                 matches[count] = to_cpy;
-                printf("Matches in count is now %s\n", matches[count]);
+                printf("Matches in count %d is now %s\n", count, matches[count]);
             }
 
             free(matched);
@@ -164,7 +164,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
-            to_cpy = *matches[0];
+            printf("count is now %d\n", count);
             ins = StrStr(orig, from);
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
