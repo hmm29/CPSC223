@@ -283,7 +283,7 @@ int main(int argc, char *argv[])
                     free(input);
                     input = res;
                 }
-                free(res)
+                free(res);
                 res = NULL;
             }
 
