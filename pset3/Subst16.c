@@ -248,9 +248,9 @@ int main(int argc, char *argv[])
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
             for(int i = 0; i < strlen(input); i++) {
+                if(res != NULL) free(res); // free the old res
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
-                    free(res);
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
                             j = currentRulePtr->onFailureRuleIndex;
@@ -265,10 +265,8 @@ int main(int argc, char *argv[])
                         break;
                     }
                 } else if(res) {
-                    input = realloc(input, strlen(res)+1);
-                    strcpy(input, res);
-                    input[strlen(res)] = '\0';
-                    free(res);
+                    input = res;
+                    free(input);
 
                     i = 0; // reset iterator
                     if(currentRulePtr->onSuccessRuleIndex < numRules && currentRulePtr->onSuccessRuleIndex > -1) {
