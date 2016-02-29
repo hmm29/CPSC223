@@ -237,7 +237,6 @@ int main(int argc, char *argv[])
 
             if(strlen(currentRulePtr->FROM) < strlen(currentRulePtr->TO)) {
                 break;
-                free(currentRulePtr);
                 exit(EXIT_FAILURE);
             }
         }
