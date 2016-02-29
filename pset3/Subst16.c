@@ -294,6 +294,7 @@ int main(int argc, char *argv[])
         }
         putchar('\n');
 
+        res = realloc(res, 0);
         free(res);
         free(input);
     }
