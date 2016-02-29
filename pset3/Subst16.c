@@ -248,8 +248,7 @@ int main(int argc, char *argv[])
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
             for(int i = 0; i < strlen(input); i++) {
-                if(res != NULL) free(res);
-                res = realloc(res, strlen(str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter));
+                res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
                 if (input && res && strcmp(input, res) == 0) {  // if no change
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
@@ -264,6 +263,7 @@ int main(int argc, char *argv[])
                     else {
                         break;
                     }
+                    free(res);
                 } else if(res) {
                     input = res;
 
@@ -284,6 +284,7 @@ int main(int argc, char *argv[])
                         //printf("BREAK ME SUCCESS\n");
                         break;
                     }
+                    free(res);
                 }
             }
 
