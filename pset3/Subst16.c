@@ -12,23 +12,42 @@ Description:
 #include "Subst16.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
+/* 
+ * StrStr: custom strstr to handle wildcard searches
+ * str: string to be searched
+ * target: target substring
+ *
+ * Returns a char array with pointer at index of first of occurrence of target in str
+ */
 char* StrStr(const char *str, const char *target) 
 {
   if (!*target) return NULL;
   char *p1 = (char*)str;
   while (*p1) {
-    char *p1Begin = p1, *p2 = (char*)target;
-    while (*p1 && *p2 && (*p1 == *p2 || *p2 == '.')) {  
+    char *p1_begin = p1, 
+    *p2 = (char*)target;
+    while (*p1 && *p2 && (*p1 == *p2 || *p2 == '.')) {
+      if(*p1 == '@' && *(p+1) == '.') {
+        p1+=2;
+      }  
       p1++;
       p2++;
     }
     if (!*p2)
-      return p1Begin;
-    p1 = p1Begin + 1;
+      return p1_begin;
+    p1 = p1_begin + 1;
   }
   return NULL;
 }
 
+/* 
+ * copylastn: copy n characters of src into the end of dest
+ * dest: string that will be copied into
+ * source: string to be copied
+ * n: number of characters to copy
+ *
+ * Returns a char array of the dest string with n chars of src copied into the end of it
+ */
 char *copylastn(char *dest, char *src,int n)
 {
     if (!src)
@@ -40,6 +59,11 @@ char *copylastn(char *dest, char *src,int n)
         return dest;
 }
 
+/* 
+ * parseFlags: parses flags argument of rule to get indices of next rules on success and failure
+ * flags: the flag argument of the rule
+ * ruleptr: a pointer to the current rule
+ */
 void parseFlags(char* flags, Ruleptr ruleptr)
 {
     if(flags[0] != '-') {
@@ -97,6 +121,12 @@ void parseFlags(char* flags, Ruleptr ruleptr)
 
 /* 
  * str_replace: finds a substring and replaces all `from` occurrences with `to` according to flag specifier
+ * orig: the string to filter
+ * from: the substring to be replaced
+ * to: the replacement string
+ * flag: specifies the filter to apply
+ * 
+ * Returns the filtered orig string
  */
 char *str_replace(char *orig, char *from, char *to, char flag) {
     char *result = NULL; /* the return string */
@@ -168,7 +198,7 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
             len_front = ins - orig;
             tmp = strncpy(tmp, orig, len_front) + len_front;
             tmp = strcpy(tmp, to_cpy) + len_to;
-            orig += len_front + len_from; // move to next "end of from"
+            orig += len_front + len_from;
             i++;
         }
         strcpy(tmp, orig);
@@ -283,14 +313,12 @@ int main(int argc, char *argv[])
                             j = currentRulePtr->onSuccessRuleIndex;
                             currentRulePtr = rules[j];
                         }
-                        //printf("New rule index success is %d and i is %d\n", j, i);
                     } 
                     // if no Sn or Fm rule specified, go to next rule if it exists
                     else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
                         currentRulePtr = rules[++j];
                     }
                     else {
-                        //printf("BREAK ME SUCCESS\n");
                         break;
                     }
                     free(input);
@@ -306,7 +334,7 @@ int main(int argc, char *argv[])
         free(res);
         free(input);
     }
-        // free everything
+    // free rules
     for(int r = 0; r < numRules; r++) {
         free(rules[r]);
     }

@@ -17,3 +17,5 @@ String function details are tough!
 Have to remember null terminators!
 Rescan function is a bit tricky!!! had to make function copylastn that copied remainder or string to be scanned to result variable.
 Debugging was difficult, did not understand Explode and crash tests?
+Major difficulties included the binary number parity check, and also handling fail cases as specified.
+Also was tricky using the caret replacement but managed to get it!!
