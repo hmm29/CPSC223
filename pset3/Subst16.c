@@ -145,10 +145,11 @@ char *str_replace(char *orig, char *from, char *to, char flag) {
         if (!result) return NULL;
 
         while (count--) {
-            if(strchr(to, '^')) {
                 matched = malloc(3 * sizeof(*matched));
                 matched = strncpy(matched, tmp, 2);
                 matched[2] = '\0';
+
+            if(strchr(to, '^')) {
                 to_cpy = to; // reset to_cpy
                 to_cpy = str_replace(to_cpy, "^", matched, 'q');
                 len_to = strlen(to_cpy);
