@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
                     } 
                     // if no Sn or Fm rule specified, go to next rule if it exists
                     else if(currentRulePtr->onFailureRuleIndex == -1 && j+1 < numRules) {
-                         currentRulePtr = rules[j+1];
+                         currentRulePtr = rules[++j];
                     }
                     else {
                         break;
@@ -308,7 +308,7 @@ int main(int argc, char *argv[])
                     } 
                     // if no Sn or Fm rule specified, go to next rule if it exists
                     else if(currentRulePtr->onSuccessRuleIndex == -1 && j+1 < numRules) {
-                        currentRulePtr = rules[j+1];
+                        currentRulePtr = rules[++j];
                     }
                     else {
                         break;
