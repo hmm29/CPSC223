@@ -282,8 +282,11 @@ int main(int argc, char *argv[])
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
             res = NULL;
 
-            for(int i = 0; i < strlen(input); i++) {
+	   j = 0;
+
+            for(int i = 0; i < strlen(input) || j < numRules; i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
+
                 if (input && res && strcmp(input, res) == 0) {  // if no change
                     if(currentRulePtr->onFailureRuleIndex < numRules && currentRulePtr->onFailureRuleIndex > -1) {
                         if(currentRulePtr->onFailureRuleIndex > -1) {
@@ -293,7 +296,8 @@ int main(int argc, char *argv[])
                     } 
                     // if no Sn or Fm rule specified, go to next rule if it exists
                     else if(currentRulePtr->onFailureRuleIndex == -1 && j+1 < numRules) {
-                         currentRulePtr = rules[++j];
+		        currentRulePtr = rules[++j];
+			free(res);
                     }
                     else {
                         break;
@@ -316,6 +320,7 @@ int main(int argc, char *argv[])
                     free(input);
                     input = res;
                 }
+
             }
 
         for(int idx = 0; res && idx < strlen(res); idx++) {
@@ -325,8 +330,6 @@ int main(int argc, char *argv[])
 
         free(res);
         free(input);
-
-        currentRulePtr = rules[0];
     }
     // free rules
     for(int r = 0; r < numRules; r++) {
