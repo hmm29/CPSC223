@@ -325,6 +325,8 @@ int main(int argc, char *argv[])
 
         free(res);
         free(input);
+
+        currentRulePtr = rules[0];
     }
     // free rules
     for(int r = 0; r < numRules; r++) {
