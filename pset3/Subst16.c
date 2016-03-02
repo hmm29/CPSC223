@@ -282,7 +282,7 @@ int main(int argc, char *argv[])
             if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
             res = NULL;
 
-	   j = 0;
+	       j = 0;
 
             for(int i = 0; i < strlen(input) || j < numRules; i++) {
                 res = str_replace(input, currentRulePtr->FROM, currentRulePtr->TO, currentRulePtr->filter);
