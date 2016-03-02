@@ -37,12 +37,11 @@ int main(int argc, char *argv[]) {
        processors = malloc(nProc * sizeof(int));
     } else {
         fprintf(stderr, "Usage: %s filename\nInvalid number of processors.", argv[0]);
-        exit(1);
+        exit(EXIT_FAILURE);
     }
 
    // set all elements in processor array to zero
-   int j;
-   for(j = 0; j < nProc; j++) {
+   for(int j = 0; j < nProc; j++) {
     processors[j] = 0;
    }
 
@@ -51,6 +50,11 @@ int main(int argc, char *argv[]) {
 
     taskCount = getTaskCount();
     flagCount = getFlagCount();
+
+    if(!(taskCount && flagsCount)) {
+        fprintf(stderr, "Usage: %s filename\nInvalid tasks or flags.");
+        exit(EXIT_FAILURE);
+    }
     
    //if no tasks or flags, then exit gracefully
     if(taskCount == 0 || flagCount == 0) {
@@ -59,15 +63,14 @@ int main(int argc, char *argv[]) {
 
     for(int i = 0; i < flagCount; i++) {
         maxWorkLoad = getMaxWorkLoad(processors, nProc, tasks, flags[i]);
-        printf("%-4s %d\n", flags[i], maxWorkLoad);
-        int j;
+        printf("%-3s %d\n", flags[i], maxWorkLoad);
 	
 	// must rest tasks if they have been sorted
         tasks = getTasks(argc, argv);
 	
 	// must reset processors to zero for each flag iteration
-        for(j = 0; j < nProc; j++) {
- 	   processors[j] = 0;
+        for(int j = 0; j < nProc; j++) {
+     	   processors[j] = 0;
         }
     }
 

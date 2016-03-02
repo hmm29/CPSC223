@@ -87,8 +87,14 @@ char **getFlags(int argc, char **argv) {
     // copy flags into flags array
     for (i = 3; i < argc && j < counter; i++) {
         if (isdigit(argv[i][0])) {
+            if(i > j) { // if there is a task between flags
+                break;
+                return NULL;
+            } else {
             continue;
-         } else {
+            }
+         }
+         else {
             flags[j] = argv[i];
             j++;
         }
