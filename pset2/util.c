@@ -87,14 +87,8 @@ char **getFlags(int argc, char **argv) {
     // copy flags into flags array
     for (i = 3; i < argc && j < counter; i++) {
         if (isdigit(argv[i][0])) {
-            if(i > j) { // if there is a task between flags
-                break;
-                return NULL;
-            } else {
             continue;
-            }
-         }
-         else {
+         } else {
             flags[j] = argv[i];
             j++;
         }
@@ -201,7 +195,7 @@ int leastWorkload(int *processors, int nProc, int *tasks) {
     int idx; /* index of least workload processor */
   
     for(i = 0; i < TASK_COUNT; i++) {
-        idx = getLeastWorkloadProcessorIndex(processors, nProc);
+        idx = getLeastWorkloadProcessorIndex(processors, nProc); // get index of least workload processor
         processors[idx] += tasks[i]; /* assign the task to the least workload processor */
     }
 

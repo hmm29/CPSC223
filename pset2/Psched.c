@@ -51,11 +51,11 @@ int main(int argc, char *argv[]) {
     taskCount = getTaskCount();
     flagCount = getFlagCount();
 
-    if(!(taskCount && flagsCount)) {
-        fprintf(stderr, "Usage: %s filename\nInvalid tasks or flags.");
+    if(!(taskCount && flagCount)) {
+        fprintf(stderr, "Usage: %s filename\nInvalid tasks or flags.", argv[0]);
         exit(EXIT_FAILURE);
     }
-    
+
    //if no tasks or flags, then exit gracefully
     if(taskCount == 0 || flagCount == 0) {
        return EXIT_SUCCESS;
