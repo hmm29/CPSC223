@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
 
     for(int i = 0; i < flagCount; i++) {
         maxWorkLoad = getMaxWorkLoad(processors, nProc, tasks, flags[i]);
-        printf("%-3s %d\n", flags[i], maxWorkLoad);
+        printf("%3s %d\n", flags[i], maxWorkLoad);
 	
 	// must rest tasks if they have been sorted
         tasks = getTasks(argc, argv);

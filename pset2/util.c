@@ -157,26 +157,7 @@ int getMaxWorkLoad(int *processors, int nProc, int *tasks, char *flag) {
  */
 
 int backtrackToOpt(int *processors, int nProc, int *tasks, int taskCount, int minMaxWorkload) {	
-	int idx = getMaxWorkloadProcessorIndex(processors,nProc);
-
-	if(processors[idx] < minMaxWorkload || minMaxWorkload == 0) {
-		minMaxWorkload = processors[idx];
-	}
-	
-	if(taskCount <= 0) {
-	   return minMaxWorkload;
-	}
-
-	int i;
-	for(i = 0; i <= taskCount; i++) {
-	  processors[nProc] = tasks[i];
-	
-	taskCount -= 1;
-	nProc -= 1;
-
-	minMaxWorkload = backtrackToOpt(processors, nProc, tasks, taskCount, minMaxWorkload);
-	}
-	return minMaxWorkload;
+	return 1;
 }
 
 /*
@@ -234,19 +215,19 @@ int leastWorkloadDecreasing(int *processors, int nProc, int *tasks) {
 int bestWorkload(int *processors, int nProc, int *tasks) {
     int i; /* index counter */
     int idx; /* index of least workload processor */
-    int currentMaxWorkload = 0;
+    int currentMaxWorkload = 0; /* current maximum workload */
 
     for(i = 0; i < TASK_COUNT; i++) {
         idx = getLeastWorkloadProcessorIndex(processors, nProc);
 
         if(processors[idx] + tasks[i] >= currentMaxWorkload) {
-            currentMaxWorkload = processors[idx] + tasks[i];
-	    processors[idx] += tasks[i];
+           currentMaxWorkload = processors[idx] + tasks[i];
+	       processors[idx] += tasks[i];
         }
-	else {
+	   else {
 	    int j;
 	    int busiestProcessorWorkloadThatMinimizesMaximum = processors[0];
-            for(j = 0; j < nProc; j++) {
+        for(j = 0; j < nProc; j++) {
 		if((processors[j] + tasks[i] <= currentMaxWorkload) && (busiestProcessorWorkloadThatMinimizesMaximum <= processors[j])) {
 			busiestProcessorWorkloadThatMinimizesMaximum = processors[j];
 			idx = j;
