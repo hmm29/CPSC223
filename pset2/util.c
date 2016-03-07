@@ -22,6 +22,7 @@ int *getTasks(int argc, char **argv) {
     int i = 0; /* argv index pointer */
     int j = 0; /* tasks index pointer */
     int counter = 0; /* task counter */
+    int *tasks; /* pointer to tasks array */
 
     /* start with index 2, because argv[0] has "Psched" and argv[1] has number of processors */
     for (i = 2; i < argc; i++) {
@@ -31,10 +32,18 @@ int *getTasks(int argc, char **argv) {
             break;
         }
     }
-   int *tasks = malloc(counter * sizeof(int));
 
     if(counter > 0) {
         TASK_COUNT = counter;
+    }
+
+   int arr[counter];
+   memset(arr, 0, counter*sizeof(int));
+
+   tasks = arr;
+
+   for(int i = 0; i < counter; i++) {
+        printf(" task is %d\n", tasks[i]);
     }
 
     // copy runtime values into tasks array
@@ -72,6 +81,7 @@ char **getFlags(int argc, char **argv) {
     int i = 0; /* argv index pointer */
     int j = 0; /* flags index pointer */
     int counter = 0; /* flag counter */
+    char **flags; /* flags array */
 
     for (i = 3; i < argc; i++) { /* start with index 2, because argv[0] has "Psched" and argv[1] has number of processors */
         if (isdigit(argv[i][0])) { /* if digit then skip */
@@ -81,8 +91,13 @@ char **getFlags(int argc, char **argv) {
         }
     }
 
-    char **flags = malloc(counter * sizeof(char*));
-    FLAG_COUNT = counter;
+    char* arr[counter];
+    memset(arr, '\0', counter * sizeof(char*)); 
+    flags = arr;
+    
+    if(counter > 0) {
+        FLAG_COUNT = counter;
+    }
 
     // copy flags into flags array
     for (i = 3; i < argc && j < counter; i++) {

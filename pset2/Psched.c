@@ -34,7 +34,10 @@ int main(int argc, char *argv[]) {
     // ensure that a valid number of processors provided
     if(argc >= 2 && atoi(argv[1]) > 0) {
        nProc = atoi(argv[1]);
-       processors = malloc(nProc * sizeof(int));
+       int arr[nProc];
+       memset(arr, 0, nProc);
+
+       processors = arr;
     } else {
         fprintf(stderr, "Usage: %s filename\nInvalid number of processors.", argv[0]);
         exit(EXIT_FAILURE);
@@ -51,8 +54,11 @@ int main(int argc, char *argv[]) {
     taskCount = getTaskCount();
     flagCount = getFlagCount();
 
+    for(int i = 0; i < flagCount; i++) {
+      printf(" flag is %s\n", flags[i]);
+    }
+
     if(!(taskCount && flagCount)) {
-        fprintf(stderr, "Usage: %s filename\nInvalid tasks or flags.", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -63,9 +69,10 @@ int main(int argc, char *argv[]) {
 
     for(int i = 0; i < flagCount; i++) {
         maxWorkLoad = getMaxWorkLoad(processors, nProc, tasks, flags[i]);
-        printf("%3s %d\n", flags[i], maxWorkLoad);
+        printf("%-4s %d\n", flags[i], maxWorkLoad);
 	
 	// must rest tasks if they have been sorted
+        tasks = NULL;
         tasks = getTasks(argc, argv);
 	
 	// must reset processors to zero for each flag iteration
