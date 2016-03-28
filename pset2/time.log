@@ -4,8 +4,8 @@ ESTIMATE of time to complete assignment: 6-8 hours
 Date    Started     Spent    Work Completed
 ----    -------     ----     --------------
 2/1     1:01PM      0:30     Read spec and create files for assignment
-2/1     10:29PM     2:24     Came up with top-down approach to program, figured out general algorithm for program scheduling, next will come up with algorithms for individual flags, updated Makefile	     
-2/19	9:50PM	    1:00     Figured out backtracking algorithm implementation and better understood bw and bwd assignments
+2/1     10:29PM     2:24     Came up with top-down approach to program, figured out general algorithm for program scheduling, next will come up with algorithms for individual flags, updated Makefile       
+2/19    9:50PM      1:00     Figured out backtracking algorithm implementation and better understood bw and bwd assignments
 2/20    12:01PM     2:00     Wrote function definitions for prototypes in util.h, paid keen attention to style rules
 2/22    9:45PM      3:00     Debugged lw, lwd, bw, bwd, and opt flags
 2/28	5:23PM	    1:10     Final touches to logic	 
