@@ -16,8 +16,63 @@
  * returns: value of maximum workload using this assignment method
  */
 
-int backtrackToOpt(int *processors, int nProc, int *tasks, int taskCount) {	
-	return 1;
+int backtrackToOpt(int nProc, int *tasks, int taskCount) {	
+  // sort workload by decreasing order in order to compute the intial upper bound using -lwd
+  int i;
+  int upperBound;
+  int lowerBound;
+  int sum;
+  int res;
+  int processors[nProc];
+
+  for (i = 0; i < nProc; i++)
+    processors[i] = 0;
+
+  quicksort(tasks, taskCount, "desc");
+  upperBound = leastWorkLoad(nProc, tasks, taskCount);
+
+  sum = arraySum(tasks, taskCount);
+
+  // @hmm: compute lower bound
+  lowerBound = sum/nProc + (sum % nProc != 0);
+  res = backtrack(lowerBound, upperBound, nProc, processors, taskCount, tasks, tasks, 0, 0);
+  return res;
+}
+
+int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int taskCount, int tasks[], int prevTasks[], int numTasksRemaining, int prevProcessorIdx) {
+    // @hmm: base case: if no more tasks left then return maxWorkLoad or the upper bound, which one is smaller
+  if (taskCount == 0) {
+    int largest = largestElement(processors, nProc);
+    return (largest < upperBound) ? largest : upperBound;
+  }
+
+  for (int j = 0; j < nProc; j++){
+    if (upperBound == lowerBound) {
+      return lowerBound;
+    }
+
+    processors[j] += tasks[numTasksRemaining];
+    if (j > 0 && (processors[j] - tasks[numTasksRemaining] == processors[j - 1])){
+      processors[j] -= tasks[numTasksRemaining];
+      continue;
+    }
+    else if (processors[j] >= upperBound){
+      processors[j] -= tasks[numTasksRemaining];
+      continue;
+    }
+    else if ((j > 0) && (prevTasks[numTasksRemaining - 1] == tasks[numTasksRemaining]) && j < prevProcessorIdx){
+      processors[j] -= tasks[numTasksRemaining];
+      continue;
+    }
+    else {
+      int backtrackLower = backtrack(lowerBound, upperBound, nProc, processors, taskCount-1, tasks, prevTasks, numTasksRemaining + 1, j);
+      if (backtrackLower < upperBound)
+        upperBound = backtrackLower;
+    }
+    // @hmm: remove task from the current processor[index]
+    processors[j] -= tasks[numTasksRemaining];
+  }
+  return upperBound;
 }
 
 /*
@@ -32,7 +87,7 @@ int backtrackToOpt(int *processors, int nProc, int *tasks, int taskCount) {
  * returns: value of maximum workload using this assignment method
  */
 
-int leastWorkload(int *processors, int nProc, int *tasks, int taskCount) {
+int leastWorkload(int nProc, int *tasks, int taskCount) {
     int idx = 0; /* index of least workload processor */
   
     for(int i = 0; i < taskCount; i++) {
@@ -58,23 +113,23 @@ int leastWorkload(int *processors, int nProc, int *tasks, int taskCount) {
  *
  * returns: value of maximum workload using this assignment method
  */
-int bestWorkload(int *processors, int nProc, int *tasks, int taskCount) {
+int bestWorkload(int nProc, int *tasks, int taskCount) {
     int i; /* index counter */
     int idx; /* index of least workload processor */
     int busiestProcessorWorkloadThatMinimizesMaximum; /* busiest proc for which adding task minimizes max workload */
-    int currentMaxWorkload = 0; /* current maximum workload */
+    int currMaxWorkload = 0; /* current maximum workload */
 
     for(i = 0; i < taskCount; i++) {
         idx = getLeastWorkloadProcessorIndex(processors, nProc);
 
-        if(processors[idx] + tasks[i] >= currentMaxWorkload) {
-           currentMaxWorkload = processors[idx] + tasks[i];
+        if(processors[idx] + tasks[i] >= currMaxWorkload) {
+           currMaxWorkload = processors[idx] + tasks[i];
 	       processors[idx] += tasks[i];
         }
 	   else {
 	    busiestProcessorWorkloadThatMinimizesMaximum = processors[0];
         for(int j = 0; j < nProc; j++) {
-		if((processors[j] + tasks[i] <= currentMaxWorkload) && (busiestProcessorWorkloadThatMinimizesMaximum <= processors[j])) {
+		if((processors[j] + tasks[i] <= currMaxWorkload) && (busiestProcessorWorkloadThatMinimizesMaximum <= processors[j])) {
 			busiestProcessorWorkloadThatMinimizesMaximum = processors[j];
 			idx = j;
 		} 
@@ -151,7 +206,7 @@ int* quicksort(int *tasks, int taskCount, char *order) {
  * returns: the index of the processor with the least workload
  */
 
-int getLeastWorkloadProcessorIndex(int *processors, int nProc) {
+int getLeastWorkloadProcessorIndex(int processors[], int nProc) {
     int i;
     int idx = 0;
     int minimum = processors[0];
@@ -167,7 +222,7 @@ int getLeastWorkloadProcessorIndex(int *processors, int nProc) {
     return idx;
 }
 
-int getMaxWorkloadProcessorIndex(int *processors, int nProc) {
+int getMaxWorkloadProcessorIndex(int processors[], int nProc) {
  	int i;
 	int idx = 0;
 	int maximum = processors[0];
@@ -178,7 +233,40 @@ int getMaxWorkloadProcessorIndex(int *processors, int nProc) {
 	      idx = i;
 	  }
   	}
- 
 	return idx;
 }
+
+
+int largestElement(int arr[], int size){
+  int currMax;
+  currMax = 0;
+  for (int i = 0; i < size; i++){
+    if (array[i] > currMax)
+      currMax = array[i];
+  }
+  return currMax;
+}
+
+// Function that returns largest element in an array that is smaller than a given value
+int largestElementLessThan(int arr[], int size, int upperVal){
+  int currMax, maxIndex;
+  currMax = 0;
+  for (int i = 0; i < size; i++){
+    if (arr[i] > currMax && arr[i] <= upperVal){
+      currMax = arr[i];
+      maxIndex = i;
+    }
+  }
+  return maxIndex;
+}
+
+// Function that returns sum of all elements in an array
+int arraySum(int arr[], int size){
+  int i, sum;
+  sum = 0;
+  for (i = 0; i < size; i++)
+    sum += arr[i];
+  return sum;
+}
+
 

@@ -39,59 +39,61 @@ int main(int argc, char *argv[]){
   // main for loop to do this
   for (int i = 1; i < argc; i++){
 
-    arg = atoi(argv[i]);
+      arg = atoi(argv[i]);
+      
+      if (i == 1 && arg > 0)
+        nProc = atoi(argv[1]);
+      else if (i == 1){
+        printf("Usage: %s filename\nInvalid number of processors.", argv[0]);
+        return EXIT_FAILURE;
+      }
+      else if (arg < 0){
+        printf("Usage: %s filename\nArguments must be non-negative.", argv[0]);
+        return EXIT_FAILURE;
+      }
+      else if (arg > 0 && !isFlag){
+        tasks[i-2] = arg;
+        sortedTasks[i-2] = arg;
+        taskCount++;
+      }
     
-    if (i == 1 && arg > 0)
-      nProc = atoi(argv[1]);
-    else if (i == 1){
-      printf("Usage: %s filename\nInvalid number of processors.", argv[0]);
-      return EXIT_FAILURE;
-    }
-    else if (arg < 0){
-      printf("Usage: %s filename\nArguments must be non-negative.", argv[0]);
-      return EXIT_FAILURE;
-    }
-    else if (arg > 0 && !isFlag){
-      tasks[i-2] = arg;
-      sortedTasks[i-2] = arg;
-      taskCount++;
-    }
-  
-    if (strcmp(argv[i], "-opt") == 0){
-      isFlag = true;
-      maxWorkLoad = backtrackToOpt(nProc, taskCount, tasks);
-      printf("-opt %d\n", maxWorkLoad);
+      if (strcmp(argv[i], "-opt") == 0){
+        isFlag = true;
+        maxWorkLoad = backtrackToOpt(nProc, tasks, taskCount);
+        printf("-opt %d\n", maxWorkLoad);
+      }
+
+      else if (strcmp(argv[i], "-lw") == 0){
+        isFlag = true;
+        maxWorkLoad = leastWorkLoad(nProc, tasks, taskCount);
+        printf("-lw  %d\n", maxWorkLoad);
+      }
+
+      else if (strcmp(argv[i], "-lwd") == 0){
+        isFlag = true;
+        quicksort(sortedTasks, taskCount, "desc");
+        maxWorkLoad = leastWorkLoad(nProc, sortedTasks, taskCount);
+        printf("-lwd %d\n", maxWorkLoad);
+      }
+
+      else if (strcmp(argv[i], "-bw") == 0){
+        isFlag = true;
+        maxWorkLoad = bestWorkLoad(nProc, tasks, taskCount);
+        printf("-bw  %d\n", maxWorkLoad);
+      }
+
+      else if (strcmp(argv[i], "-bwd") == 0){
+        isFlag = true;
+        quicksort(sortedTasks, taskCount, "desc");
+        maxWorkLoad = bestWorkLoad(nProc, sortedTasks, taskCount);
+        printf("-bwd %d\n", maxWorkLoad);
+      }
+
+      else {
+        printf("Usage: %s filename\nInvalid flag(s). Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
+        return EXIT_FAILURE;
+      }
     }
 
-    else if (strcmp(argv[i], "-lw") == 0){
-      isFlag = true;
-      maxWorkLoad = leastWorkLoad(nProc, taskCount, tasks);
-      printf("-lw  %d\n", maxWorkLoad);
-    }
-
-    else if (strcmp(argv[i], "-lwd") == 0){
-      isFlag = true;
-      quicksort(sortedTasks, taskCount, "desc");
-      maxWorkLoad = leastWorkLoad(nProc, taskCount, sortedTasks);
-      printf("-lwd %d\n", maxWorkLoad);
-    }
-
-    else if (strcmp(argv[i], "-bw") == 0){
-      isFlag = true;
-      maxWorkLoad = bestWorkLoad(nProc, taskCount, tasks);
-      printf("-bw  %d\n", maxWorkLoad);
-    }
-
-    else if (strcmp(argv[i], "-bwd") == 0){
-      isFlag = true;
-      quicksort(sortedTasks, taskCount, "desc");
-      maxWorkLoad = bestWorkLoad(nProc, taskCount, sortedTasks);
-      printf("-bwd %d\n", maxWorkLoad);
-    }
-    
-    else {
-      printf("Usage: %s filename\nInvalid flag(s). Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
-      return EXIT_FAILURE;
-    }
-    }
+    return EXIT_SUCCESS;
   }
