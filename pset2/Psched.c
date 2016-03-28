@@ -8,9 +8,7 @@ Name: Harrison Miller, hmm29
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
 #include <stdbool.h>
-#include <ctype.h>
 #include "util.h"
 
 int main(int argc, char *argv[]){
@@ -86,7 +84,7 @@ int main(int argc, char *argv[]){
       printf("-bwd %d\n", maxWorkLoad);
     }
     else {
-      printf("Usage: %s filename\nInvalid flag. Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
+      printf("Usage: %s filename\nInvalid flag(s). Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
       return EXIT_FAILURE;
     }
     }
