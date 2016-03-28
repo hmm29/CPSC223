@@ -4,123 +4,58 @@
 #include <ctype.h>
 #include "util.h"
 
-static int TASK_COUNT = 0;
-static int FLAG_COUNT = 0;
-
 /*
- * Function: getTasks
+ * Function: getTaskCount
  * ------------------
- * Generates array of tasks with task runtime arguments passed to program
+ * Counts number of task args
  *
  * argc: number of command-line arguments
  * argv: array of command-line arguments
  *
- * returns: an integer array of the task runtimes in order
+ * returns: task count
  */
 
-int *getTasks(int argc, char **argv) {
-    int i = 0; /* argv index pointer */
-    int j = 0; /* tasks index pointer */
-    int counter = 0; /* task counter */
-    int *tasks; /* pointer to tasks array */
+int getTaskCount(int argc, char **argv) {
+    int taskCount = 0; /* task count */
 
-    /* start with index 2, because argv[0] has "Psched" and argv[1] has number of processors */
-    for (i = 2; i < argc; i++) {
+    // count number of integers after first 2 args
+    for (int i = 2; i < argc; i++) {
         if (isdigit(argv[i][0])) {
-            counter++;
+            taskCount++;
         } else {
             break;
         }
     }
-
-    if(counter > 0) {
-        TASK_COUNT = counter;
-    }
-
-   int arr[counter];
-   memset(arr, 0, counter*sizeof(int));
-
-   tasks = arr;
-
-   for(int i = 0; i < counter; i++) {
-        printf(" task is %d\n", tasks[i]);
-    }
-
-    // copy runtime values into tasks array
-    for (i = 2; i < argc && j < counter; i++) {
-        tasks[j] = atoi(argv[i]);
-        j++;
-    }
    
-    return tasks;
-}
-
-/*
- * Function: getTaskCount
- * ------------------------
- * Gets number of tasks typed in
- *
- * returns: number of tasks
- */
-int getTaskCount() {
-    return TASK_COUNT;
-}
-
-/*
- * Function: getFlags
- * ------------------
- * Generates array of flags with flag arguments passed to program
- *
- * argc: number of command-line arguments
- * argv: array of command-line arguments
- *
- * returns: an array of flag strings
- */
-
-char **getFlags(int argc, char **argv) {
-    int i = 0; /* argv index pointer */
-    int j = 0; /* flags index pointer */
-    int counter = 0; /* flag counter */
-    char **flags; /* flags array */
-
-    for (i = 3; i < argc; i++) { /* start with index 2, because argv[0] has "Psched" and argv[1] has number of processors */
-        if (isdigit(argv[i][0])) { /* if digit then skip */
-            continue;
-        } else {
-            counter++;
-        }
-    }
-
-    char* arr[counter];
-    memset(arr, '\0', counter * sizeof(char*)); 
-    flags = arr;
-    
-    if(counter > 0) {
-        FLAG_COUNT = counter;
-    }
-
-    // copy flags into flags array
-    for (i = 3; i < argc && j < counter; i++) {
-        if (isdigit(argv[i][0])) {
-            continue;
-         } else {
-            flags[j] = argv[i];
-            j++;
-        }
-     }
-
-    return flags;
+    return taskCount;
 }
 
 /*
  * Function: getFlagCount
- * ------------------------
- * Gets number of flags typed in
+ * ------------------
+ * Counts number of flag args
  *
- * returns: number of flags
+ * argc: number of command-line arguments
+ * argv: array of command-line arguments
+ * taskCount: number of task arguments to determine start idx for count
+ *
+ * returns: flag count
  */
-int getFlagCount() {
-    return FLAG_COUNT;
+
+int getFlagCount(int argc, char **argv, int taskCount) {
+    int flagCount = 0;
+
+    //start with first arg after tasks at idx 2 + taskCount
+    for (int i = 2 + taskCount; i < argc; i++) {
+        // skip if is digit
+        if (isdigit(argv[i][0])) {
+            continue;
+        } else {
+            flagCount++;
+        }
+    }
+
+    return flagCount;
 }
 
 /*
@@ -130,30 +65,31 @@ int getFlagCount() {
  *
  * processors: array of processors
  * tasks: array of task runtimes
+ * taskCount: number of task runtimes
  * flag: assignment method specification
  *
  * returns: value of maximum workload using assignment method
  */
 
-int getMaxWorkLoad(int *processors, int nProc, int *tasks, char *flag) {
+int getMaxWorkLoad(int *processors, int nProc, int *tasks, int taskCount, char *flag) {
     if (strcmp(flag, "-opt") == 0) {
-        return backtrackToOpt(processors, nProc, tasks, TASK_COUNT, 0);
+        return backtrackToOpt(processors, nProc, tasks, taskCount);
     }
 
     if (strcmp(flag, "-lw") == 0) {
-        return leastWorkload(processors, nProc, tasks);
+        return leastWorkload(processors, nProc, tasks, taskCount);
     }
 
     if (strcmp(flag, "-lwd") == 0) {
-        return leastWorkloadDecreasing(processors, nProc, tasks);
+        return leastWorkloadDecreasing(processors, nProc, tasks, taskCount);
     }
 
     if (strcmp(flag, "-bw") == 0) {
-        return bestWorkload(processors, nProc, tasks);
+        return bestWorkload(processors, nProc, tasks, taskCount);
     }
 
     if (strcmp(flag, "-bwd") == 0) {
-        return bestWorkloadDecreasing(processors, nProc, tasks);
+        return bestWorkloadDecreasing(processors, nProc, tasks, taskCount);
     }
 
    return -1;
@@ -167,11 +103,12 @@ int getMaxWorkLoad(int *processors, int nProc, int *tasks, char *flag) {
  *
  * processors: array of processors
  * tasks: array of task runtimes
+ * taskCount: number of task runtimes
  *
  * returns: value of maximum workload using this assignment method
  */
 
-int backtrackToOpt(int *processors, int nProc, int *tasks, int taskCount, int minMaxWorkload) {	
+int backtrackToOpt(int *processors, int nProc, int *tasks, int taskCount) {	
 	return 1;
 }
 
@@ -182,20 +119,21 @@ int backtrackToOpt(int *processors, int nProc, int *tasks, int taskCount, int mi
  *
  * processors: array of processors
  * tasks: array of task runtimes
+ * taskCount: number of task runtimes
  *
  * returns: value of maximum workload using this assignment method
  */
 
-int leastWorkload(int *processors, int nProc, int *tasks) {
-    int i; /* index counter */
-    int idx; /* index of least workload processor */
+int leastWorkload(int *processors, int nProc, int *tasks, int taskCount) {
+    int idx = 0; /* index of least workload processor */
   
-    for(i = 0; i < TASK_COUNT; i++) {
+    for(int i = 0; i < taskCount; i++) {
         idx = getLeastWorkloadProcessorIndex(processors, nProc); // get index of least workload processor
         processors[idx] += tasks[i]; /* assign the task to the least workload processor */
     }
 
     idx = getMaxWorkloadProcessorIndex(processors, nProc);
+    // printf("at index %d the val is %d hahah\n", idx, processors[idx]);
     return processors[idx];
 }
 
@@ -206,13 +144,14 @@ int leastWorkload(int *processors, int nProc, int *tasks) {
  *
  * processors: array of processors
  * tasks: array of task runtimes
+ * taskCount: number of task runtimes
  *
  * returns: value of maximum workload using this assignment method
  */
 
-int leastWorkloadDecreasing(int *processors, int nProc, int *tasks) {
-    int *sortedTasksDecreasing = quicksort(tasks);
-    return leastWorkload(processors, nProc, sortedTasksDecreasing);
+int leastWorkloadDecreasing(int *processors, int nProc, int *tasks, int taskCount) {
+    int *sortedTasksDecreasing = quicksort(tasks, taskCount);
+    return leastWorkload(processors, nProc, sortedTasksDecreasing, taskCount);
 }
 
 /*
@@ -222,17 +161,19 @@ int leastWorkloadDecreasing(int *processors, int nProc, int *tasks) {
  * would not increase the maximum workload
  *
  * processors: array of processors
+ * nProc: number of processors
  * tasks: array of task runtimes
+ * taskCount: number of task runtimes
  *
  * returns: value of maximum workload using this assignment method
  */
-
-int bestWorkload(int *processors, int nProc, int *tasks) {
+int bestWorkload(int *processors, int nProc, int *tasks, int taskCount) {
     int i; /* index counter */
     int idx; /* index of least workload processor */
+    int busiestProcessorWorkloadThatMinimizesMaximum; /* busiest proc for which adding task minimizes max workload */
     int currentMaxWorkload = 0; /* current maximum workload */
 
-    for(i = 0; i < TASK_COUNT; i++) {
+    for(i = 0; i < taskCount; i++) {
         idx = getLeastWorkloadProcessorIndex(processors, nProc);
 
         if(processors[idx] + tasks[i] >= currentMaxWorkload) {
@@ -240,9 +181,8 @@ int bestWorkload(int *processors, int nProc, int *tasks) {
 	       processors[idx] += tasks[i];
         }
 	   else {
-	    int j;
-	    int busiestProcessorWorkloadThatMinimizesMaximum = processors[0];
-        for(j = 0; j < nProc; j++) {
+	    busiestProcessorWorkloadThatMinimizesMaximum = processors[0];
+        for(int j = 0; j < nProc; j++) {
 		if((processors[j] + tasks[i] <= currentMaxWorkload) && (busiestProcessorWorkloadThatMinimizesMaximum <= processors[j])) {
 			busiestProcessorWorkloadThatMinimizesMaximum = processors[j];
 			idx = j;
@@ -267,9 +207,9 @@ int bestWorkload(int *processors, int nProc, int *tasks) {
  * returns: value of maximum workload using this assignment method
  */
 
-int bestWorkloadDecreasing(int *processors, int nProc, int *tasks) {
-    int *sortedTasksDecreasing = quicksort(tasks);
-    return bestWorkload(processors, nProc, sortedTasksDecreasing);
+int bestWorkloadDecreasing(int *processors, int nProc, int *tasks, int taskCount) {
+    int *sortedTasksDecreasing = quicksort(tasks, taskCount);
+    return bestWorkload(processors, nProc, sortedTasksDecreasing, taskCount);
 }
 
 /*
@@ -299,8 +239,8 @@ int comparatorFn (const void *a, const void *b)
  * returns: the sorted input array, with elements in order specified by order argument
  */
 
-int* quicksort(int *tasks) {
-    qsort(tasks, TASK_COUNT, sizeof(int), comparatorFn);
+int* quicksort(int *tasks, int taskCount) {
+    qsort(tasks, taskCount, sizeof(int), comparatorFn);
     return tasks;
 }
 

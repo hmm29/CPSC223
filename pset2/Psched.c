@@ -1,4 +1,3 @@
-
 /*
 File: Psched.c
 Description: This file contains a program for processor scheduling that performs various assignments of
@@ -9,78 +8,86 @@ Name: Harrison Miller, hmm29
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include <stdbool.h>
+#include <ctype.h>
 #include "util.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]){
 
-    static int nProc; /* number of processors */
-    static int maxWorkLoad; /* maximum workload among processors */
-    static int *processors; /* array of processors */
-    static int *tasks; /* array of tasks */
-    static char **flags; /* array of flag strings */
-    static int flagCount; /* number of flags */
-    static int taskCount; /* number of tasks */
+  int arg;
+  int nProc;
+  int taskCount;
+  bool isFlag; 
+  int maxWorkLoad;
+  int tasks[argc];
+  int sortedTasks[argc];
 
-    // check for the valid argument count
-    if(argc < 2) {
-        fprintf(stderr, "Usage: %d filename\nInvalid number of arguments: %s", argc, argv[0]);
-        exit(1);
-    }
+  taskCount = 0;
+  isFlag = false;
 
-    if(argc == 2) {
-      return EXIT_SUCCESS;
-     }
-    
-    // ensure that a valid number of processors provided
-    if(argc >= 2 && atoi(argv[1]) > 0) {
-       nProc = atoi(argv[1]);
-       int arr[nProc];
-       memset(arr, 0, nProc);
+  // @hmm: check for the valid argument count
+  if(argc < 2) {
+      printf("Usage: %d filename\nInvalid number of arguments: %s", argc, argv[0]);
+      exit(EXIT_FAILURE);
+  }
 
-       processors = arr;
-    } else {
-        fprintf(stderr, "Usage: %s filename\nInvalid number of processors.", argv[0]);
-        exit(EXIT_FAILURE);
-    }
-
-   // set all elements in processor array to zero
-   for(int j = 0; j < nProc; j++) {
-    processors[j] = 0;
+  // @hmm: if no tasks AND no flags, exit gracefully
+  if(argc == 2) {
+    return EXIT_SUCCESS;
    }
 
-   tasks = getTasks(argc, argv);       /* get an array of tasks based on taskRuntime inputs */
-   flags =  getFlags(argc, argv);       /* get array of flags based on flag input */
+  // @hmm: process the arguments, starting at idx 1
+  for (int i = 1; i < argc; i++){
 
-    taskCount = getTaskCount();
-    flagCount = getFlagCount();
-
-    for(int i = 0; i < flagCount; i++) {
-      printf(" flag is %s\n", flags[i]);
+    arg = atoi(argv[i]);
+    
+    if (i == 1 && arg > 0)
+      nProc = atoi(argv[1]);
+    else if (i == 1){
+      printf("Usage: %s filename\nInvalid number of processors.", argv[0]);
+      return EXIT_FAILURE;
     }
-
-    if(!(taskCount && flagCount)) {
-        exit(EXIT_FAILURE);
+    else if (arg < 0){
+      printf("Usage: %s filename\nArguments must be non-negative.", argv[0]);
+      return EXIT_FAILURE;
     }
-
-   //if no tasks or flags, then exit gracefully
-    if(taskCount == 0 || flagCount == 0) {
-       return EXIT_SUCCESS;
+    else if (arg > 0 && !isFlag){
+      tasks[i-2] = arg;
+      sortedTasks[i-2] = arg;
+      taskCount++;
     }
-
-    for(int i = 0; i < flagCount; i++) {
-        maxWorkLoad = getMaxWorkLoad(processors, nProc, tasks, flags[i]);
-        printf("%-4s %d\n", flags[i], maxWorkLoad);
-	
-	// must rest tasks if they have been sorted
-        tasks = NULL;
-        tasks = getTasks(argc, argv);
-	
-	// must reset processors to zero for each flag iteration
-        for(int j = 0; j < nProc; j++) {
-     	   processors[j] = 0;
-        }
+  
+    if (strcmp(argv[i], "-opt") == 0){
+      isFlag = true;
+      maxWorkLoad = backtrackToOpt(nProc, taskCount, tasks);
+      printf("-opt %d\n", maxWorkLoad);
     }
-
-    return EXIT_SUCCESS;
-}
-
+    else if (strcmp(argv[i], "-lw") == 0){
+      isFlag = true;
+      maxWorkLoad = leastWorkLoad(nProc, taskCount, tasks);
+      printf("-lw  %d\n", maxWorkLoad);
+    }
+    else if (strcmp(argv[i], "-lwd") == 0){
+      isFlag = true;
+      quicksort(sortedTasks, taskCount, "desc");
+      maxWorkLoad = leastWorkLoad(nProc, taskCount, sortedTasks);
+      printf("-lwd %d\n", maxWorkLoad);
+    }
+    else if (strcmp(argv[i], "-bw") == 0){
+      isFlag = true;
+      maxWorkLoad = bestWorkLoad(nProc, taskCount, tasks);
+      printf("-bw  %d\n", maxWorkLoad);
+    }
+    else if (strcmp(argv[i], "-bwd") == 0){
+      isFlag = true;
+      quicksort(sortedTasks, taskCount, "desc");
+      maxWorkLoad = bestWorkLoad(nProc, taskCount, sortedTasks);
+      printf("-bwd %d\n", maxWorkLoad);
+    }
+    else {
+      printf("Usage: %s filename\nInvalid flag. Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
+      return EXIT_FAILURE;
+    }
+    }
+  }
