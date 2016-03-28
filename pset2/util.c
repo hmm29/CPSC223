@@ -7,17 +7,17 @@
 /*
  * Function: backtrackToOpt
  * ------------------------
- * Uses backtracking to find an assignment that minimizes maximum workload among processors
+ * Uses backtracking to find an assignment that minimizes maximum WorkLoad among processors
  *
  * processors: array of processors
  * tasks: array of task runtimes
  * taskCount: number of task runtimes
  *
- * returns: value of maximum workload using this assignment method
+ * returns: value of maximum WorkLoad using this assignment method
  */
 
 int backtrackToOpt(int nProc, int *tasks, int taskCount) {	
-  // sort workload by decreasing order in order to compute the intial upper bound using -lwd
+  // sort WorkLoad by decreasing order in order to compute the intial upper bound using -lwd
   int i;
   int upperBound;
   int lowerBound;
@@ -76,61 +76,68 @@ int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int t
 }
 
 /*
- * Function: leastWorkload
+ * Function: leastWorkLoad
  * -----------------------
- * assigns tasks in order they appear, greedily choosing processor with least workload
+ * assigns tasks in order they appear, greedily choosing processor with least WorkLoad
  *
  * processors: array of processors
  * tasks: array of task runtimes
  * taskCount: number of task runtimes
  *
- * returns: value of maximum workload using this assignment method
+ * returns: value of maximum WorkLoad using this assignment method
  */
 
-int leastWorkload(int nProc, int *tasks, int taskCount) {
-    int idx = 0; /* index of least workload processor */
-  
+int leastWorkLoad(int nProc, int *tasks, int taskCount) {  
+    int processors[nProc];
+
+    for (i = 0; i < nProc; i++)
+    processors[i] = 0;
+
     for(int i = 0; i < taskCount; i++) {
-        idx = getLeastWorkloadProcessorIndex(processors, nProc); // get index of least workload processor
-        processors[idx] += tasks[i]; /* assign the task to the least workload processor */
+        idx = getLeastWorkLoadProcessorIndex(processors, nProc); // get index of least WorkLoad processor
+        processors[idx] += tasks[i]; /* assign the task to the least WorkLoad processor */
     }
 
-    idx = getMaxWorkloadProcessorIndex(processors, nProc);
+    idx = getMaxWorkLoadProcessorIndex(processors, nProc);
     // printf("at index %d the val is %d hahah\n", idx, processors[idx]);
     return processors[idx];
 }
 
 /*
- * Function: bestWorkload
+ * Function: bestWorkLoad
  * ----------------------
  * assign tasks in order they appear, greedily choosing busiest processor for which the assignment
- * would not increase the maximum workload
+ * would not increase the maximum WorkLoad
  *
  * processors: array of processors
  * nProc: number of processors
  * tasks: array of task runtimes
  * taskCount: number of task runtimes
  *
- * returns: value of maximum workload using this assignment method
+ * returns: value of maximum WorkLoad using this assignment method
  */
-int bestWorkload(int nProc, int *tasks, int taskCount) {
+int bestWorkLoad(int nProc, int *tasks, int taskCount) {
     int i; /* index counter */
-    int idx; /* index of least workload processor */
-    int busiestProcessorWorkloadThatMinimizesMaximum; /* busiest proc for which adding task minimizes max workload */
-    int currMaxWorkload = 0; /* current maximum workload */
+    int idx; /* index of least WorkLoad processor */
+    int busiestProcessorWorkLoadThatMinimizesMaximum; /* busiest proc for which adding task minimizes max WorkLoad */
+    int currMaxWorkLoad = 0; /* current maximum WorkLoad */
+    int processors[nProc];
+
+    for (i = 0; i < nProc; i++)
+    processors[i] = 0;
 
     for(i = 0; i < taskCount; i++) {
-        idx = getLeastWorkloadProcessorIndex(processors, nProc);
+        idx = getLeastWorkLoadProcessorIndex(processors, nProc);
 
-        if(processors[idx] + tasks[i] >= currMaxWorkload) {
-           currMaxWorkload = processors[idx] + tasks[i];
+        if(processors[idx] + tasks[i] >= currMaxWorkLoad) {
+           currMaxWorkLoad = processors[idx] + tasks[i];
 	       processors[idx] += tasks[i];
         }
 	   else {
-	    busiestProcessorWorkloadThatMinimizesMaximum = processors[0];
+	    busiestProcessorWorkLoadThatMinimizesMaximum = processors[0];
         for(int j = 0; j < nProc; j++) {
-		if((processors[j] + tasks[i] <= currMaxWorkload) && (busiestProcessorWorkloadThatMinimizesMaximum <= processors[j])) {
-			busiestProcessorWorkloadThatMinimizesMaximum = processors[j];
+		if((processors[j] + tasks[i] <= currMaxWorkLoad) && (busiestProcessorWorkLoadThatMinimizesMaximum <= processors[j])) {
+			busiestProcessorWorkLoadThatMinimizesMaximum = processors[j];
 			idx = j;
 		} 
 	    }
@@ -138,7 +145,7 @@ int bestWorkload(int nProc, int *tasks, int taskCount) {
         }
     }
 
-    idx = getMaxWorkloadProcessorIndex(processors, nProc);
+    idx = getMaxWorkLoadProcessorIndex(processors, nProc);
     return processors[idx];
 }
 
@@ -191,22 +198,22 @@ int* quicksort(int *tasks, int taskCount, char *order) {
     } else if (strcmp(order, "asc") == 0) {
             qsort(tasks, taskCount, sizeof(int), comparatorFnAsc);
     } else {
-        printf("Usage: %s filename\nInvalid flag(s). Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
+        printf("Invalid order scheme in quicksort.");
     }
     return tasks;
 }
 
 /*
- * Function: getLeastWorkloadProcessorIndex
+ * Function: getLeastWorkLoadProcessorIndex
  * ----------------------------------------
- * get index of processor with lowest workload
+ * get index of processor with lowest WorkLoad
  *
- * processors: array of processors, whos workloads are int values
+ * processors: array of processors, whos WorkLoads are int values
  *
- * returns: the index of the processor with the least workload
+ * returns: the index of the processor with the least WorkLoad
  */
 
-int getLeastWorkloadProcessorIndex(int processors[], int nProc) {
+int getLeastWorkLoadProcessorIndex(int processors[], int nProc) {
     int i;
     int idx = 0;
     int minimum = processors[0];
@@ -222,7 +229,7 @@ int getLeastWorkloadProcessorIndex(int processors[], int nProc) {
     return idx;
 }
 
-int getMaxWorkloadProcessorIndex(int processors[], int nProc) {
+int getMaxWorkLoadProcessorIndex(int processors[], int nProc) {
  	int i;
 	int idx = 0;
 	int maximum = processors[0];
