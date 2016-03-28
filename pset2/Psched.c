@@ -13,13 +13,13 @@ Name: Harrison Miller, hmm29
 
 int main(int argc, char *argv[]){
 
-  int arg;
-  int nProc;
-  int taskCount;
-  bool isFlag; 
-  int maxWorkLoad;
-  int tasks[argc];
-  int sortedTasks[argc];
+  int arg; /* current argument */
+  int nProc; /* num of processors */
+  int taskCount; /* num of tasks */
+  bool isFlag; /* marker for whether arg is flag or not */
+  int maxWorkLoad; /* maxWorkLoad for an assignment method */
+  int tasks[argc]; /* store tasks in this array */
+  int sortedTasks[argc]; /* another array to store sorted tasks */
 
   taskCount = 0;
   isFlag = false;
@@ -36,6 +36,7 @@ int main(int argc, char *argv[]){
    }
 
   // @hmm: process the arguments, starting at idx 1
+  // main for loop to do this
   for (int i = 1; i < argc; i++){
 
     arg = atoi(argv[i]);
@@ -61,28 +62,33 @@ int main(int argc, char *argv[]){
       maxWorkLoad = backtrackToOpt(nProc, taskCount, tasks);
       printf("-opt %d\n", maxWorkLoad);
     }
+
     else if (strcmp(argv[i], "-lw") == 0){
       isFlag = true;
       maxWorkLoad = leastWorkLoad(nProc, taskCount, tasks);
       printf("-lw  %d\n", maxWorkLoad);
     }
+
     else if (strcmp(argv[i], "-lwd") == 0){
       isFlag = true;
       quicksort(sortedTasks, taskCount, "desc");
       maxWorkLoad = leastWorkLoad(nProc, taskCount, sortedTasks);
       printf("-lwd %d\n", maxWorkLoad);
     }
+
     else if (strcmp(argv[i], "-bw") == 0){
       isFlag = true;
       maxWorkLoad = bestWorkLoad(nProc, taskCount, tasks);
       printf("-bw  %d\n", maxWorkLoad);
     }
+
     else if (strcmp(argv[i], "-bwd") == 0){
       isFlag = true;
       quicksort(sortedTasks, taskCount, "desc");
       maxWorkLoad = bestWorkLoad(nProc, taskCount, sortedTasks);
       printf("-bwd %d\n", maxWorkLoad);
     }
+    
     else {
       printf("Usage: %s filename\nInvalid flag(s). Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
       return EXIT_FAILURE;

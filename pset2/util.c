@@ -5,98 +5,6 @@
 #include "util.h"
 
 /*
- * Function: getTaskCount
- * ------------------
- * Counts number of task args
- *
- * argc: number of command-line arguments
- * argv: array of command-line arguments
- *
- * returns: task count
- */
-
-int getTaskCount(int argc, char **argv) {
-    int taskCount = 0; /* task count */
-
-    // count number of integers after first 2 args
-    for (int i = 2; i < argc; i++) {
-        if (isdigit(argv[i][0])) {
-            taskCount++;
-        } else {
-            break;
-        }
-    }
-   
-    return taskCount;
-}
-
-/*
- * Function: getFlagCount
- * ------------------
- * Counts number of flag args
- *
- * argc: number of command-line arguments
- * argv: array of command-line arguments
- * taskCount: number of task arguments to determine start idx for count
- *
- * returns: flag count
- */
-
-int getFlagCount(int argc, char **argv, int taskCount) {
-    int flagCount = 0;
-
-    //start with first arg after tasks at idx 2 + taskCount
-    for (int i = 2 + taskCount; i < argc; i++) {
-        // skip if is digit
-        if (isdigit(argv[i][0])) {
-            continue;
-        } else {
-            flagCount++;
-        }
-    }
-
-    return flagCount;
-}
-
-/*
- * Function: getMaxWorkload
- * ------------------------
- * Gets minimized maximum workload using assignment specified by flag argument
- *
- * processors: array of processors
- * tasks: array of task runtimes
- * taskCount: number of task runtimes
- * flag: assignment method specification
- *
- * returns: value of maximum workload using assignment method
- */
-
-int getMaxWorkLoad(int *processors, int nProc, int *tasks, int taskCount, char *flag) {
-    if (strcmp(flag, "-opt") == 0) {
-        return backtrackToOpt(processors, nProc, tasks, taskCount);
-    }
-
-    if (strcmp(flag, "-lw") == 0) {
-        return leastWorkload(processors, nProc, tasks, taskCount);
-    }
-
-    if (strcmp(flag, "-lwd") == 0) {
-        return leastWorkloadDecreasing(processors, nProc, tasks, taskCount);
-    }
-
-    if (strcmp(flag, "-bw") == 0) {
-        return bestWorkload(processors, nProc, tasks, taskCount);
-    }
-
-    if (strcmp(flag, "-bwd") == 0) {
-        return bestWorkloadDecreasing(processors, nProc, tasks, taskCount);
-    }
-
-   return -1;
-}
-
-
-/*
  * Function: backtrackToOpt
  * ------------------------
  * Uses backtracking to find an assignment that minimizes maximum workload among processors
@@ -135,23 +43,6 @@ int leastWorkload(int *processors, int nProc, int *tasks, int taskCount) {
     idx = getMaxWorkloadProcessorIndex(processors, nProc);
     // printf("at index %d the val is %d hahah\n", idx, processors[idx]);
     return processors[idx];
-}
-
-/*
- * Function: leastWorkloadDecreasing
- * ---------------------------------
- * assigns tasks in decreasing order, then uses least workload heuristic
- *
- * processors: array of processors
- * tasks: array of task runtimes
- * taskCount: number of task runtimes
- *
- * returns: value of maximum workload using this assignment method
- */
-
-int leastWorkloadDecreasing(int *processors, int nProc, int *tasks, int taskCount) {
-    int *sortedTasksDecreasing = quicksort(tasks, taskCount);
-    return leastWorkload(processors, nProc, sortedTasksDecreasing, taskCount);
 }
 
 /*
@@ -197,23 +88,7 @@ int bestWorkload(int *processors, int nProc, int *tasks, int taskCount) {
 }
 
 /*
- * Function: bestWorkloadDecreasing
- * --------------------------------
- * assigns tasks in decreasing order, then uses best workload heuristic
- *
- * processors: array of processors
- * tasks: array of task runtimes
- *
- * returns: value of maximum workload using this assignment method
- */
-
-int bestWorkloadDecreasing(int *processors, int nProc, int *tasks, int taskCount) {
-    int *sortedTasksDecreasing = quicksort(tasks, taskCount);
-    return bestWorkload(processors, nProc, sortedTasksDecreasing, taskCount);
-}
-
-/*
- * Function: comparatorFn
+ * Function: comparatorFnDesc
  * ---------------------
  * compares values to be in descending order
  *
@@ -223,9 +98,25 @@ int bestWorkloadDecreasing(int *processors, int nProc, int *tasks, int taskCount
  * returns: the sorted input array, with elements in order specified by order argument
  */
 
-int comparatorFn (const void *a, const void *b)
+int comparatorFnDesc (const void *a, const void *b)
 {
     return *(int*)b-*(int*)a;
+}
+
+/*
+ * Function: comparatorFnAsc
+ * ---------------------
+ * compares values to be in ascending order
+ *
+ * a: pointer to first val for comparison
+ * b: pointer to second val for comparison
+ *
+ * returns: the sorted input array, with elements in order specified by order argument
+ */
+
+int comparatorFnAsc (const void *a, const void *b)
+{
+    return *(int*)a-*(int*)b;
 }
 
 /*
@@ -239,8 +130,14 @@ int comparatorFn (const void *a, const void *b)
  * returns: the sorted input array, with elements in order specified by order argument
  */
 
-int* quicksort(int *tasks, int taskCount) {
-    qsort(tasks, taskCount, sizeof(int), comparatorFn);
+int* quicksort(int *tasks, int taskCount, char *order) {
+    if(strcmp(order, "desc") == 0) {
+            qsort(tasks, taskCount, sizeof(int), comparatorFnDesc);
+    } else if (strcmp(order, "asc") == 0) {
+            qsort(tasks, taskCount, sizeof(int), comparatorFnAsc);
+    } else {
+        printf("Usage: %s filename\nInvalid flag(s). Flags must be one of the following: -opt, -lw, -lwd, -bw, or -bwd.", argv[0]);
+    }
     return tasks;
 }
 
