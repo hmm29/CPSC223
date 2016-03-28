@@ -88,10 +88,10 @@ int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int t
  */
 
 int leastWorkLoad(int nProc, int *tasks, int taskCount) {  
-    int processors[nProc];
+    int processors[nProc],
+    idx = 0;
 
-    for (i = 0; i < nProc; i++)
-    processors[i] = 0;
+    for (int i = 0; i < nProc; i++) processors[i] = 0;
 
     for(int i = 0; i < taskCount; i++) {
         idx = getLeastWorkLoadProcessorIndex(processors, nProc); // get index of least WorkLoad processor
@@ -117,16 +117,15 @@ int leastWorkLoad(int nProc, int *tasks, int taskCount) {
  * returns: value of maximum WorkLoad using this assignment method
  */
 int bestWorkLoad(int nProc, int *tasks, int taskCount) {
-    int i; /* index counter */
     int idx; /* index of least WorkLoad processor */
     int busiestProcessorWorkLoadThatMinimizesMaximum; /* busiest proc for which adding task minimizes max WorkLoad */
     int currMaxWorkLoad = 0; /* current maximum WorkLoad */
     int processors[nProc];
 
-    for (i = 0; i < nProc; i++)
+    for (int i = 0; i < nProc; i++)
     processors[i] = 0;
 
-    for(i = 0; i < taskCount; i++) {
+    for(int i = 0; i < taskCount; i++) {
         idx = getLeastWorkLoadProcessorIndex(processors, nProc);
 
         if(processors[idx] + tasks[i] >= currMaxWorkLoad) {
@@ -248,7 +247,7 @@ int largestElement(int arr[], int size){
   int currMax;
   currMax = 0;
   for (int i = 0; i < size; i++){
-    if (array[i] > currMax)
+    if (arr[i] > currMax)
       currMax = array[i];
   }
   return currMax;

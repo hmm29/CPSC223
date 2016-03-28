@@ -1,7 +1,7 @@
 /*
 File: Psched.c
 Description: This file contains a program for processor scheduling that performs various assignments of
-tasks to processors and prints their maximum workloads.
+tasks to processors and prints their maximum WorkLoads.
 Name: Harrison Miller, hmm29
 */
 
