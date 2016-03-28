@@ -10,11 +10,11 @@ int backtrackToOpt(int nProc, int *tasks, int taskCount);
 int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int taskCount, int tasks[], int prevTasks[], int numTasksRemaining, int prevProcessorIdx);
 
 /* assigns tasks in order they appear, greedily choosing processor with least workload at the time */
-int leastWorkload(int nProc, int *tasks, int taskCount);
+int leastWorkLoad(int nProc, int *tasks, int taskCount);
 
 /* assign tasks in order they appear, greedily choosing busiest processor for which the assignment
  * would not increase the current maximum workload */
-int bestWorkload(int nProc, int *tasks, int taskCount);
+int bestWorkLoad(int nProc, int *tasks, int taskCount);
 
 /* compare values in quicksort for descending order */
 int comparatorFnDesc(const void *a, const void *b);
@@ -26,10 +26,10 @@ int comparatorFnAsc(const void *a, const void *b);
 int* quicksort(int *tasks, int taskCount, char *order);
 
 /* get index of processor with the least current workload */
-int getLeastWorkloadProcessorIndex(int *processors, int nProc);
+int getLeastWorkLoadProcessorIndex(int *processors, int nProc);
 
 /* get index of processor with greatest current workload */
-int getMaxWorkloadProcessorIndex(int *processors, int nProc);
+int getMaxWorkLoadProcessorIndex(int *processors, int nProc);
 
 int largestElement(int arr[], int size);
 
