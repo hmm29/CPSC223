@@ -242,7 +242,6 @@ int getMaxWorkLoadProcessorIndex(int processors[], int nProc) {
 	return idx;
 }
 
-
 int largestElement(int arr[], int size){
   int currMax;
   currMax = 0;
