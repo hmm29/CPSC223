@@ -9,8 +9,9 @@ Date    Started     Spent    Work Completed
 2/20    12:01PM     2:00     Wrote function definitions for prototypes in util.h, paid keen attention to style rules
 2/22    9:45PM      3:00     Debugged lw, lwd, bw, bwd, and opt flags
 2/28	5:23PM	    1:10     Final touches to logic	 
+2/28    9:55PM      0:30     Clean up backtracking and add style to functions 
                     ----
-                    10:04     TOTAL Time Spent
+                    10:34     TOTAL Time Spent
 
 I discussed my solution briefly with TA Lee Danilek.
 No major difficulties encountered thus far, simply getting reacquainted with arrays and passing arguments by value in C.

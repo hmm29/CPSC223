@@ -7,6 +7,7 @@ Name: Harrison Miller, hmm29
 /* uses backtracking to find assignment for minimizing the maximum workload */
 int backtrackToOpt(int nProc, int *tasks, int taskCount);
 
+/* backtracking algorithm */
 int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int taskCount, int tasks[], int prevTasks[], int numTasksRemaining, int prevProcessorIdx);
 
 /* assigns tasks in order they appear, greedily choosing processor with least workload at the time */
@@ -31,8 +32,8 @@ int getLeastWorkLoadProcessorIndex(int *processors, int nProc);
 /* get index of processor with greatest current workload */
 int getMaxWorkLoadProcessorIndex(int *processors, int nProc);
 
-int largestElement(int arr[], int size);
+/* gets biggest element in array */
+int maxElement(int arr[], int length);
 
-int largestElementLessThan(int arr[], int size, int upperVal);
-
-int arraySum(int arr[], int size);
+/* gets sum of elements in an array */
+int sum(int arr[], int length);
