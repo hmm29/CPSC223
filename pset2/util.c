@@ -17,21 +17,21 @@
  */
 
 int backtrackToOpt(int nProc, int *tasks, int taskCount) {	
-  // sort WorkLoad by decreasing order in order to compute the intial upper bound using -lwd
-  int i;
-  int upperBound;
-  int lowerBound;
-  int sum;
-  int res;
-  int processors[nProc];
 
-  for (i = 0; i < nProc; i++)
+  int upperBound; /* lower bound on tasks */
+  int lowerBound; /* upper bound on tasks */
+  int sum; /* sum of tasks in array */
+  int res; /* result of backtrack */
+  int processors[nProc]; /* array of processors */
+
+  for (int i = 0; i < nProc; i++)
     processors[i] = 0;
 
+  // @hmm: sort workLoad by decreasing order in order to compute the intial upper bound using -lwd
   quicksort(tasks, taskCount, "desc");
   upperBound = leastWorkLoad(nProc, tasks, taskCount);
 
-  sum = arraySum(tasks, taskCount);
+  sum = sum(tasks, taskCount);
 
   // @hmm: compute lower bound
   lowerBound = sum/nProc + (sum % nProc != 0);
@@ -42,7 +42,7 @@ int backtrackToOpt(int nProc, int *tasks, int taskCount) {
 int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int taskCount, int tasks[], int prevTasks[], int numTasksRemaining, int prevProcessorIdx) {
     // @hmm: base case: if no more tasks left then return maxWorkLoad or the upper bound, which one is smaller
   if (taskCount == 0) {
-    int largest = largestElement(processors, nProc);
+    int largest = maxElement(processors, nProc);
     return (largest < upperBound) ? largest : upperBound;
   }
 
@@ -88,8 +88,8 @@ int backtrack(int lowerBound, int upperBound, int nProc, int processors[], int t
  */
 
 int leastWorkLoad(int nProc, int *tasks, int taskCount) {  
-    int processors[nProc],
-    idx = 0;
+    int processors[nProc]; /* number of processors */
+    int idx = 0; /* current index in array */
 
     for (int i = 0; i < nProc; i++) processors[i] = 0;
 
@@ -120,7 +120,7 @@ int bestWorkLoad(int nProc, int *tasks, int taskCount) {
     int idx; /* index of least WorkLoad processor */
     int busiestProcessorWorkLoadThatMinimizesMaximum; /* busiest proc for which adding task minimizes max WorkLoad */
     int currMaxWorkLoad = 0; /* current maximum WorkLoad */
-    int processors[nProc];
+    int processors[nProc]; /* array of processors */
 
     for (int i = 0; i < nProc; i++)
     processors[i] = 0;
@@ -208,16 +208,16 @@ int* quicksort(int *tasks, int taskCount, char *order) {
  * get index of processor with lowest WorkLoad
  *
  * processors: array of processors, whos WorkLoads are int values
+ * nProc: num of processors
  *
  * returns: the index of the processor with the least WorkLoad
  */
 
 int getLeastWorkLoadProcessorIndex(int processors[], int nProc) {
-    int i;
-    int idx = 0;
-    int minimum = processors[0];
+    int idx = 0; /* index */
+    int minimum = processors[0]; /* minimum element in arr */
 
-    for (i = 1 ; i < nProc; i++)
+    for (int i = 1 ; i < nProc; i++)
     {
         if ( processors[i] < minimum )
         {
@@ -228,12 +228,21 @@ int getLeastWorkLoadProcessorIndex(int processors[], int nProc) {
     return idx;
 }
 
+/*
+ * Function: getMaxWorkLoadProcessorIndex
+ * ----------------------------------------
+ * get index of processor with highest WorkLoad
+ *
+ * processors: array of processors, whos WorkLoads are int values
+ * nProc: num of processors
+ *
+ * returns: the index of the processor with the least WorkLoad
+ */
 int getMaxWorkLoadProcessorIndex(int processors[], int nProc) {
- 	int i;
-	int idx = 0;
-	int maximum = processors[0];
+	int idx = 0; /* index */
+	int maximum = processors[0]; /* maximum element in array */
 
-	for(i = 1; i < nProc; i++) {
+	for(int i = 1; i < nProc; i++) {
 	  if(processors[i] > maximum){
 	      maximum = processors[i];
 	      idx = i;
@@ -242,35 +251,46 @@ int getMaxWorkLoadProcessorIndex(int processors[], int nProc) {
 	return idx;
 }
 
-int largestElement(int arr[], int size){
-  int currMax;
+/*
+ * Function: maxElement
+ * ----------------------------------------
+ * get largest element in an array
+ *
+ * arr: array of values
+ * length: length of array
+ *
+ * returns: largest elemnt in the array
+ */
+int maxElement(int arr[], int length){
+  int currMax; /* running current maximum elemnt */
+
   currMax = 0;
-  for (int i = 0; i < size; i++){
+  for (int i = 0; i < length; i++){
     if (arr[i] > currMax)
       currMax = arr[i];
   }
   return currMax;
 }
 
-// Function that returns largest element in an array that is smaller than a given value
-int largestElementLessThan(int arr[], int size, int upperVal){
-  int currMax, maxIndex;
-  currMax = 0;
-  for (int i = 0; i < size; i++){
-    if (arr[i] > currMax && arr[i] <= upperVal){
-      currMax = arr[i];
-      maxIndex = i;
-    }
-  }
-  return maxIndex;
-}
+/*
+ * Function: sum
+ * ----------------------------------------
+ * get sum of elements in an array
+ *
+ * arr: array of values
+ * length: length of array
+ *
+ * returns: sum of elements in the array
+ */
+int sum(int arr[], int length){
+  int sum; /* sum of elts in array */
 
-// Function that returns sum of all elements in an array
-int arraySum(int arr[], int size){
-  int i, sum;
   sum = 0;
-  for (i = 0; i < size; i++)
+
+  for (int i = 0; i < length; i++) {
     sum += arr[i];
+  }
+
   return sum;
 }
 
