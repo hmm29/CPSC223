@@ -20,7 +20,7 @@ int backtrackToOpt(int nProc, int *tasks, int taskCount) {
 
   int upperBound; /* lower bound on tasks */
   int lowerBound; /* upper bound on tasks */
-  int sum; /* sum of tasks in array */
+  int arrSum; /* sum of tasks in array */
   int res; /* result of backtrack */
   int processors[nProc]; /* array of processors */
 
@@ -31,10 +31,10 @@ int backtrackToOpt(int nProc, int *tasks, int taskCount) {
   quicksort(tasks, taskCount, "desc");
   upperBound = leastWorkLoad(nProc, tasks, taskCount);
 
-  sum = sum(tasks, taskCount);
+  arrSum = sum(tasks, taskCount);
 
   // @hmm: compute lower bound
-  lowerBound = sum/nProc + (sum % nProc != 0);
+  lowerBound = arrSum/nProc + (arrSum % nProc != 0);
   res = backtrack(lowerBound, upperBound, nProc, processors, taskCount, tasks, tasks, 0, 0);
   return res;
 }
