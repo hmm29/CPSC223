@@ -24,7 +24,8 @@ int main(int argc, char *argv[]) {
   int NCOLS = 0; /* number of board columns */
   bool showNonBoggle = false; /* flag: print non-Boggle words */
   bool useLettersOnce = false; /* flag: only use letters once */
-  char *input; /* stdin word */
+  char *board = NULL; /* board */
+  char *input = NULL; /* stdin word */
 
   // need board
 
@@ -56,8 +57,8 @@ int main(int argc, char *argv[]) {
         NCOLS = intArg;
       }
     } else if(i == argc-1) {
-      if(intArg == 0 && strlen(argv[i]) >= NROWS * NCOLS) {
-        // board
+      if(intArg == 0 && !board && strlen(argv[i]) >= NROWS * NCOLS) {
+        board = argv[i];
       } else {
         fprintf(stderr, "Usage: %s filename\nInvalid board argument: %s.", argv[0], argv[i])
         exit(EXIT_FAILURE);
@@ -71,7 +72,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // create boggle board here
+  // create trie here
   // create hash table
 
   if(NROWS <= 0 || NCOLS <= 0 || !board || !table) {
@@ -79,16 +80,18 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
+  // read words from stdin
   while((input = getLine(stdin)) != NULL) {
      if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
-     // traverse board
+     // traverse trie
      for(int i = 0; i < strlen(input); i++) {
-
+       // if key is '_', then move to next letter in input
+       // if -t flag specified, keep track of whether or not trie node key has been used or not
      }
 
      // if it's a boggle word -> key: hash(input), value: 1
-      // if key already there then increment value by 1
+     // else if key already there then increment value by 1
      // else -> key: hash(input), value: 0
 
      // if -c flag specified then also put non-boggle words into hash table
