@@ -1,8 +1,8 @@
 
 /*
-File: Boggle.c
-Description: This file contains a program for processor scheduling that performs various assignments of
-tasks to processors and prints their maximum WorkLoads.
+File: boggle.c
+Description: This file contains a program that can be used to list every word in the standard input that is a "Boggle
+word" for the NROWS x NCOLS array BOARD.
 Name: Harrison Miller, hmm29
 */
 
@@ -12,27 +12,25 @@ Name: Harrison Miller, hmm29
 #include <string.h>
 #include <stdbool.h>
 #include "boggle.h"
+#include "hash.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
 #define MAX_LINE 100
 #define ALPHA_SIZE 26
-#define MAX_BOARD_SIZE 10
 
 int main(int argc, char *argv[]) {
-  int intArg; /* current argument as integer */
-  int NROWS; /* number of rows */
-  int NCOLS; /* number of columns */
-  bool showNonBoggle; /* non-Boggle words flag */
-  bool useLettersOnce; /* only use letters once in Boggle */
+  int intArg; /* current arg as int */
+  int NROWS = 0; /* number of board rows */
+  int NCOLS = 0; /* number of board columns */
+  bool showNonBoggle = false; /* flag: print non-Boggle words */
+  bool useLettersOnce = false; /* flag: only use letters once */
   char *input; /* stdin word */
-  // need board
 
-  // initializations
-  showNonBoggle = useLettersOnce = false;
+  // need board
 
   // check for valid argument count
   if(argc < 4 || argv > 6) {
-    printf("Usage: %s filename\nInvalid number of arguments: %d.", argv[0], argc)
+    fprintf(stderr, "Usage: %s filename\nInvalid number of arguments: %d.", argv[0], argc)
     exit(EXIT_FAILURE);
   }
 
@@ -43,55 +41,63 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-c") == 0) {
         showNonBoggle = true;
       } else if (intArg == 0) {
-        printf("Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
+        fprintf(stderr, "Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
         exit(EXIT_FAILURE);
       } else {
         NROWS = intArg;
       }
-    }
-    else if(i == 2) {
+    } else if(i == 2) {
       if(intArg == 0 && strcmp(argv[i], "-t") == 0) {
         useLettersOnce = true;
       } else if (intArg == 0){
-        printf("Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
+        fprintf(stderr, "Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
         exit(EXIT_FAILURE);
       } else {
         NCOLS = intArg;
       }
-    }
-    else if(i == argc-1) {
+    } else if(i == argc-1) {
       if(intArg == 0 && strlen(argv[i]) >= NROWS * NCOLS) {
         // board
       } else {
-        printf("Usage: %s filename\nInvalid argument: %s.", argv[0], argv[i])
+        fprintf(stderr, "Usage: %s filename\nInvalid board argument: %s.", argv[0], argv[i])
         exit(EXIT_FAILURE);
       }
     } else {
-      if(NROWS == 0) {
+      if(NROWS == 0 && intArg > 0) {
         NROWS = intArg;
-      } else if(NCOLS == 0) {
+      } else if(NCOLS == 0 && intArg > 0) {
         NCOLS = intArg;
       }
     }
   }
 
   // create boggle board here
+  // create hash table
 
-  if(NROWS <= 0 || NCOLS <= 0 || !board) {
-    printf("Usage: %s filename\nError occurred with Boggle board values.", argv[0])
+  if(NROWS <= 0 || NCOLS <= 0 || !board || !table) {
+    fprintf(stderr, "Usage: %s filename\nError occurred with Boggle setup.", argv[0])
     exit(EXIT_FAILURE);
   }
 
   while((input = getLine(stdin)) != NULL) {
      if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
+     // traverse board
+     for(int i = 0; i < strlen(input); i++) {
 
-   }
-   // free rules
-   for(int r = 0; r < numRules; r++) {
-       free(rules[r]);
+     }
+
+     // if it's a boggle word -> key: hash(input), value: 1
+      // if key already there then increment value by 1
+     // else -> key: hash(input), value: 0
+
+     // if -c flag specified then also put non-boggle words into hash table
    }
 
+   // sort the hash table with radix sort
+   // print values using specified format
+
+   // free everything here
 
   return EXIT_SUCCESS;
 }
