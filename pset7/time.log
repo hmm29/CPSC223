@@ -6,7 +6,8 @@ Date    Started     Spent    Work Completed
 5/13    10:00       0:30     Begin planning solution to Boggle and create files
 5/14    2:30        1:27     Figure out trie data structure and begin coding it
 5/14    4:10        0:30     Plan out code for hash table and radix sort before printing boggle words
+5/14    7:30        0:40     Reorganize plan for boggle to use recursion and how to store 
                     ----
-                    2:27     TOTAL Time Spent
+                    3:07     TOTAL Time Spent
 
 I discussed my solution with no one.
