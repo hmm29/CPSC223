@@ -24,6 +24,7 @@ int main(int argc, char *argv[]) {
   int NCOLS; /* number of columns */
   bool showNonBoggle; /* non-Boggle words flag */
   bool useLettersOnce; /* only use letters once in Boggle */
+  char *input; /* stdin word */
   // need board
 
   // initializations
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
     if(i == 1) {
       if(intArg == 0 && strcmp(argv[i], "-c") == 0) {
         showNonBoggle = true;
-      } else if (intArg == 0){
+      } else if (intArg == 0) {
         printf("Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
         exit(EXIT_FAILURE);
       } else {
@@ -74,6 +75,22 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  // create boggle board here
+
+  if(NROWS <= 0 || NCOLS <= 0 || !board) {
+    printf("Usage: %s filename\nError occurred with Boggle board values.", argv[0])
+    exit(EXIT_FAILURE);
+  }
+
+  while((input = getLine(stdin)) != NULL) {
+     if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
+
+
+   }
+   // free rules
+   for(int r = 0; r < numRules; r++) {
+       free(rules[r]);
+   }
 
 
   return EXIT_SUCCESS;
