@@ -7,9 +7,9 @@ Date    Started     Spent    Work Completed
 5/14    2:30        1:27     Figure out trie data structure and begin coding it
 5/14    4:10        0:30     Plan out code for hash table and radix sort before printing boggle words
 5/14    7:30        2:23     Reorganize plan for boggle to use recursion and how to store, work on trie ds, work more on operations
-5/14
+5/14    10:00       1:00     Add input reading operations and create board and trie
                     ----
-                    4:50     TOTAL Time Spent
+                    5:50     TOTAL Time Spent
 
 I discussed my solution with no one.
 Major difficulties: Not exactly major, but figuring out how to create trie and then print the dictionary entries in alphabetical order. TBD.

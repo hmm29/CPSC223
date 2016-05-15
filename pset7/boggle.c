@@ -14,11 +14,8 @@ Name: Harrison Miller, hmm29
 #include "boggle.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
-#define MAX_NUM_WORDS 100
-#define ALPHABET_SIZE 26
-
 void initializeNode(trieNodePtr t) {
-  for (int i = 0; i<ALPHABET_SIZE; i++) t->children[i] = NULL;
+  for (int i = 0; i < ALPHABET_SIZE; i++) t->children[i] = NULL;
   t->isTerminal = t->used = false;
 }
 
@@ -26,7 +23,7 @@ void insert(trieNodePtr root, char *string) {
   int pos; /* position of char in node children array */
   trieNodePtr child; /* child node of current trie node */
 
-  for(int i = 0; i<strlen(string); i++) {
+  for(int i = 0; i < strlen(string); i++) {
     pos = tolower(string[i]) - 'a';
     child = root->children[pos];
     if(!child) {
@@ -87,17 +84,31 @@ int isValidWord(char *s) {
   return 1;
 }
 
+boardPtr createBoard(int NROWS, int NCOLS, char *string) {
+  boardPtr board = (boardPtr) malloc(sizeof(board));
+  board->NROWS = NROWS;
+  board->NCOLS = NCOLS;
+  board->size = NROWS*NCOLS;
+  for(int i = 0; i < NROWS; i++) {
+    for(int j = 0; j < NCOLS; j++) {
+      board->grid[i][j] = string[i * NROWS + j];
+    }
+  }
+  return board;
+}
+
 int main(int argc, char *argv[]) {
 
   int intArg; /* current arg as int */
   int NROWS = 0; /* ARG: number of board rows */
   int NCOLS = 0; /* ARG: number of board columns */
-  int histogram[MAX_NUM_WORDS]; /* word counts */
+  int inputCount = 0; /* number of stdin inputs */
   bool showNonBoggle = false; /* ARG: flag to print non-Boggle words */
   bool useLettersOnce = false; /* ARG: flag to only use letters once */
   bool isValid; /* flag to signify stdin word (dictionary entry) is valid */
   char *board = NULL; /* ARG: board */
   char *input = NULL; /* STDIN: dictionary word */
+  char *dict[MAX_NUM_WORDS]; /* array of inputs */
 
   // check for valid argument count
   if(argc < 4 || argv > 6) {
@@ -151,33 +162,39 @@ int main(int argc, char *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-  createBoard(board);
-  // create trie here
-  // create hash table
+  boardPtr boggleBoard = createBoard(NROWS, NCOLS, board);
+  trieNodePtr root = (trieNodePtr) malloc(sizeof(trieNode));
+  initializeNode(root);
+  root->isTerminal = true;
+
+  int i = 0;
 
   // read words from stdin
   while((input = getLine(stdin)) != NULL) {
-     removeNewline(input);
+     inputCount++;
 
-     // check to make sure all characters are valid
+     // normalize input (make lower case and remove newlines)
+     // check if it's valid, meaning no non-alphabetical characters
      isValid = isValidWord(input);
 
-     // skip to next word in dictionary if this one contains non-alphabetical characters
+     // skip to next word in dictionary if invalid
      if (!isValid) {
+       if(showNonBoggle) {
+         dict[i++] = input;
+       }
        continue;
      }
 
-     for(int i = 0; i < strlen(input); i++) {
-       // if key is '_', then move to next letter in input
-       // if -t flag specified, keep track of whether or not trie node key has been used or not
-     }
-
-     // if it's a boggle word -> key: hash(input), value: 1
-     // else if key already there then increment value by 1
-     // else -> key: hash(input), value: 0
-
-     // if -c flag specified then also put non-boggle words into hash table
+     insert(root, input);
+     dict[i++] = input;
    }
+
+    // walk board and check for boggle words
+    // if it's a boggle word -> key: hash(input), value: 1
+    // else if key already there then increment value by 1
+    // else -> key: hash(input), value: 0
+
+   int histogram[inputCount];
 
    // sort the hash table with radix sort
    // print values using specified format
