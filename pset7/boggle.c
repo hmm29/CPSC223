@@ -23,11 +23,11 @@ void initializeNode(trieNodePtr t) {
 }
 
 void insert(trieNodePtr root, char *string) {
-  int pos;
-  trieNodePtr child;
+  int pos; /* position of char in node children array */
+  trieNodePtr child; /* child node of current trie node */
 
   for(int i = 0; i<strlen(string); i++) {
-    pos = string[i] - 'a';
+    pos = tolower(string[i]) - 'a';
     child = root->children[pos];
     if(!child) {
       child = (trieNodePtr) malloc(sizeof(trieNode));
@@ -42,7 +42,7 @@ void insert(trieNodePtr root, char *string) {
 }
 
 int trieNodeHasChildren(trieNodePtr t) {
- for (int i=0; i<ALPHABET_SIZE; i++) {
+ for (int i = 0; i<ALPHABET_SIZE; i++) {
    if (t->children[i] != NULL) {
      return true;
    }
@@ -51,9 +51,41 @@ int trieNodeHasChildren(trieNodePtr t) {
 }
 
 int search(trieNodePtr root, char *string) {
-  
+  int pos; /* position of char in node children array */
+  int found; /* search result */
+
+  for(int i = 0; i < strlen(string); i++) {
+    pos = tolower(string[i]) - 'a';
+    if(root->children[pos] == NULL) {
+      found = 0;
+      return found;
+    } else {
+      root = root->children[pos];
+    }
+  }
+  found = (int) root->isTerminal || trieNodeHasChildren(root);
+  return found;
 }
 
+void removeNewline(char *s) {
+  while(*s && *s != '\n' && *s != '\r') s++;
+  *s = 0;
+}
+
+int isValidWord(char *s) {
+  int c = 0;
+
+  removeNewline(s);
+
+  if (strlen(s) < 3) return 0;
+
+  while(*s) {
+    c = tolower(*s);
+    if (!(c >= 'a' && (c <= 'z'))) return 0;
+    *s++ = c;
+  }
+  return 1;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -125,18 +157,10 @@ int main(int argc, char *argv[]) {
 
   // read words from stdin
   while((input = getLine(stdin)) != NULL) {
-     // reset isValid flag
-     isValid = true;
-
-     // make sure strings are null-terminated
-     if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
+     removeNewline(input);
 
      // check to make sure all characters are valid
-     for(int j = 0; j < strlen(input); j++) {
-       if(!isalpha(input[j])) {
-         isValid = false;
-       }
-     }
+     isValid = isValidWord(input);
 
      // skip to next word in dictionary if this one contains non-alphabetical characters
      if (!isValid) {
