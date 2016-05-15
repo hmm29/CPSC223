@@ -71,11 +71,8 @@ void removeNewline(char *s) {
 
 int isValidWord(char *s) {
   int c = 0;
-
   removeNewline(s);
-
   if (strlen(s) < 3) return 0;
-
   while(*s) {
     c = tolower(*s);
     if (!(c >= 'a' && (c <= 'z'))) return 0;
@@ -97,15 +94,62 @@ boardPtr createBoard(int NROWS, int NCOLS, char *string) {
   return board;
 }
 
+void checkBoard(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word) {
+  int found, nrow, ncol;
+  char newWord[board->NROWS * board->NCOLS];
+  int nseen[board->NROWS * board->NCOLS];
+  found = search(t, word);
+  if(found) {
+    // hash it
+  }
+
+  for(int i = 0; i <board->NROWS * board->NCOLS; i++) nseen[i] = seen[i];
+  for (int i = -1;i < 2;i++) {
+    for (int j = -1; j < 2; j++) {
+      nrow = row + i;
+      ncol = col + j;
+      if (nrow >= 0 &&
+    nrow < board->NROWS &&
+    ncol >= 0 &&
+    ncol < board->NCOLS &&
+    seen[nrow * board->NROWS + ncol] == 0) {
+
+  sprintf(newWord,"%s%c",word,board->data[nrow][ncol]);
+  seen[nrow * board->NROWS + ncol] = 1;
+  checkBoard(board,trie,nrow,ncol,nseen,newword);
+      }
+    }
+  }
+
+}
+
+void checkPath(BoardPtr board, TrieNodePtr trie, int row, int col) {
+  char word[board->NROWS * board->NCOLS];
+  int seen[board->NROWS * board->NCOLS];
+  int i;
+  for (i=0;i<board->NROWS * board->NCOLS; i++) seen[i] = 0;
+  seen[(row * board->NROWS) + col] = 1;
+  sprintf(word,"%c",board->data[row][col]);
+  checkBoard(board,trie,row,col,seen,word);
+}
+
+void traverseBoard(BoardPtr board, TrieNodePtr trie) {
+  for (int row=0; row < board->NROWS; row++) {
+    for (int col=0; col < board->NCOLS; col++) {
+      checkPath(board,trie,row,col);
+    }
+  }
+}
+
 int main(int argc, char *argv[]) {
 
   int intArg; /* current arg as int */
   int NROWS = 0; /* ARG: number of board rows */
   int NCOLS = 0; /* ARG: number of board columns */
   int inputCount = 0; /* number of stdin inputs */
+  int isValid; /* stdin word (dictionary entry) is valid */
   bool showNonBoggle = false; /* ARG: flag to print non-Boggle words */
-  bool useLettersOnce = false; /* ARG: flag to only use letters once */
-  bool isValid; /* flag to signify stdin word (dictionary entry) is valid */
+  bool useLettersOnlyOnce = false; /* ARG: flag to only use letters once */
   char *board = NULL; /* ARG: board */
   char *input = NULL; /* STDIN: dictionary word */
   char *dict[MAX_NUM_WORDS]; /* array of inputs */
@@ -130,7 +174,7 @@ int main(int argc, char *argv[]) {
       }
     } else if(i == 2) {
       if(intArg == 0 && strcmp(argv[i], "-t") == 0) {
-        useLettersOnce = true;
+        useLettersOnlyOnce = true;
       } else if (intArg == 0){
         fprintf(stderr, "Usage: %s filename. Invalid flag: %s.", argv[0], argv[i]);
         exit(EXIT_FAILURE);
@@ -138,7 +182,7 @@ int main(int argc, char *argv[]) {
         NCOLS = intArg;
       }
     } else if(i == argc-1) {
-      if(intArg == 0 && !board && strlen(argv[i]) >= NROWS * NCOLS) {
+      if(intArg == 0 && !board && strlen(argv[i]) == NROWS * NCOLS) {
         board = argv[i];
       } else {
         fprintf(stderr, "Usage: %s filename. Invalid board argument: %s.", argv[0], argv[i]);
@@ -189,14 +233,9 @@ int main(int argc, char *argv[]) {
      dict[i++] = input;
    }
 
-    // walk board and check for boggle words
-    // if it's a boggle word -> key: hash(input), value: 1
-    // else if key already there then increment value by 1
-    // else -> key: hash(input), value: 0
-
-   int histogram[inputCount];
-
-   // sort the hash table with radix sort
+   // sort the dict;
+   // create hash table and sort it
+   traverseBoard(boggleBoard, root);
    // print values using specified format
 
    // free everything here

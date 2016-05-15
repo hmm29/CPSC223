@@ -42,6 +42,9 @@
  void removeNewline(char *s);
  int isValidWord(char *s);
  boardPtr createBoard(int NROWS, int NCOLS, char *string);
+ void checkBoard(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word);
+ void checkPath(BoardPtr board, TrieNodePtr trie, int row, int col);
+ void traverseBoard(BoardPtr board, TrieNodePtr trie);
 
  #endif
  /* end BOGGLE_H */
