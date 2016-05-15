@@ -12,26 +12,32 @@ Name: Harrison Miller, hmm29
 #include <string.h>
 #include <stdbool.h>
 #include "boggle.h"
-#include "hash.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
-#define MAX_LINE 100
-#define ALPHA_SIZE 26
+#define MAX_NUM_WORDS 100
+#define ALPHABET_SIZE 26
+
+struct node {
+  struct node *child[ALPHABET_SIZE];
+  int isLeaf;
+  bool used;
+};
 
 int main(int argc, char *argv[]) {
+
   int intArg; /* current arg as int */
   int NROWS = 0; /* number of board rows */
   int NCOLS = 0; /* number of board columns */
-  bool showNonBoggle = false; /* flag: print non-Boggle words */
-  bool useLettersOnce = false; /* flag: only use letters once */
+  int histogram[MAX_NUM_WORDS]; /* word counts */
+  bool showNonBoggle = false; /* ARG FLAG: print non-Boggle words */
+  bool useLettersOnce = false; /* ARG FLAG: only use letters once */
+  bool isValid; /* flag: stdin word (dictionary entry) is valid */
   char *board = NULL; /* board */
   char *input = NULL; /* stdin word */
 
-  // need board
-
   // check for valid argument count
   if(argc < 4 || argv > 6) {
-    fprintf(stderr, "Usage: %s filename\nInvalid number of arguments: %d.", argv[0], argc)
+    fprintf(stderr, "Usage: %s filename. Invalid number of arguments: %d.", argv[0], argc);
     exit(EXIT_FAILURE);
   }
 
@@ -42,7 +48,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-c") == 0) {
         showNonBoggle = true;
       } else if (intArg == 0) {
-        fprintf(stderr, "Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
+        fprintf(stderr, "Usage: %s filename. Invalid flag: %s.", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       } else {
         NROWS = intArg;
@@ -51,7 +57,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-t") == 0) {
         useLettersOnce = true;
       } else if (intArg == 0){
-        fprintf(stderr, "Usage: %s filename\nInvalid flag: %s.", argv[0], argv[i])
+        fprintf(stderr, "Usage: %s filename. Invalid flag: %s.", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       } else {
         NCOLS = intArg;
@@ -60,7 +66,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && !board && strlen(argv[i]) >= NROWS * NCOLS) {
         board = argv[i];
       } else {
-        fprintf(stderr, "Usage: %s filename\nInvalid board argument: %s.", argv[0], argv[i])
+        fprintf(stderr, "Usage: %s filename. Invalid board argument: %s.", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     } else {
@@ -68,23 +74,43 @@ int main(int argc, char *argv[]) {
         NROWS = intArg;
       } else if(NCOLS == 0 && intArg > 0) {
         NCOLS = intArg;
+      } else {
+        fprintf(stderr, "Usage: %s filename. Invalid board dimension argument: %s.", argv[0], argv[i]);
+        exit(EXIT_FAILURE);
       }
     }
   }
 
-  // create trie here
-  // create hash table
-
-  if(NROWS <= 0 || NCOLS <= 0 || !board || !table) {
-    fprintf(stderr, "Usage: %s filename\nError occurred with Boggle setup.", argv[0])
+  // ensure we have necessary setup
+  if(NROWS <= 0 || NCOLS <= 0 || !board) {
+    fprintf(stderr, "Usage: %s filename. Error occurred with Boggle setup.", argv[0])
     exit(EXIT_FAILURE);
   }
 
+  createBoard(board);
+  // create trie here
+  // create hash table
+
   // read words from stdin
   while((input = getLine(stdin)) != NULL) {
+     // reset isValid flag
+     isValid = true;
+
+     // make sure strings are null-terminated
      if(input[strlen(input)-1] == '\n') input[strlen(input)-1] = '\0';
 
-     // traverse trie
+     // check to make sure all characters are valid
+     for(int j = 0; j < strlen(input); j++) {
+       if(!isalpha(input[j])) {
+         isValid = false;
+       }
+     }
+
+     // skip to next word in dictionary if this one contains non-alphabetical characters
+     if (!isValid) {
+       continue;
+     }
+
      for(int i = 0; i < strlen(input); i++) {
        // if key is '_', then move to next letter in input
        // if -t flag specified, keep track of whether or not trie node key has been used or not

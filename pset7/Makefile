@@ -13,14 +13,14 @@ CFLAGS=-std=c99 -g3 -Wall -pedantic
 HWK3 = /c/cs223/Hwk3/
 
 # Rule to build executable from object files
-boggle: boggle.o hash.o ${HWK3}getLine.o
-	$(CC) $(CFLAGS) -o boggle boggle.o hash.o ${HWK3}getLine.o
+boggle: boggle.o ${HWK3}getLine.o
+	$(CC) $(CFLAGS) -o boggle boggle.o ${HWK3}getLine.o
 
 # Rule to generate object files
 %.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Rule for getLine.o header file dependency
+# Rule for object file header dependency
 boggle.o ${HWK3}getLine.o: ${HWK3}getLine.h
 
 # Rule to clean up directory
