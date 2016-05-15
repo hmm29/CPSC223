@@ -17,23 +17,55 @@ Name: Harrison Miller, hmm29
 #define MAX_NUM_WORDS 100
 #define ALPHABET_SIZE 26
 
-struct node {
-  struct node *child[ALPHABET_SIZE];
-  int isLeaf;
-  bool used;
-};
+void initializeNode(trieNodePtr t) {
+  for (int i = 0; i<ALPHABET_SIZE; i++) t->children[i] = NULL;
+  t->isTerminal = t->used = false;
+}
+
+void insert(trieNodePtr root, char *string) {
+  int pos;
+  trieNodePtr child;
+
+  for(int i = 0; i<strlen(string); i++) {
+    pos = string[i] - 'a';
+    child = root->children[pos];
+    if(!child) {
+      child = (trieNodePtr) malloc(sizeof(trieNode));
+      initializeNode(child);
+      root->children[pos] = child;
+    }
+    root = child;
+    if(i == strlen(string)-1) {
+      root->isTerminal = true;
+    }
+  }
+}
+
+int trieNodeHasChildren(trieNodePtr t) {
+ for (int i=0; i<ALPHABET_SIZE; i++) {
+   if (t->children[i] != NULL) {
+     return true;
+   }
+ }
+ return false;
+}
+
+int search(trieNodePtr root, char *string) {
+  
+}
+
 
 int main(int argc, char *argv[]) {
 
   int intArg; /* current arg as int */
-  int NROWS = 0; /* number of board rows */
-  int NCOLS = 0; /* number of board columns */
+  int NROWS = 0; /* ARG: number of board rows */
+  int NCOLS = 0; /* ARG: number of board columns */
   int histogram[MAX_NUM_WORDS]; /* word counts */
-  bool showNonBoggle = false; /* ARG FLAG: print non-Boggle words */
-  bool useLettersOnce = false; /* ARG FLAG: only use letters once */
-  bool isValid; /* flag: stdin word (dictionary entry) is valid */
-  char *board = NULL; /* board */
-  char *input = NULL; /* stdin word */
+  bool showNonBoggle = false; /* ARG: flag to print non-Boggle words */
+  bool useLettersOnce = false; /* ARG: flag to only use letters once */
+  bool isValid; /* flag to signify stdin word (dictionary entry) is valid */
+  char *board = NULL; /* ARG: board */
+  char *input = NULL; /* STDIN: dictionary word */
 
   // check for valid argument count
   if(argc < 4 || argv > 6) {
