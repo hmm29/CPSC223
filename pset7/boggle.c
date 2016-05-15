@@ -141,6 +141,13 @@ void traverseBoard(BoardPtr board, TrieNodePtr trie) {
   }
 }
 
+int clearTrie (trieNodePtr root){
+  if (root){
+    free(root);
+    for (int i = 0; i < ALPHABET_SIZE; i++) clearTrie (root->children[i]);
+  }
+}
+
 int main(int argc, char *argv[]) {
 
   int intArg; /* current arg as int */
@@ -234,11 +241,24 @@ int main(int argc, char *argv[]) {
    }
 
    // sort the dict;
-   // create hash table and sort it
+   // create hash table
    traverseBoard(boggleBoard, root);
-   // print values using specified format
 
-   // free everything here
+   // print the counts in alphabetical order
+   int j = 0, val;
+   while(dict[j] != NULL) {
+     val = atoi(getValue(hashtable, dict[j]));
+     if(val == 0) {
+       printf("%s\n", dict[j]); // specified format
+     } else {
+       printf("%s: %d\n", dict[j], val); // specified format
+     }
+     j++;
+   }
+
+   // free dynamically allocated sotrage
+   free(boardPtr);
+   clearTrie(root);
 
   return EXIT_SUCCESS;
 }

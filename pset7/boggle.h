@@ -45,6 +45,7 @@
  void checkBoard(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word);
  void checkPath(BoardPtr board, TrieNodePtr trie, int row, int col);
  void traverseBoard(BoardPtr board, TrieNodePtr trie);
+ int clearTrie (trieNodePtr root);
 
  #endif
  /* end BOGGLE_H */

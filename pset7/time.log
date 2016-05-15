@@ -8,8 +8,11 @@ Date    Started     Spent    Work Completed
 5/14    4:10        0:30     Plan out code for hash table and radix sort before printing boggle words
 5/14    7:30        2:23     Reorganize plan for boggle to use recursion and how to store, work on trie ds, work more on operations
 5/14    10:00       1:00     Add input reading operations and create board and trie
+5/14    12:30       1:06     Free dynamically allocated storage, file organization
                     ----
-                    5:50     TOTAL Time Spent
+                    6:56     TOTAL Time Spent
 
 I discussed my solution with no one.
-Major difficulties: Not exactly major, but figuring out how to create trie and then print the dictionary entries in alphabetical order. TBD.
+Major difficulties: Not exactly major, but figuring out how to create trie and
+then print the dictionary entries in alphabetical order.
+Next step: debugging - this will probably take up most of the time spent on this.
