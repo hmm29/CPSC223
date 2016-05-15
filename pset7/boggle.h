@@ -12,16 +12,15 @@
  #include <stdlib.h>
  #include <ctype.h>
  #include <string.h>
- #include <stdbool.h>
 
  #define ALPHABET_SIZE 26
- #define MAX_BOARD_DIMENSION 10
- #define MAX_NUM_WORDS 100
+ #define MAX_BOARD_LENGTH 10
 
  typedef struct trieNode {
    struct node *children[ALPHABET_SIZE];
-   bool isTerminal;
-   bool used;
+   int isTerminal;
+   int used;
+   int count;
  } trieNode;
 
  typedef struct trieNode *trieNodePtr;
@@ -29,23 +28,18 @@
  typedef struct board {
    int NROWS;
    int NCOLS;
-   int size;
-   char grid[MAX_BOARD_DIMENSION][MAX_BOARD_DIMENSION];
+   char grid[MAX_BOARD_LENGTH][MAX_BOARD_LENGTH];
  } board;
 
  typedef struct board *boardPtr;
 
- void initializeNode(trieNodePtr t);
- void insert(trieNodePtr root, char *string);
- int trieNodeHasChildren(trieNodePtr t);
- int search(trieNodePtr root, char *string);
- void removeNewline(char *s);
- int isValidWord(char *s);
- boardPtr createBoard(int NROWS, int NCOLS, char *string);
- void checkBoard(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word);
- void checkPath(BoardPtr board, TrieNodePtr trie, int row, int col);
- void traverseBoard(BoardPtr board, TrieNodePtr trie);
- int clearTrie (trieNodePtr root);
+ int getWord(File fp);
+ trieNodePtr makeNode(void);
+ void insertWord(trieNodePtr root, char *string);
+ void traverse(boardPtr board, trieNodePtr t, int row, int col);
+ void printWords(trieNodePtr t);
+ void clearTrie (trieNodePtr root);
+ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 
  #endif
  /* end BOGGLE_H */
