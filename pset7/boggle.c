@@ -14,6 +14,7 @@ Name: Harrison Miller, hmm29
 #include "/c/cs223/Hwk3/getLine.h"
 
 char *getWord(FILE *fp) {
+  int c = 0;
   char *in = getLine(fp);
   removeNewline(in);
   while(*in) {
