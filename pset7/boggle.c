@@ -45,6 +45,7 @@ trieNodePtr makeNode(void) {
   trieNodePtr t = (trieNodePtr) malloc(sizeof(trieNode));
   for (int i = 0; i < ALPHABET_SIZE; i++) t->children[i] = NULL;
   t->count = 0;
+  t->word = NULL;
   return t;
 }
 
@@ -81,12 +82,16 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   return board;
 }
 
-void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[], char* word, int noReuse) {
+void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[], int noReuse) {
   if(!trie) return;
+  if(noReuse && seen[row * board->NROWS + col] == 1) return;
+
+  trie->count++;
 
   int nrow, ncol;
   char newWord[board->NROWS * board->NCOLS]; // max word size
   int nseen[board->NROWS * board->NCOLS];
+  int pos;
 
   for(int i = 0; i < board->NROWS * board->NCOLS; i++) nseen[i] = seen[i]; // update seen marker grid
 
@@ -95,25 +100,22 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[]
     for (int j = -1; j < 2; j++) {
       nrow = row + i;
       ncol = col + j;
-      // if neighbor position is valid, then add to word
+      // if neighbor position is valid
       if (nrow >= 0 && nrow < board->NROWS && ncol >= 0 && ncol < board->NCOLS) {
+        if(board->grid[nrow][ncol] == '_') {
+          for(int i = 0; i < ALPHABET_SIZE; i++) {
+            traverseUtil(board, trie->children[i], nrow, ncol, nseen, noReuse);
+          }
+        }
         // if noReuse flag, ensure that neighbor has not been visited
         if(noReuse && seen[nrow * board->NROWS + ncol] == 0) {
-          sprintf(newWord,"%s%c",word,board->grid[nrow][ncol]);
           seen[nrow * board->NROWS + ncol] = 1;
-
-          // trie->word
-
-          int pos = board->grid[nrow][ncol] - 'a';
-          traverseUtil(board, trie->children[pos], nrow, ncol, nseen, newWord, noReuse);
+          pos = board->grid[nrow][ncol] - 'a';
+          traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
         } else if (!noReuse) {
-          sprintf(newWord, "%s%c", word, board->grid[nrow][ncol]);
-
-          // trie->word
           seen[nrow * board->NROWS + ncol] = 1;
-
-          int pos = board->grid[nrow][ncol] - 'a';
-          traverseUtil(board, trie->children[pos], nrow, ncol, nseen, newWord, noReuse);
+          pos = board->grid[nrow][ncol] - 'a';
+          traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
         }
       }
     }
@@ -126,13 +128,10 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
         
   for (int row = 0; row < board->NROWS; row++) {
     for (int col = 0; col < board->NCOLS; col++) {
-
         for (int i = 0; i < board->NROWS * board->NCOLS; i++) seen[i] = 0; // initialize all to 0
         seen[(row * board->NROWS) + col] = 1; // mark current letter as seen
-        sprintf(word,"%c",board->grid[row][col]); // replace word with this letter
-
         for(int i = 0; i < ALPHABET_SIZE; i++) {
-          traverseUtil(board, trie->children[i], row, col, seen, word, noReuse);
+          traverseUtil(board, trie->children[i], row, col, seen, noReuse);
         }
     }
   }
@@ -142,12 +141,12 @@ void printWords(trieNodePtr root, int showNonBoggleWords) {
   int i;
   if (root == NULL) return;
 
-// check that word exists
-  if(showNonBoggleWords && root->count == 0) {
+  // check that word exists
+  if(showNonBoggleWords && root->count == 0 && root->word) {
     printf("%s\n", root->word);
   }
 
-  if (root->count > 0) {
+  if (root->count > 0 && root->word) {
     printf("%s: %d\n", root->word, root->count);
   }
 

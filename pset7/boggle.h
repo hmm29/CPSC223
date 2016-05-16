@@ -38,7 +38,7 @@
  trieNodePtr makeNode(void);
  void insertWord(trieNodePtr root, char *string);
  boardPtr makeBoard(int NROWS, int NCOLS, char *letters);
- void traverseUtil(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word, int noReuse);
+ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[], int noReuse);
  void traverse(boardPtr board, trieNodePtr trie, int noReuse);
  void printWords(trieNodePtr trie, int showNonBoggleWords);
 
