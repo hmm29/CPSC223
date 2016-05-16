@@ -44,6 +44,7 @@ trieNodePtr makeNode(void) {
   trieNodePtr t = (trieNodePtr) malloc(sizeof(trieNode));
   for (int i = 0; i < ALPHABET_SIZE; i++) t->children[i] = NULL;
   t->count = 0;
+  return t;
 }
 
 void insertWord(trieNodePtr root, char *word) {
@@ -74,7 +75,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   return board;
 }
 
-void traverseUtil(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word, int noReuse) {
+void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[], char* word, int noReuse) {
   int nrow, ncol;
   char newWord[board->NROWS * board->NCOLS]; // max word size
   int nseen[board->NROWS * board->NCOLS];
@@ -96,7 +97,7 @@ void traverseUtil(boardPtr board, trieNodePtr t, int row, int col, int seen[], c
         } else if (!noReuse) {
           sprintf(newWord, "%s%c", word, board->grid[nrow][ncol]);
           seen[nrow * board->NROWS + ncol] = 1;
-          traverseUtil(board, trie, nrow, ncol, nseen, newword, noReuse);
+          traverseUtil(board, trie, nrow, ncol, nseen, newWord, noReuse);
         }
       }
     }
@@ -117,11 +118,11 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   }
 }
 
-void printWords(trieNodePtr t) {
+void printWords(trieNodePtr trie, int icount, int showNonBoggleWords) {
 
 }
 
-int clearTrie (trieNodePtr root){
+void clearTrie(trieNodePtr root){
   if (root){
     free(root);
     for (int i = 0; i < ALPHABET_SIZE; i++) clearTrie(root->children[i]);
@@ -136,11 +137,11 @@ int main(int argc, char *argv[]) {
   int icount = 0; /* count of stdin inputs */
   int showNonBoggleWords = 0; /* ARG: flag to print all non-Boggle words */
   int noReuse = 0; /* ARG: flag to only use letters once */
-  char *board = NULL; /* ARG: board */
+  char *letters = NULL; /* ARG: board letters */
   char *input = NULL; /* STDIN: dictionary word */
 
   // check for valid argument count
-  if(argc < 4 || argv > 6) {
+  if(argc < 4 || argc > 6) {
     fprintf(stderr, "Usage: %s filename. Invalid number of arguments: %d.", argv[0], argc);
     exit(EXIT_FAILURE);
   }
@@ -168,7 +169,7 @@ int main(int argc, char *argv[]) {
       }
     } else if(i == argc-1) {
       if(intArg == 0 && !board && strlen(argv[i]) == NROWS * NCOLS) {
-        board = argv[i];
+        letters = argv[i];
       } else {
         fprintf(stderr, "Usage: %s filename. Invalid board argument: %s.", argv[0], argv[i]);
         exit(EXIT_FAILURE);
@@ -186,13 +187,13 @@ int main(int argc, char *argv[]) {
   }
 
   // ensure we have necessary setup
-  if(NROWS < 1 || NCOLS < 1 || !board) {
-    fprintf(stderr, "Usage: %s filename. Error occurred with Boggle setup.", argv[0])
+  if(NROWS < 1 || NCOLS < 1 || !letters) {
+    fprintf(stderr, "Usage: %s filename. Error occurred with Boggle setup.", argv[0]);
     exit(EXIT_FAILURE);
   }
 
   // make board
-  boardPtr board = makeBoard(NROWS, NCOLS, board);
+  boardPtr board = makeBoard(NROWS, NCOLS, letters);
 
   // make trie
   trieNodePtr root = makeNode();

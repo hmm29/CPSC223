@@ -17,7 +17,7 @@
  #define MAX_BOARD_LENGTH 10
 
  typedef struct trieNode {
-   struct node *children[ALPHABET_SIZE];
+   struct trieNode *children[ALPHABET_SIZE];
    int count;
  } trieNode;
 
@@ -31,7 +31,7 @@
 
  typedef struct board *boardPtr;
 
- int getWord(File fp);
+ char *getWord(File *fp);
  void removeNewline(char *str);
  int isValidWord(char *str);
  trieNodePtr makeNode(void);
@@ -39,8 +39,8 @@
  boardPtr makeBoard(int NROWS, int NCOLS, char *letters);
  void traverseUtil(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word, int noReuse);
  void traverse(boardPtr board, trieNodePtr trie, int noReuse);
- void printWords(trieNodePtr t, int icount, int showNonBoggleWords);
- void clearTrie (trieNodePtr root);
+ void printWords(trieNodePtr trie, int icount, int showNonBoggleWords);
+ void clearTrie(trieNodePtr root);
 
  #endif
  /* end BOGGLE_H */
