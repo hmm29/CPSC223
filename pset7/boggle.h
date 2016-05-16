@@ -1,5 +1,5 @@
 /*
- * File: boggle.h
+ * File: Boggle.h
  * Programmer: Harrison Miller
  * Description: this file contains typedef declarations and function prototypes
  * for the functions defined and called in boggle.c.

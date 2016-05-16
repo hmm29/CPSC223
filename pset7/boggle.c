@@ -1,6 +1,6 @@
 
 /*
-File: boggle.c
+File: Boggle.c
 Description: This file contains a program that can be used to list every word in the standard input that is a "Boggle
 word" for the NROWS x NCOLS array BOARD.
 Name: Harrison Miller, hmm29
@@ -30,7 +30,7 @@ void removeNewline(char *str) {
 }
 
 int isValidWord(char *str) {
-  int c = 0;1
+  int c = 0;
   if(str[strlen(str)-1] == '\n') removeNewline(str);
   if (strlen(str) < 3) return 0;
   while(*str) {
@@ -59,6 +59,11 @@ void insertWord(trieNodePtr root, char *word) {
       child = makeNode();
       root->children[pos] = child;
     }
+    // if at the end of the word (i = strlen - 1) and t->word is null, t->word = word
+    if(i == strlen(word)-1 && !root->word) {
+      root->word = word;
+      return;
+    }
     root = child;
   }
 }
@@ -77,6 +82,8 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 }
 
 void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[], char* word, int noReuse) {
+  if(!trie) return;
+
   int nrow, ncol;
   char newWord[board->NROWS * board->NCOLS]; // max word size
   int nseen[board->NROWS * board->NCOLS];
@@ -94,11 +101,19 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[]
         if(noReuse && seen[nrow * board->NROWS + ncol] == 0) {
           sprintf(newWord,"%s%c",word,board->grid[nrow][ncol]);
           seen[nrow * board->NROWS + ncol] = 1;
-          traverseUtil(board, trie, nrow, ncol, nseen, newWord, noReuse);
+
+          // trie->word
+
+          int pos = board->grid[nrow][ncol] - 'a';
+          traverseUtil(board, trie->children[pos], nrow, ncol, nseen, newWord, noReuse);
         } else if (!noReuse) {
           sprintf(newWord, "%s%c", word, board->grid[nrow][ncol]);
+
+          // trie->word
           seen[nrow * board->NROWS + ncol] = 1;
-          traverseUtil(board, trie, nrow, ncol, nseen, newWord, noReuse);
+
+          int pos = board->grid[nrow][ncol] - 'a';
+          traverseUtil(board, trie->children[pos], nrow, ncol, nseen, newWord, noReuse);
         }
       }
     }
@@ -111,10 +126,14 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
         
   for (int row = 0; row < board->NROWS; row++) {
     for (int col = 0; col < board->NCOLS; col++) {
+
         for (int i = 0; i < board->NROWS * board->NCOLS; i++) seen[i] = 0; // initialize all to 0
         seen[(row * board->NROWS) + col] = 1; // mark current letter as seen
         sprintf(word,"%c",board->grid[row][col]); // replace word with this letter
-        traverseUtil(board, trie, row, col, seen, word, noReuse);
+
+        for(int i = 0; i < ALPHABET_SIZE; i++) {
+          traverseUtil(board, trie->children[i], row, col, seen, word, noReuse);
+        }
     }
   }
 }

@@ -14,8 +14,9 @@ Date    Started     Spent    Work Completed
 5/16    12:00       1:00     clean up functions and store count in nodes
 5/16    10:30       0:34     start debugging
 5/16    11:30       0:30     start writing print function
+5/16    5:00        0:30
                     ----
-                    11:30     TOTAL Time Spent
+                    12:00     TOTAL Time Spent
 
 I discussed my solution with no one.
 Major difficulties: Not major ones, just figuring out how to create trie and
