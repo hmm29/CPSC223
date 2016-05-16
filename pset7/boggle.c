@@ -30,7 +30,7 @@ void removeNewline(char *str) {
 }
 
 int isValidWord(char *str) {
-  int c = 0;
+  int c = 0;1
   if(str[strlen(str)-1] == '\n') removeNewline(str);
   if (strlen(str) < 3) return 0;
   while(*str) {
@@ -119,8 +119,22 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   }
 }
 
-void printWords(trieNodePtr trie, int icount, int showNonBoggleWords) {
+void printWords(trieNodePtr trie, int showNonBoggleWords) {
+  int i;
+  if (root == NULL) return;
 
+  if(showNonBoggleWords && root->count == 0) {
+    printf("%s\n", word);
+  }
+
+  if (root->count > 0) {
+    printf("%s: %d\n", word, root->count);
+  }
+
+  for (i = 0; i < ALPHABET_SIZE; i++)
+  {
+      printWords(root->children[i], showNonBoggleWords);
+  }
 }
 
 void clearTrie(trieNodePtr root){
@@ -135,7 +149,6 @@ int main(int argc, char *argv[]) {
   int intArg; /* current arg as int */
   int NROWS = 0; /* ARG: number of board rows */
   int NCOLS = 0; /* ARG: number of board columns */
-  int icount = 0; /* count of stdin inputs */
   int showNonBoggleWords = 0; /* ARG: flag to print all non-Boggle words */
   int noReuse = 0; /* ARG: flag to only use letters once */
   char *letters = NULL; /* ARG: board letters */
@@ -143,7 +156,7 @@ int main(int argc, char *argv[]) {
 
   // check for valid argument count
   if(argc < 4 || argc > 6) {
-    fprintf(stderr, "Usage: %s filename. Invalid number of arguments: %d.", argv[0], argc);
+    fprintf(stderr, "Usage: %s filename. Invalid number of arguments: %d.\n", argv[0], argc);
     exit(EXIT_FAILURE);
   }
 
@@ -154,7 +167,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-c") == 0) {
         showNonBoggleWords = 1;
       } else if (intArg == 0) {
-        fprintf(stderr, "Usage: %s filename. Invalid flag: %s.", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s filename. Invalid flag: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       } else {
         NROWS = intArg;
@@ -163,7 +176,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-t") == 0) {
         noReuse = 1;
       } else if (intArg == 0){
-        fprintf(stderr, "Usage: %s filename. Invalid flag: %s.", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s filename. Invalid flag: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       } else {
         NCOLS = intArg;
@@ -172,7 +185,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
         letters = argv[i];
       } else {
-        fprintf(stderr, "Usage: %s filename. Invalid board argument: %s.", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s filename. Invalid board argument: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     } else {
@@ -181,7 +194,7 @@ int main(int argc, char *argv[]) {
       } else if(NCOLS == 0 && intArg > 0) {
         NCOLS = intArg;
       } else {
-        fprintf(stderr, "Usage: %s filename. Invalid board dimension argument: %s.", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s filename. Invalid board dimension argument: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     }
@@ -189,7 +202,7 @@ int main(int argc, char *argv[]) {
 
   // ensure we have necessary setup
   if(NROWS < 1 || NCOLS < 1 || !letters) {
-    fprintf(stderr, "Usage: %s filename. Error occurred with Boggle setup.", argv[0]);
+    fprintf(stderr, "Usage: %s filename. Error occurred with Boggle setup.\n", argv[0]);
     exit(EXIT_FAILURE);
   }
 
@@ -201,8 +214,6 @@ int main(int argc, char *argv[]) {
 
   // read words from stdin
   while((input = getWord(stdin)) != NULL) {
-     icount++;
-
      // if not then simply skip
      if (!isValidWord(input)) {
        continue;
@@ -213,7 +224,7 @@ int main(int argc, char *argv[]) {
 
    // walk board and count words
    traverse(board, root, noReuse);
-   printWords(root, icount, showNonBoggleWords);
+   printWords(root, showNonBoggleWords);
 
    // free heap storage
    free(board);
