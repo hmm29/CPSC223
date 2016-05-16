@@ -53,7 +53,7 @@ void insertWord(trieNodePtr root, char *word) {
   trieNodePtr child; /* child node of current trie node */
 
   for(int i = 0; i < strlen(word); i++) {
-    pos = tolower(word[i]) - 'a';
+    pos = word[i] - 'a';
     child = root->children[pos];
     if(!child) {
       child = makeNode();
@@ -119,28 +119,22 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   }
 }
 
-void printWords(trieNodePtr trie, int showNonBoggleWords) {
+void printWords(trieNodePtr root, int showNonBoggleWords) {
   int i;
   if (root == NULL) return;
 
+// check that word exists
   if(showNonBoggleWords && root->count == 0) {
-    printf("%s\n", word);
+    printf("%s\n", root->word);
   }
 
   if (root->count > 0) {
-    printf("%s: %d\n", word, root->count);
+    printf("%s: %d\n", root->word, root->count);
   }
 
   for (i = 0; i < ALPHABET_SIZE; i++)
   {
       printWords(root->children[i], showNonBoggleWords);
-  }
-}
-
-void clearTrie(trieNodePtr root){
-  if (root){
-    free(root);
-    for (int i = 0; i < ALPHABET_SIZE; i++) clearTrie(root->children[i]);
   }
 }
 
@@ -225,10 +219,6 @@ int main(int argc, char *argv[]) {
    // walk board and count words
    traverse(board, root, noReuse);
    printWords(root, showNonBoggleWords);
-
-   // free heap storage
-   free(board);
-   clearTrie(root);
 
   return EXIT_SUCCESS;
 }

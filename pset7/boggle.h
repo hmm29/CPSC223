@@ -18,6 +18,7 @@
 
  typedef struct trieNode {
    struct trieNode *children[ALPHABET_SIZE];
+   char *word;
    int count;
  } trieNode;
 
@@ -40,7 +41,6 @@
  void traverseUtil(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word, int noReuse);
  void traverse(boardPtr board, trieNodePtr trie, int noReuse);
  void printWords(trieNodePtr trie, int showNonBoggleWords);
- void clearTrie(trieNodePtr root);
 
  #endif
  /* end BOGGLE_H */
