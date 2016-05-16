@@ -10,10 +10,12 @@ Date    Started     Spent    Work Completed
 5/14    10:00       1:00     Add input reading operations and create board and trie
 5/14    12:30       1:06     Free dynamically allocated storage, file organization
 5/15    3:18        1:00     Revise and simplify file structure -- no need for hash, store count in nodes and simply traverse, now to work on traverse function
+5/15    5:00        1:00     write traverse function
+5/16    12:00       1:00     clean up functions and store count in nodes
                     ----
-                    7:56     TOTAL Time Spent
+                    9:56     TOTAL Time Spent
 
 I discussed my solution with no one.
-Major difficulties: Not exactly major, but figuring out how to create trie and
-then print the dictionary entries in alphabetical order.
+Major difficulties: Not major ones, just figuring out how to create trie and
+then handle flags
 Next step: debugging - this will probably take up most of the time spent on this.

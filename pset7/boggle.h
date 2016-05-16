@@ -18,8 +18,6 @@
 
  typedef struct trieNode {
    struct node *children[ALPHABET_SIZE];
-   int isTerminal;
-   int used;
    int count;
  } trieNode;
 
@@ -34,12 +32,15 @@
  typedef struct board *boardPtr;
 
  int getWord(File fp);
+ void removeNewline(char *str);
+ int isValidWord(char *str);
  trieNodePtr makeNode(void);
  void insertWord(trieNodePtr root, char *string);
- void traverse(boardPtr board, trieNodePtr t, int row, int col);
- void printWords(trieNodePtr t);
+ boardPtr makeBoard(int NROWS, int NCOLS, char *letters);
+ void traverseUtil(boardPtr board, trieNodePtr t, int row, int col, int seen[], char* word, int noReuse);
+ void traverse(boardPtr board, trieNodePtr trie, int noReuse);
+ void printWords(trieNodePtr t, int icount, int showNonBoggleWords);
  void clearTrie (trieNodePtr root);
- boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 
  #endif
  /* end BOGGLE_H */
