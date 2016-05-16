@@ -31,7 +31,7 @@
 
  typedef struct board *boardPtr;
 
- char *getWord(File *fp);
+ char *getWord(FILE *fp);
  void removeNewline(char *str);
  int isValidWord(char *str);
  trieNodePtr makeNode(void);

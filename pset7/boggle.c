@@ -13,8 +13,8 @@ Name: Harrison Miller, hmm29
 #include "boggle.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
-char *getWord(File *fp) {
-  char *in = getLine(File fp);
+char *getWord(FILE *fp) {
+  char *in = getLine(fp);
   removeNewline(in);
   while(*in) {
       c = tolower(*in);
@@ -93,7 +93,7 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[]
         if(noReuse && seen[nrow * board->NROWS + ncol] == 0) {
           sprintf(newWord,"%s%c",word,board->grid[nrow][ncol]);
           seen[nrow * board->NROWS + ncol] = 1;
-          traverseUtil(board,trie,nrow,ncol,nseen,newword, noReuse);
+          traverseUtil(board, trie, nrow, ncol, nseen, newWord, noReuse);
         } else if (!noReuse) {
           sprintf(newWord, "%s%c", word, board->grid[nrow][ncol]);
           seen[nrow * board->NROWS + ncol] = 1;
@@ -168,7 +168,7 @@ int main(int argc, char *argv[]) {
         NCOLS = intArg;
       }
     } else if(i == argc-1) {
-      if(intArg == 0 && !board && strlen(argv[i]) == NROWS * NCOLS) {
+      if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
         letters = argv[i];
       } else {
         fprintf(stderr, "Usage: %s filename. Invalid board argument: %s.", argv[0], argv[i]);
