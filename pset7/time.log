@@ -14,11 +14,12 @@ Date    Started     Spent    Work Completed
 5/16    12:00       1:00     clean up functions and store count in nodes
 5/16    10:30       0:34     start debugging
 5/16    11:30       0:30     start writing print function
-5/16    5:00        0:30
+5/16    5:00        0:30     figure out traverse function
+5/16	7:00	    1:30     handle special case for underscore and also for flags	
                     ----
-                    12:00     TOTAL Time Spent
+                    14:00     TOTAL Time Spent
 
-I discussed my solution with no one.
+I discussed my solution with Steven Rofrano.
 Major difficulties: Not major ones, just figuring out how to create trie and
 then handle flags
 Next step: debugging - this will probably take up most of the time spent on this.
