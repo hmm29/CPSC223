@@ -25,8 +25,8 @@ char *getWord(FILE *fp) {
 }
 
 void removeNewline(char *str) {
-  while(*str && *str != '\n' && *str != '\r') str++;
-  *str = 0;
+  while(*str && *str != '\n' && *str != '\r') *str++;
+  *str = '\0';
 }
 
 int isValidWord(char *str) {
@@ -76,7 +76,6 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 
   for(int i = 0; i < NROWS; i++) {
     for(int j = 0; j < NCOLS; j++) {
-      printf("%d and %d", i, j);
       board->grid[i][j] = letters[i * NROWS + j];
     }
   }
