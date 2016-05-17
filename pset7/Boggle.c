@@ -13,6 +13,11 @@ Name: Harrison Miller, hmm29
 #include "Boggle.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
+void removeNewline(char *str) {
+  while(*str && *str != '\n') str++;
+  *str = 0;
+}
+
 char *getWord(FILE *fp) {
   int c = 0;
   char *in = getLine(fp);
@@ -22,11 +27,6 @@ char *getWord(FILE *fp) {
       *in++ = c;
    }
    return in;
-}
-
-void removeNewline(char *str) {
-  while(*str && *str != '\n' && *str != '\r') str++;
-  *str = 0;
 }
 
 int isValidWord(char *str) {
@@ -76,7 +76,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 
   for(int i = 0; i < NROWS; i++) {
     for(int j = 0; j < NCOLS; j++) {
-      board->grid[i][j] = letters[i * NROWS + j];
+     // board->grid[i][j] = letters[i*NROWS+j];
     }
   }
   return board;
