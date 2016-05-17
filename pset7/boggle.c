@@ -10,7 +10,7 @@ Name: Harrison Miller, hmm29
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
-#include "boggle.h"
+#include "Boggle.h"
 #include "/c/cs223/Hwk3/getLine.h"
 
 char *getWord(FILE *fp) {
@@ -42,7 +42,7 @@ int isValidWord(char *str) {
 }
 
 trieNodePtr makeNode(void) {
-  trieNodePtr t = (trieNodePtr) malloc(sizeof(trieNode));
+  trieNodePtr t = malloc(sizeof(trieNode));
   for (int i = 0; i < ALPHABET_SIZE; i++) t->children[i] = NULL;
   t->count = 0;
   t->word = NULL;
@@ -70,7 +70,7 @@ void insertWord(trieNodePtr root, char *word) {
 }
 
 boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
-  boardPtr board = (boardPtr) malloc(sizeof(board));
+  boardPtr board = malloc(sizeof(board));
   board->NROWS = NROWS;
   board->NCOLS = NCOLS;
 
@@ -89,7 +89,6 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[]
   trie->count++;
 
   int nrow, ncol;
-  char newWord[board->NROWS * board->NCOLS]; // max word size
   int nseen[board->NROWS * board->NCOLS];
   int pos;
 
@@ -123,7 +122,6 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[]
 }
 
 void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
-  char word[board->NROWS * board->NCOLS];
   int seen[board->NROWS * board->NCOLS];
         
   for (int row = 0; row < board->NROWS; row++) {
