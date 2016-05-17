@@ -76,6 +76,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 
   for(int i = 0; i < NROWS; i++) {
     for(int j = 0; j < NCOLS; j++) {
+      printf("%d and %d", i, j);
       board->grid[i][j] = letters[i * NROWS + j];
     }
   }
