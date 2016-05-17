@@ -76,7 +76,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 
   for(int i = 0; i < NROWS; i++) {
     for(int j = 0; j < NCOLS; j++) {
-      board->grid[i][j] = letters[i * NROWS + j];
+      board->grid[i][j] = letters[i*NROWS+j];
     }
   }
   return board;
@@ -211,7 +211,7 @@ int main(int argc, char *argv[]) {
   }
 
   // ensure we have necessary setup
-  if(NROWS < 1 || NCOLS < 1 || !letters) {
+  if(NROWS < 1 || NCOLS < 1 || !letters || strlen(letters) != NROWS * NCOLS) {
     fprintf(stderr, "Usage: %s filename. Error occurred with Boggle setup.\n", argv[0]);
     exit(EXIT_FAILURE);
   }
