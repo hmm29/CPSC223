@@ -11,30 +11,42 @@ Name: Harrison Miller, hmm29
 #include <ctype.h>
 #include <string.h>
 #include "Boggle.h"
-#include "/c/cs223/Hwk3/getLine.h"
-
-void removeNewline(char *str) {
-  while(*str && *str != '\n') str++;
-  *str = 0;
-}
 
 char *getWord(FILE *fp) {
-  int c = 0;
-  char *in = getLine(fp);
-  removeNewline(in);
-  while(*in) {
-      c = tolower(*in);
-      *in++ = c;
-   }
-   return in;
+    // modified getLine
+    char *input;                 
+    int size;                   
+    int c, i;
+
+    size = sizeof(double);                      
+    input = malloc (size);
+    for (i = 0;  (c = getc(fp)) != EOF; )  {
+        if (i == size-1) {
+            size *= 2;                         
+            input = realloc (input, size);
+        }
+	input[i++] = tolower(c);
+        if (c == '\n')                        
+            break;
+    }
+
+    if (c == EOF && i == 0)  {                 
+        free (input);
+        return NULL;
+    }
+
+    input[i++] = '\0';                          
+    input = realloc (input, i);
+    return input;
 }
 
 int isValidWord(char *str) {
   int c = 0;
-  if(str[strlen(str)-1] == '\n') removeNewline(str);
-  if (strlen(str) < 3) return 0;
+  if(!str) return 0;
+  if(!isalpha(str[0])) return 0;
   while(*str) {
     c = tolower(*str);
+    if(!isalpha(c)) return 0;
     if (!(c >= 'a' && (c <= 'z'))) return 0;
     *str++ = c;
   }
@@ -42,7 +54,7 @@ int isValidWord(char *str) {
 }
 
 trieNodePtr makeNode(void) {
-  trieNodePtr t = (trieNodePtr) malloc(sizeof(trieNode));
+  trieNodePtr t = (trieNodePtr) malloc(sizeof(TrieNode));
   for (int i = 0; i < ALPHABET_SIZE; i++) t->children[i] = NULL;
   t->count = 0;
   t->word = NULL;
@@ -54,13 +66,13 @@ void insertWord(trieNodePtr root, char *word) {
   trieNodePtr child; /* child node of current trie node */
 
   for(int i = 0; i < strlen(word); i++) {
-    pos = word[i] - 'a';
+    pos = tolower(word[i]) - 'a';
     child = root->children[pos];
     if(!child) {
       child = makeNode();
       root->children[pos] = child;
     }
-    // if at the end of the word (i = strlen - 1) and t->word is null, t->word = word
+    // if at the end of the word (i = strlen-1) and t->word is null, t->word = word
     if(i == strlen(word)-1 && !root->word) {
       root->word = word;
       return;
@@ -70,13 +82,13 @@ void insertWord(trieNodePtr root, char *word) {
 }
 
 boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
-  boardPtr board = (boardPtr) malloc(sizeof(board));
+  boardPtr board = (boardPtr) malloc(sizeof(Board));
   board->NROWS = NROWS;
   board->NCOLS = NCOLS;
 
   for(int i = 0; i < NROWS; i++) {
     for(int j = 0; j < NCOLS; j++) {
-     // board->grid[i][j] = letters[i*NROWS+j];
+     board->grid[i][j] = letters[i*NROWS+j];
     }
   }
   return board;
@@ -137,21 +149,20 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
 
 void printWords(trieNodePtr root, int showNonBoggleWords) {
   int i;
-  if (root == NULL) return;
+  if (!root) return;
 
   // check that word exists
   if(showNonBoggleWords && root->count == 0 && root->word) {
     printf("%s\n", root->word);
-  }
-
-  if (root->count > 0 && root->word) {
+  } else if (!showNonBoggleWords && root->count > 0 && root->word) {
     printf("%s: %d\n", root->word, root->count);
   }
-
+   
   for (i = 0; i < ALPHABET_SIZE; i++)
   {
       printWords(root->children[i], showNonBoggleWords);
   }
+
 }
 
 int main(int argc, char *argv[]) {
@@ -224,11 +235,9 @@ int main(int argc, char *argv[]) {
 
   // read words from stdin
   while((input = getWord(stdin)) != NULL) {
-     // if not then simply skip
      if (!isValidWord(input)) {
-       continue;
+      continue;
      }
-
      insertWord(root, input);
    }
 

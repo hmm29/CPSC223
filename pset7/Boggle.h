@@ -20,7 +20,7 @@
    struct trieNode *children[ALPHABET_SIZE];
    char *word;
    int count;
- } trieNode;
+ } TrieNode;
 
  typedef struct trieNode *trieNodePtr;
 
@@ -28,7 +28,7 @@
    int NROWS;
    int NCOLS;
    char grid[MAX_BOARD_LENGTH][MAX_BOARD_LENGTH];
- } board;
+ } Board;
 
  typedef struct board *boardPtr;
 
