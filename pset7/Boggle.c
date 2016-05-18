@@ -25,28 +25,28 @@
 char *getWord(FILE *fp) {
     // modified getLine
     char *input;
-    int size;
-    int c, i;
+    int size = 8;
+    int c, i = 0;
 
-    size = sizeof(double);
-    input = malloc (size);
-    for (i = 0;  (c = getc(fp)) != EOF; )  {
-        if (i == size-1) {
-            size *= 2;
-            input = realloc (input, size);
-        }
-	      input[i++] = tolower(c);
+    input = malloc(size);
+    while((c = getc(fp)) != EOF)  {
         if (c == '\n') {
-            ungetch(c, fp);
-            break;
+            if(i == 0) {
+	 	continue;
+	    } else {
+	 	break;
+ 	    }
         }
+	if(i == size-1) {
+	   size *= 2;
+	   input = realloc(input, size);
+	}
+	input[i++] = tolower(c);
     }
-
     if (c == EOF && i == 0)  {
-        free (input);
+        free(input);
         return NULL;
     }
-
     input[i++] = '\0';
     input = realloc(input, i);
     return input;
@@ -265,9 +265,7 @@ int main(int argc, char *argv[]) {
 
   // check for valid argument count
   if(argc < 4 || argc > 6) {
-    fprintf(stderr,
-      "Usage: %s filename.
-      Invalid number of arguments: %d.\n", argv[0], argc);
+    fprintf(stderr, "Usage: %s. Invalid number of arguments: %d.\n", argv[0], argc);
     exit(EXIT_FAILURE);
   }
 
@@ -278,9 +276,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-c") == 0) {
         showNonBoggleWords = 1;
       } else if (intArg == 0) {
-        fprintf(stderr,
-          "Usage: %s filename.
-          Invalid flag: %s.\n", argv[0], argv[i]);
+        fprintf(stderr,"Usage: %s. Invalid flag: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       } else {
         NROWS = intArg;
@@ -289,9 +285,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && strcmp(argv[i], "-t") == 0) {
         noReuse = 1;
       } else if (intArg == 0){
-        fprintf(stderr,
-          "Usage: %s filename.
-          Invalid flag: %s.\n", argv[0], argv[i]);
+        fprintf(stderr,"Usage: %s. Invalid flag: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       } else {
         NCOLS = intArg;
@@ -300,9 +294,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
         letters = argv[i];
       } else {
-        fprintf(stderr,
-          "Usage: %s filename.
-          Invalid board argument: %s.\n", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s. Invalid board argument: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     } else {
@@ -311,9 +303,7 @@ int main(int argc, char *argv[]) {
       } else if(NCOLS == 0 && intArg > 0) {
         NCOLS = intArg;
       } else {
-        fprintf(stderr,
-          "Usage: %s filename.
-          Invalid board dimension argument: %s.\n", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s. Invalid board dimension argument: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     }
@@ -321,9 +311,7 @@ int main(int argc, char *argv[]) {
 
   // ensure we have necessary setup
   if(NROWS < 1 || NCOLS < 1 || !letters) {
-    fprintf(stderr,
-      "Usage: %s filename.
-      Error occurred with Boggle setup.\n", argv[0]);
+    fprintf(stderr, "Usage: %s. Error occurred with Boggle setup.\n", argv[0]);
     exit(EXIT_FAILURE);
   }
 
