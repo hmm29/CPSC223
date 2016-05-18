@@ -1,9 +1,10 @@
-/*
- * File: Boggle.h
- * Programmer: Harrison Miller
- * Description: this file contains typedef declarations and function prototypes
+/******************************************************************************
+ * Boggle.h
+ * This file contains typedef declarations and function prototypes
  * for the functions defined and called in boggle.c.
- */
+ *
+ * Harrison Miller
+ ******************************************************************************/
 
  #ifndef BOGGLE_H
  #define BOGGLE_H

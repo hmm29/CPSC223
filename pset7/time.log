@@ -17,10 +17,11 @@ Date    Started     Spent    Work Completed
 5/16    5:00        0:30     figure out traverse function
 5/16	7:00	    1:30     handle special case for underscore and also for flags	
 5/16    8:00        4:00     debugging!!!! UGH
+5/18    12:00       1:00
                     ----
-                    17:00     TOTAL Time Spent
+                    18:00     TOTAL Time Spent
 
 I discussed my solution with Steven Rofrano.
-Major difficulties: Not major ones, just figuring out how to create trie and
-then handle flags
+Major difficulties: Debugging Valgrind errors and ensuring that words are correctly inserted.
+Traversing the board recursively was hardest function to write.
 Next step: debugging - this will probably take up most of the time spent on this.
