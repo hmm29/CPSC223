@@ -29,19 +29,19 @@ char *getWord(FILE *fp) {
     int c, i = 0;
 
     input = malloc(size);
-    while((c = getc(fp)) != EOF)  {
+    while((c = getc(fp)) != EOF) {
         if (c == '\n') {
-            if(i == 0) {
-	 	continue;
-	    } else {
-	 	break;
- 	    }
-        }
-	if(i == size-1) {
-	   size *= 2;
-	   input = realloc(input, size);
-	}
-	input[i++] = tolower(c);
+          if(i == 0) {
+      	   	continue;
+      	  } else {
+          	break;
+     	    }
+    }
+  	if(i == size-1) {
+  	   size *= 2;
+  	   input = realloc(input, size);
+  	}
+	  input[i++] = tolower(c);
     }
     if (c == EOF && i == 0)  {
         free(input);
@@ -158,6 +158,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
  */
 void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
   int seen[], int noReuse) {
+
   if(!trie) return;
   if(noReuse && seen[row * board->NROWS + col] == 1) return;
 
@@ -181,13 +182,11 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
           for(int i = 0; i < ALPHABET_SIZE; i++) {
             traverseUtil(board, trie->children[i], nrow, ncol, nseen, noReuse);
           }
-        }
-        // if noReuse flag, ensure that neighbor has not been visited
-        if(noReuse && seen[nrow * board->NROWS + ncol] == 0) {
+        } else if(noReuse && seen[nrow * board->NROWS + ncol] == 0) {
           seen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow][ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
-        } else if (!noReuse) {
+        } else if(!noReuse) {
           seen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow][ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
@@ -232,11 +231,10 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
  *  print trie words in alphabetical order
  *
  *  root: root of the trie
- *  showNonBoggleWords: flag to indicate if non-Boggle words should be printed
+ *  showNonBoggleWords: flag to hide or print non-Boggle words
  *
  */
 void printWords(trieNodePtr root, int showNonBoggleWords) {
-  int i;
   if (!root) return;
 
   // check that word exists
@@ -246,7 +244,7 @@ void printWords(trieNodePtr root, int showNonBoggleWords) {
     printf("%s: %d\n", root->word, root->count);
   }
 
-  for (i = 0; i < ALPHABET_SIZE; i++)
+  for (int i = 0; i < ALPHABET_SIZE; i++)
   {
     printWords(root->children[i], showNonBoggleWords);
   }
@@ -265,7 +263,7 @@ int main(int argc, char *argv[]) {
 
   // check for valid argument count
   if(argc < 4 || argc > 6) {
-    fprintf(stderr, "Usage: %s. Invalid number of arguments: %d.\n", argv[0], argc);
+    fprintf(stderr, "Usage: %s. Invalid # of args: %d.\n", argv[0], argc);
     exit(EXIT_FAILURE);
   }
 
@@ -294,7 +292,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
         letters = argv[i];
       } else {
-        fprintf(stderr, "Usage: %s. Invalid board argument: %s.\n", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s. Invalid arg: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     } else {
@@ -303,7 +301,7 @@ int main(int argc, char *argv[]) {
       } else if(NCOLS == 0 && intArg > 0) {
         NCOLS = intArg;
       } else {
-        fprintf(stderr, "Usage: %s. Invalid board dimension argument: %s.\n", argv[0], argv[i]);
+        fprintf(stderr, "Usage: %s. Invalid arg: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
       }
     }

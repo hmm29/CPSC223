@@ -17,9 +17,10 @@ Date    Started     Spent    Work Completed
 5/16    5:00        0:30     figure out traverse function
 5/16	7:00	    1:30     handle special case for underscore and also for flags	
 5/16    8:00        4:00     debugging!!!! UGH
-5/18    12:00       1:00
+5/18    12:00       1:00     debugging
+5/19    11:15       0:30     debugging
                     ----
-                    18:00     TOTAL Time Spent
+                    18:30     TOTAL Time Spent
 
 I discussed my solution with Steven Rofrano.
 Major difficulties: Debugging Valgrind errors and ensuring that words are correctly inserted.
