@@ -194,16 +194,16 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
       if(nrow >= 0 && nrow < board->NROWS && ncol >= 0 && ncol < board->NCOLS){
 
         if(board->grid[nrow * board->NROWS + ncol] == '_') {
-          seen[nrow * board->NROWS + ncol] = 1;
+          nseen[nrow * board->NROWS + ncol] = 1;
           for(int i = 0; i < ALPHABET_SIZE; i++) {
             traverseUtil(board, trie->children[i], nrow, ncol, nseen, noReuse);
           }
         } else if(noReuse && !seen[nrow * board->NROWS + ncol]) {
-          seen[nrow * board->NROWS + ncol] = 1;
+          nseen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
         } else if(!noReuse) {
-          seen[nrow * board->NROWS + ncol] = 1;
+          nseen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
         } else {
@@ -246,7 +246,7 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
           traverseUtil(board, trie->children[k], row, col, seen, noReuse);
         }
       } else {
-        pos = currLetter - 'a';
+        pos = currLetter-'a';
         traverseUtil(board, trie->children[pos], row, col, seen, noReuse);
       }
     }
