@@ -177,14 +177,14 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
   if(!trie) return;
   if(noReuse && seen[row * board->NROWS + col] == 1) return;
 
+  trie->count++;
+
   int nrow, ncol;
   int nseen[board->NROWS * board->NCOLS];
   int pos;
 
   // update the seen positions matrix
   for(int i = 0; i < board->NROWS * board->NCOLS; i++) nseen[i] = seen[i];
-
-  trie->count++;
 
   // check all letters around current position
   for (int i = -1; i < 2; i++) {
@@ -226,15 +226,15 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   int size = board->NROWS * board->NCOLS;
   int seen[size];
 
+  // initialize all positions in grid
+  for(int j = 0; j < size; j++) {
+    seen[j] = 0;
+  }
+
   for (int row = 0; row < board->NROWS; row++) {
     for (int col = 0; col < board->NCOLS; col++) {
       char currLetter = board->grid[row * board->NROWS + col];
       int pos;
-
-      // initialize all positions in grid
-      for(int j = 0; j < size; j++) {
-        seen[j] = 0;
-      }
 
       seen[row * board->NROWS + col] = 1;
 
