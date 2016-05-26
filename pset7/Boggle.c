@@ -177,14 +177,14 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
   if(!trie) return;
   if(noReuse && seen[row * board->NROWS + col] == 1) return;
 
-  trie->count++;
-
   int nrow, ncol;
   int nseen[board->NROWS * board->NCOLS];
   int pos;
 
   // update the seen positions matrix
   for(int i = 0; i < board->NROWS * board->NCOLS; i++) nseen[i] = seen[i];
+
+  trie->count++;
 
   // check all letters around current position
   for (int i = -1; i < 2; i++) {
