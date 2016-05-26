@@ -181,7 +181,6 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
   int nseen[board->NROWS * board->NCOLS];
   int pos;
 
-  trie->count++;
 
   // update the seen positions matrix
   for(int i = 0; i < board->NROWS * board->NCOLS; i++) nseen[i] = seen[i];
@@ -198,7 +197,7 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
         if(noReuse && seen[nrow * board->NROWS + ncol] == 1) {
           continue;
         }
-        
+
         if(board->grid[nrow * board->NROWS + ncol] == '_') {
           seen[nrow * board->NROWS + ncol] = 1;
           for(int i = 0; i < ALPHABET_SIZE; i++) {
