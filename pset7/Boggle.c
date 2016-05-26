@@ -175,12 +175,14 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
   int seen[], int noReuse) {
 
   if(!trie) return;
+
+  trie->count++;
+
   if(noReuse && seen[row * board->NROWS + col] == 1) return;
 
   int nrow, ncol;
   int nseen[board->NROWS * board->NCOLS];
   int pos;
-
 
   // update the seen positions matrix
   for(int i = 0; i < board->NROWS * board->NCOLS; i++) nseen[i] = seen[i];
