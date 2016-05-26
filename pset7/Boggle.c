@@ -70,10 +70,9 @@ int isValidWord(char *str) {
   int c = 0;
 
   while(*str) {
-    c = tolower(*str);
+    c = tolower(*str++);
     if(!isalpha(c)) return 0;
     if (!(c >= 'a' && (c <= 'z'))) return 0;
-    *str++;
   }
   return 1;
 }
@@ -232,7 +231,7 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   for (int row = 0; row < board->NROWS; row++) {
     for (int col = 0; col < board->NCOLS; col++) {
       char currLetter = board->grid[row][col];
-      int next[] = { i }, pos;
+      int pos;
 
       // initialize all positions in grid
       for(int i = 0; i < size; i++) {
