@@ -62,9 +62,11 @@ char *getWord(FILE *fp) {
  *  returns: whether string is a valid input
  */
 int isValidWord(char *str) {
-  int c = 0;
   if(!str) return 0;
-  if(!isalpha(str[0])) return 0;
+  if(!isalpha(*str)) return 0;
+
+  int c = 0;
+
   while(*str) {
     c = tolower(*str);
     if(!isalpha(c)) return 0;
@@ -83,39 +85,46 @@ int isValidWord(char *str) {
  */
 trieNodePtr makeNode(void) {
   trieNodePtr t = (trieNodePtr) malloc(sizeof(TrieNode));
+
+  if(!t) return NULL;
+
   for (int i = 0; i < ALPHABET_SIZE; i++) t->children[i] = NULL;
   t->count = 0;
   t->word = NULL;
+
   return t;
 }
 
 /*
  *  Function: insertWord
  *  --------------------
- *  reads and parses words from stdin
+ *  inserts word from stdin into trie
  *
  *  root: root of the trie
  *  word: string to be inserted
  *
  */
 void insertWord(trieNodePtr root, char *word) {
+  if(!root) root = makeNode();
+
   int pos; /* position of char in node children array */
   trieNodePtr child; /* child node of current trie node */
 
   for(int i = 0; i < strlen(word); i++) {
     pos = tolower(word[i]) - 'a';
     child = root->children[pos];
+
     if(!child) {
       child = makeNode();
       root->children[pos] = child;
     }
+    root = child;
     // if at the end of the word (i = strlen-1)
     // and t->word is null, t->word = word
     if(i == strlen(word)-1 && !root->word) {
       root->word = word;
       return;
     }
-    root = child;
   }
 }
 
@@ -132,6 +141,9 @@ void insertWord(trieNodePtr root, char *word) {
  */
 boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   boardPtr board = (boardPtr) malloc(sizeof(Board));
+
+  if(!board) return NULL;
+
   board->NROWS = NROWS;
   board->NCOLS = NCOLS;
 
@@ -240,7 +252,7 @@ void printWords(trieNodePtr root, int showNonBoggleWords) {
   // check that word exists
   if(showNonBoggleWords && root->count == 0 && root->word) {
     printf("%s\n", root->word);
-  } else if (!showNonBoggleWords && root->count > 0 && root->word) {
+  } else if (!showNonBoggleWords && root->count && root->word) {
     printf("%s: %d\n", root->word, root->count);
   }
 
@@ -249,6 +261,7 @@ void printWords(trieNodePtr root, int showNonBoggleWords) {
     printWords(root->children[i], showNonBoggleWords);
   }
 
+  return;
 }
 
 int main(int argc, char *argv[]) {
@@ -315,9 +328,17 @@ int main(int argc, char *argv[]) {
 
   // make board
   boardPtr board = makeBoard(NROWS, NCOLS, letters);
+  if(!board) {
+    fprintf(stderr, "Usage: %s. Could not create board. \n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
 
   // make trie
   trieNodePtr root = makeNode();
+  if(!root) {
+    fprintf(stderr, "Usage: %s. Could not create trie. \n", argv[0]);
+    exit(EXIT_FAILURE);
+  }
 
   // read words from stdin
   while((input = getWord(stdin)) != NULL) {
@@ -327,11 +348,11 @@ int main(int argc, char *argv[]) {
      insertWord(root, input);
    }
 
-   // walk board and count words
+   // walk board
    traverse(board, root, noReuse);
 
    // print
    printWords(root, showNonBoggleWords);
 
-  return EXIT_SUCCESS;
+  exit(EXIT_SUCCESS);
 }
