@@ -226,8 +226,9 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   int size = board->NROWS * board->NCOLS;
   int seen[size];
 
-  for(int i = 0; i < board->NROWS * board->NCOWS; i++) {
-      char currLetter = board->grid[i];
+  for (int row = 0; row < board->NROWS; row++) {
+    for (int col = 0; col < board->NCOLS; col++) {
+      char currLetter = board->grid[row * board->NROWS + col];
       int pos;
 
       // initialize all positions in grid
@@ -235,7 +236,7 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
         seen[j] = 0;
       }
 
-      seen[i] = 1;
+      seen[row * board->NROWS + col] = 1;
 
       if(currLetter == '_') {
         for(int k = 0; k < ALPHABET_SIZE; k++) {
@@ -246,6 +247,7 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
         traverseUtil(board, trie->children[pos], row, col, seen, noReuse);
       }
     }
+  }
 }
 
 /*
