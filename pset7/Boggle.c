@@ -193,12 +193,7 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
       // if neighbor position is valid
       if(nrow >= 0 && nrow < board->NROWS && ncol >= 0 && ncol < board->NCOLS){
 
-        if(board->grid[nrow * board->NROWS + ncol] == '_') {
-          seen[nrow * board->NROWS + ncol] = 1;
-          for(int i = 0; i < ALPHABET_SIZE; i++) {
-            traverseUtil(board, trie->children[i], nrow, ncol, nseen, noReuse);
-          }
-        } else if(noReuse && !seen[nrow * board->NROWS + ncol]) {
+        if(noReuse && !seen[nrow * board->NROWS + ncol]) {
           seen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
