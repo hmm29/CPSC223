@@ -22,6 +22,7 @@
  *
  *  returns: word to lower case with terminal newlines removed
  */
+
 char *getWord(FILE *fp) {
     // modified getLine
     char *input;
@@ -61,6 +62,7 @@ char *getWord(FILE *fp) {
  *
  *  returns: whether string is a valid input
  */
+
 int isValidWord(char *str) {
   if(!str) return 0;
   if(!isalpha(*str)) return 0;
@@ -71,7 +73,7 @@ int isValidWord(char *str) {
     c = tolower(*str);
     if(!isalpha(c)) return 0;
     if (!(c >= 'a' && (c <= 'z'))) return 0;
-    *str++ = c;
+    *str++;
   }
   return 1;
 }
@@ -83,6 +85,7 @@ int isValidWord(char *str) {
  *
  *  returns: pointer to the new trie node
  */
+
 trieNodePtr makeNode(void) {
   trieNodePtr t = (trieNodePtr) malloc(sizeof(TrieNode));
 
@@ -104,6 +107,7 @@ trieNodePtr makeNode(void) {
  *  word: string to be inserted
  *
  */
+
 void insertWord(trieNodePtr root, char *word) {
   if(!root) root = makeNode();
 
@@ -139,6 +143,7 @@ void insertWord(trieNodePtr root, char *word) {
  *
  *  returns: pointer to the new Boggle board
  */
+
 boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   boardPtr board = (boardPtr) malloc(sizeof(Board));
 
@@ -168,6 +173,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
  *  noReuse: flag to indicate whether board letters can be revisited
  *
  */
+
 void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
   int seen[], int noReuse) {
 
@@ -194,7 +200,7 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
           for(int i = 0; i < ALPHABET_SIZE; i++) {
             traverseUtil(board, trie->children[i], nrow, ncol, nseen, noReuse);
           }
-        } else if(noReuse && seen[nrow * board->NROWS + ncol] == 0) {
+        } else if(noReuse && !seen[nrow * board->NROWS + ncol]) {
           seen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow][ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
@@ -218,21 +224,31 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
  *  noReuse: flag to indicate whether board letters can be revisited
  *
  */
+
 void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
-  int seen[board->NROWS * board->NCOLS];
+  int size = board->NROWS * board->NCOLS;
+  int seen[size];
 
   for (int row = 0; row < board->NROWS; row++) {
     for (int col = 0; col < board->NCOLS; col++) {
-        // initialize all seen matrix positions to 0 (unseen)
-        for (int i = 0; i < board->NROWS * board->NCOLS; i++) seen[i] = 0;
+      char currLetter = board->grid[row][col];
+      int next[] = { i }, pos;
 
-        // mark current letter as seen
-        seen[(row * board->NROWS) + col] = 1;
+      // initialize all positions in grid
+      for(int i = 0; i < size; i++) {
+        seen[i] = 0;
+      }
 
-        // traverse all child nodes
-        for(int i = 0; i < ALPHABET_SIZE; i++) {
+      seen[row * board->NROWS + col] = 1;
+
+      if(currLetter == '_') {
+        for(int k = 0; k < ALPHABET_SIZE; k++) {
           traverseUtil(board, trie->children[i], row, col, seen, noReuse);
         }
+      } else {
+        pos = currLetter - 'a';
+        traverseUtil(board, trie->children[pos], row, col, seen, noReuse);
+      }
     }
   }
 }
