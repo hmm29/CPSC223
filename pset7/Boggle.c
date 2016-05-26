@@ -206,7 +206,7 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
           nseen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
-        } else if(!noReuse && !seen[nrow * board->NROWS + ncol]) {
+        } else if(!noReuse) {
           nseen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
@@ -299,8 +299,10 @@ int main(int argc, char *argv[]) {
     intArg = atoi(argv[i]);
 
     if(i == 1) {
-      if(intArg == 0 && strcmp(argv[i], "-c") == 0) {
+      if(intArg == 0 && strcmp(argv[i], "-c") == 0 && !showNonBoggleWords) {
         showNonBoggleWords = 1;
+      } else if (intArg == 0 && strcmp(argv[i], "-t") == 0 && !noReuse) {
+        noReuse = 1;
       } else if (intArg == 0) {
         fprintf(stderr,"Usage: %s. Invalid flag: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
@@ -308,8 +310,10 @@ int main(int argc, char *argv[]) {
         NROWS = intArg;
       }
     } else if(i == 2) {
-      if(intArg == 0 && strcmp(argv[i], "-t") == 0) {
+      if(intArg == 0 && strcmp(argv[i], "-t") == 0 && !noReuse) {
         noReuse = 1;
+      } else if (intArg == 0 && strcmp(argv[i], "-c") == 0 && !showNonBoggleWords) {
+        showNonBoggleWords = 1;
       } else if (intArg == 0){
         fprintf(stderr,"Usage: %s. Invalid flag: %s.\n", argv[0], argv[i]);
         exit(EXIT_FAILURE);
