@@ -28,7 +28,7 @@
  typedef struct board {
    int NROWS;
    int NCOLS;
-   char grid[MAX_BOARD_LENGTH][MAX_BOARD_LENGTH];
+   char grid[MAX_BOARD_LENGTH * MAX_BOARD_LENGTH];
  } Board;
 
  typedef struct board *boardPtr;

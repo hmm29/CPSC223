@@ -151,10 +151,8 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   board->NROWS = NROWS;
   board->NCOLS = NCOLS;
 
-  for(int i = 0; i < NROWS; i++) {
-    for(int j = 0; j < NCOLS; j++) {
-     board->grid[i][j] = letters[i*NROWS+j];
-    }
+  for(int i = 0; i < NROWS * NCOLS; i++) {
+     board->grid[i] = letters[i];
   }
   return board;
 }
@@ -195,17 +193,17 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
       ncol = col + j;
       // if neighbor position is valid
       if(nrow >= 0 && nrow < board->NROWS && ncol >= 0 && ncol < board->NCOLS){
-        if(board->grid[nrow][ncol] == '_') {
+        if(board->grid[nrow * board->NROWS + ncol] == '_') {
           for(int i = 0; i < ALPHABET_SIZE; i++) {
             traverseUtil(board, trie->children[i], nrow, ncol, nseen, noReuse);
           }
         } else if(noReuse && !seen[nrow * board->NROWS + ncol]) {
           seen[nrow * board->NROWS + ncol] = 1;
-          pos = board->grid[nrow][ncol] - 'a';
+          pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
         } else if(!noReuse) {
           seen[nrow * board->NROWS + ncol] = 1;
-          pos = board->grid[nrow][ncol] - 'a';
+          pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
         }
       }
@@ -228,17 +226,16 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
   int size = board->NROWS * board->NCOLS;
   int seen[size];
 
-  for (int row = 0; row < board->NROWS; row++) {
-    for (int col = 0; col < board->NCOLS; col++) {
-      char currLetter = board->grid[row][col];
+  for(int i = 0; i < board->NROWS * board->NCOWS; i++) {
+      char currLetter = board->grid[i];
       int pos;
 
       // initialize all positions in grid
-      for(int i = 0; i < size; i++) {
-        seen[i] = 0;
+      for(int j = 0; j < size; j++) {
+        seen[j] = 0;
       }
 
-      seen[row * board->NROWS + col] = 1;
+      seen[i] = 1;
 
       if(currLetter == '_') {
         for(int k = 0; k < ALPHABET_SIZE; k++) {
@@ -249,7 +246,6 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
         traverseUtil(board, trie->children[pos], row, col, seen, noReuse);
       }
     }
-  }
 }
 
 /*
