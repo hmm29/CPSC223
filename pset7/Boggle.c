@@ -242,7 +242,7 @@ void traverse(boardPtr board, trieNodePtr trie, int noReuse) {
 
       if(currLetter == '_') {
         for(int k = 0; k < ALPHABET_SIZE; k++) {
-          traverseUtil(board, trie->children[i], row, col, seen, noReuse);
+          traverseUtil(board, trie->children[k], row, col, seen, noReuse);
         }
       } else {
         pos = currLetter - 'a';
