@@ -206,7 +206,7 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
           nseen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
-        } else if(!noReuse) {
+        } else if(!noReuse && !seen[nrow * board->NROWS + ncol]) {
           nseen[nrow * board->NROWS + ncol] = 1;
           pos = board->grid[nrow * board->NROWS + ncol] - 'a';
           traverseUtil(board, trie->children[pos], nrow, ncol, nseen, noReuse);
@@ -230,13 +230,11 @@ void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col,
 
 void traverse(boardPtr board, trieNodePtr trie, int row, int col, int noReuse) {
   int size = board->NROWS * board->NCOLS;
-  int seen[size];
+  int seen[size] = { 0 };
 
   char currLetter = board->grid[row * board->NROWS + col];
   int pos;
 
-  // initialize all positions in grid
-  for(int j = 0; j < size; j++) seen[j] = 0;
   // mark current position as seen
   seen[row * board->NROWS + col] = 1;
 
