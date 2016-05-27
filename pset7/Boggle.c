@@ -153,6 +153,29 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   return board;
 }
 
+void walk(boardPtr board, trieNodePtr root, int noReuse) {
+  // walk board
+   for(int row = 0; row < board->NROWS; row++) {
+    for (int col = 0; col < board->NCOLS; col++) {
+      int idx = row * board->NROWS + col;
+      int next[] = { idx };
+
+      char letter = board->grid[idx];
+      int pos;
+
+      // wildcard
+      if (letter == '_') {
+        for (int j = 0; j < ALPHABET_SIZE; j++) {
+          traverse(board, root->children[j], idx, row, col, next, 1, noReuse);
+        }
+      } else { // all other letters
+        pos = letter-'a';
+        traverse(board, root->children[pos], idx, row, col, next, 1, noReuse);
+      }
+    }
+  }
+}
+
 /*
  *  Function: traverse
  *  --------------------
@@ -185,8 +208,7 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
     c = col-1;
     c = (c < 0) ? 0 : c;
     while(c <= nextCol){
-      nextPos = 0;
-
+      int nextPos = p * board->NCOLS + c;
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
         seen = 0;
@@ -196,9 +218,7 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
             break;
           }
         }
-        if(seen) {
-          continue;
-        }
+        if(seen) continue;
       }
       int updatedNext[n + 1];
       for (int i = 0; i < n; i++) { // copy over next next options list
@@ -338,26 +358,8 @@ int main(int argc, char *argv[]) {
      insertWord(root, input);
    }
 
-   // walk board
-   for(int row = 0; row < board->NROWS; row++) {
-    for (int col = 0; col < board->NCOLS; col++) {
-      int idx = row * board->NROWS + col;
-      int next[] = { idx };
-
-      char letter = board->grid[idx];
-      int pos;
-
-      // wildcard
-      if (letter == '_') {
-        for (int j = 0; j < ALPHABET_SIZE; j++) {
-          traverse(board, root->children[j], idx, row, col, next, 1, noReuse);
-        }
-      } else { // all other letters
-        pos = letter-'a';
-        traverse(board, root->children[pos], idx, row, col, next, 1, noReuse);
-      }
-    }
-  }
+   // walk the board
+   walk(board, root, noReuse);
 
    // print
    printWords(root, showNonBoggleWords);
