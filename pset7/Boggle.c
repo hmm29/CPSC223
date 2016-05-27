@@ -164,7 +164,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
  *
  */
 
-void traverse(boardPtr board, trieNodePtr trie, int idx, int next[], int n, int noReuse) {
+void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse) {
   int nextRow, nextCol, p, c, nextPos, seen;
 
   if(!board || !trie) return;
@@ -180,16 +180,16 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int next[], int n, int 
   p = row-1;
   p = (p < 0) ? 0 : p;
 
-  for (int i = 0; p <= nextRow; p++) {
+  for (int m; p <= nextRow; p++) {
     // ensure next column is valid
     c = col-1;
     c = (c < 0) ? 0 : c;
-    for (int i = 0; c <= nextCol; c++){
+    for (int m; c <= nextCol; c++){
       nextPos = p * board->NROWS + c;
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
         seen = 0;
-        for (int l = 0; l < n; l++) {
+        for(int l = 0; l < n; l++) {
           if (next[l] == nextPos) {
             seen = 1;
             break;
@@ -200,7 +200,7 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int next[], int n, int 
         }
       }
       int updatedNext[n + 1];
-      for (int i = 0; i < nMoves; i++) { // copy over next next options list
+      for (int i = 0; i < n; i++) { // copy over next next options list
         updatedNext[i] = next[i]; 
       }
       updatedNext[n] = nextPos;
@@ -208,11 +208,11 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int next[], int n, int 
       // traverse again using character logic
       if (nextLetter == '_') { // wildcard
         for (int i = 0; i < ALPHABET_SIZE; i++) {
-          traverse(board, trie->children[i], nextPos, updatedNext, n+1, noReuse);
+          traverse(board, trie->children[i], nextPos, p, c, updatedNext, n+1, noReuse);
         }
       } else { // non-wildcard
         int pos = nextLetter-'a';
-        traverse(board, trie->children[pos], nextPos, updatedNext, n+1, noReuse);
+        traverse(board, trie->children[pos], nextPos, p, c, updatedNext, n+1, noReuse);
       }
     }
   }
@@ -328,7 +328,7 @@ int main(int argc, char *argv[]) {
   }
 
   // read words from stdin
-  while(input = getWord(stdin)) {
+  while((input = getWord(stdin))) {
      if (!isValidWord(input)) {
       continue;
      }
@@ -337,7 +337,7 @@ int main(int argc, char *argv[]) {
 
    // walk board
    for(int row = 0; row < board->NROWS; row++) {
-    for (int col = 0; idx < board->NCOLS; col++) {
+    for (int col = 0; col < board->NCOLS; col++) {
       int idx = row * board->NROWS + col;
       int next[] = { idx };
 
@@ -347,11 +347,11 @@ int main(int argc, char *argv[]) {
       // wildcard
       if (letter == '_') {
         for (int j = 0; j < ALPHABET_SIZE; j++) {
-          traverse(board, root->children[j], idx, next, 1, noReuse);
+          traverse(board, root->children[j], idx, row, col, next, 1, noReuse);
         }
       } else { // all other letters
         pos = letter-'a';
-        traverse(board, root->children[pos], idx, next, 1, noReuse);
+        traverse(board, root->children[pos], idx, row, col, next, 1, noReuse);
       }
     }
   }
