@@ -153,6 +153,17 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
   return board;
 }
 
+/*
+ *  Function: walk
+ *  --------------------
+ *  walk the Boggle board
+ *
+ *  board: the Boggle board
+ *  trie: the trie of input words
+ *  noReuse: flag to indicate whether board letters can be revisited
+ *
+ */
+
 void walk(boardPtr board, trieNodePtr root, int noReuse) {
   // walk board
    for(int row = 0; row < board->NROWS; row++) {
@@ -179,10 +190,15 @@ void walk(boardPtr board, trieNodePtr root, int noReuse) {
 /*
  *  Function: traverse
  *  --------------------
- *  walk the Boggle board
+ *  explore moves on the Boggle board while traversing the trie
  *
  *  board: the Boggle board
  *  trie: the trie of input words
+ *  idx: index of current letter
+ *  row: row number of idx
+ *  col: col number of idx
+ *  next: array of next move options
+ *  n: length of next
  *  noReuse: flag to indicate whether board letters can be revisited
  *
  */
