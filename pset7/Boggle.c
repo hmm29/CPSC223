@@ -172,12 +172,11 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
 
   trie->count++; // increment count
 
-  // ensure next row is valid
+  // ensure next row is valid; upper and lower bounds
   nextRow = row+1;
   nextRow = (nextRow >= board->NROWS) ? board->NROWS-1 : nextRow;
   nextCol = col+1;
   nextCol = (nextCol >= board->NCOLS) ? board->NCOLS-1 : nextCol;
-
   p = row-1;
   p = (p < 0) ? 0 : p;
 
@@ -187,7 +186,7 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
     c = (c < 0) ? 0 : c;
 
     while(c <= nextCol){
-      nextPos = p * board->NCOLS + c;
+      nextPos = (p*board->NCOLS)+c;
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
         seen = 0;
