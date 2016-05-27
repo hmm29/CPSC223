@@ -185,8 +185,9 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
     // ensure next column is valid
     c = col-1;
     c = (c < 0) ? 0 : c;
+
     while(c <= nextCol){
-      nextPos = p * board->NROWS + c;
+      nextPos = p * board->NCOLS + c;
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
         seen = 0;
@@ -196,7 +197,7 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
             break;
           }
         }
-        if (seen) {
+        if(seen) {
           continue;
         }
       }

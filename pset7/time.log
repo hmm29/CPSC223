@@ -21,8 +21,9 @@ Date    Started     Spent    Work Completed
 5/19    11:15       0:30     debugging
 5/26    10:30       1:00     debugging
 5/27    11:00       1:48     debugging, get rid of traverseUtil and condense logic intotraverse function
+5/27    1:30        1:00     new logic for traverse function
                     ----
-                    21:18     TOTAL Time Spent
+                    22:18     TOTAL Time Spent
 
 I discussed my solution with Steven Rofrano.
 Major difficulties: Debugging Valgrind errors and ensuring that words are correctly inserted.
