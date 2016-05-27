@@ -40,7 +40,7 @@
  trieNodePtr makeNode(void);
  void insertWord(trieNodePtr root, char *string);
  boardPtr makeBoard(int NROWS, int NCOLS, char *letters);
- void walk(boardPtr board, trieNodePtr root);
+ void walk(boardPtr board, trieNodePtr root, int noReuse);
  void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse);
  void printWords(trieNodePtr trie, int showNonBoggleWords);
 
