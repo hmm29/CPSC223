@@ -33,14 +33,14 @@
 
  typedef struct board *boardPtr;
 
+// function prototypes
  char *getWord(FILE *fp);
  void removeNewline(char *str);
  int isValidWord(char *str);
  trieNodePtr makeNode(void);
  void insertWord(trieNodePtr root, char *string);
  boardPtr makeBoard(int NROWS, int NCOLS, char *letters);
- void traverseUtil(boardPtr board, trieNodePtr trie, int row, int col, int seen[], int noReuse);
- void traverse(boardPtr board, trieNodePtr trie, int row, int col, int noReuse);
+ void traverse(boardPtr board, trieNodePtr trie, int idx, int next[], int noReuse);
  void printWords(trieNodePtr trie, int showNonBoggleWords);
 
  #endif
