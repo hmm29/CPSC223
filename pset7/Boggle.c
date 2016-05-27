@@ -165,7 +165,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
  */
 
 void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse) {
-  int nextRow, nextCol, p, c, seen;
+  int nextRow, nextCol, nextPos, p, c, seen;
   char nextLetter;
 
   if(!board || !trie) return;
@@ -184,9 +184,9 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
     // ensure next column is valid
     c = col-1;
     c = (c < 0) ? 0 : c;
-
     while(c <= nextCol){
-      int nextPos = p * board->NCOLS + c;
+      int nextPos = p * board->NROWS + c;
+
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
         seen = 0;
