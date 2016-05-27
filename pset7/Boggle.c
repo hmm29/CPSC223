@@ -165,7 +165,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
  */
 
 void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse) {
-  int nextRow, nextCol, nextPos, p, c, seen;
+  int nextRow, nextCol, p, c, seen;
   char nextLetter;
 
   if(!board || !trie) return;
