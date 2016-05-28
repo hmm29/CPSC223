@@ -185,7 +185,7 @@ void walk(boardPtr board, trieNodePtr root, int noReuse) {
    for(int row = 0; row < board->NROWS; row++) {
     for (int col = 0; col < board->NCOLS; col++) {
       int idx = row * board->NCOLS + col;
-      int next[] = { idx };
+      int next[10] = { idx };
 
       char letter = board->grid[idx];
       int pos;
@@ -221,7 +221,7 @@ void walk(boardPtr board, trieNodePtr root, int noReuse) {
  */
 
 void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse) {
-  int upperRow, upperCol, lowerRow, lowerCol, seen;
+  int nextPos, upperRow, upperCol, lowerRow, lowerCol, seen;
   char nextLetter;
 
   if(!board || !trie) return;
@@ -241,8 +241,9 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
     lowerCol = col-1;
     lowerCol = (lowerCol < 0) ? 0 : lowerCol;
 
-    while(lowerCol <= upperCol){
-      int nextPos = lowerRow * board->NCOLS + lowerCol;
+    while(lowerCol <= upperCol) {
+      nextPos = lowerRow * board->NCOLS + lowerCol;
+
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
         seen = 0;
