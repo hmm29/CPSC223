@@ -10,12 +10,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <limits.h>
+#include <string.h>
 #include "/c/cs223/Hwk4/Queue.h"
 #include "Merge16.h"
 
 // Print message to stderr and exit.
-#define DIE(msg) exit (fprintf (stderr, "%s\n", msg))
+#define DIE(msg) exit (fprintf (stderr, "%s\n", msg));
+
+int pos = 0;
+int len = 0;
 
 char *getLine(FILE *fp)
 {
@@ -46,8 +51,36 @@ char *getLine(FILE *fp)
     return (line);
 }
 
-// Parse command line args one at a time and call appropriate functions
 int main(int argc, char **argv) {
+
+  if (argc < 3) {
+    DIE("usage: Merge16 [-POS[,LEN]] [filename]*");
+  }
+
+    // argument parsing
+    for (int i = 1; i < argc; i++) {
+        if(*argv[1] != '-') {
+            DIE("usage: invalid [-POS[,LEN]]")
+        }
+
+        if() {
+
+           continue;
+        } else {
+
+
+        }
+
+
+
+    }
+
+
+
+
+
+
+
     FILE *fp = stdin;           // Read from standard input */
     Queue Q;
     char *line;
