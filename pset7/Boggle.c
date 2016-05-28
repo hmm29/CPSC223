@@ -265,10 +265,10 @@ void traverse(boardPtr board, trieNodePtr trie, int row,
         // do not stay on same tile
         if((nRow * board->NCOLS + nCol) == (row * board->NCOLS + col)) continue;
 
-        nSeen[nRow * board->NCOLS + nCol] = 1;
         // noReuse condition
         if(noReuse && seen[nRow * board->NCOLS + nCol]) continue; 
 
+        nSeen[nRow * board->NCOLS + nCol] = 1;
         nextChar = board->grid[nRow * board->NCOLS + nCol];
 
         if (nextChar == '_') { // wildcard
