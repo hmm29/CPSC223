@@ -180,7 +180,7 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
  *
  */
 
-int getIndex(int row, int column, int NROWS, int NCOLS) {
+int getIndex(int row, int col, int NROWS, int NCOLS) {
   if (row >= NROWS) {
     row = NROWS - 1;
   } 
