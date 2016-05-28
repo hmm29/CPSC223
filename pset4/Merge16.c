@@ -52,6 +52,7 @@ char *getLine(FILE *fp)
 }
 
 int main(int argc, char **argv) {
+  const char s[2] = ",";
 
   if (argc < 3) {
     DIE("usage: Merge16 [-POS[,LEN]] [filename]*");
@@ -59,27 +60,26 @@ int main(int argc, char **argv) {
 
     // argument parsing
     for (int i = 1; i < argc; i++) {
-        if(*argv[1] != '-') {
-            DIE("usage: invalid [-POS[,LEN]]")
+        if(i == 1) {
+            if(*argv[i] != '-') { // no '-'
+                DIE("invalid [-POS[,LEN]]");
+            } else if (strlen(argv[i]) == 1) { // only '-'
+                pos = NULL;
+                len = INT_MAX;
+            } else if (strcspn(argv[i], s) == strlen(argv[i])) { // if no comma
+                pos = atoi();
+            } else if (strcspn(argv[i], s) < strlen(argv[i])-1 && strcspn(argv[i], s) > 1) { // if comma in middle of string
+              pos = atoi(strtok(argv[1], s));
+              len = atoi(strtok(NULL, s));
+            } else {
+              DIE("invalid [-POS[,LEN]]");
+            }
         }
 
-        if() {
-
-           continue;
-        } else {
-
-
+        if(i > 1) {
+           File *fp;
         }
-
-
-
     }
-
-
-
-
-
-
 
     FILE *fp = stdin;           // Read from standard input */
     Queue Q;
