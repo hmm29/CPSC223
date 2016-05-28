@@ -184,7 +184,7 @@ void walk(boardPtr board, trieNodePtr root, int noReuse) {
   // walk all letters on board
    for(row = 0; row < board->NROWS; row++) {
     for(col = 0; col < board->NCOLS; col++) {
-      traversePaths(board, trie, row, col, noReuse);
+      traversePaths(board, root, row, col, noReuse);
     }
   }
 }
@@ -203,7 +203,7 @@ void walk(boardPtr board, trieNodePtr root, int noReuse) {
  */
 
 void traversePaths(boardPtr board, trieNodePtr trie, int row, int col, int noReuse) {
-  int pos, size = board->NROWS * board->NCOLS;
+  int size = board->NROWS * board->NCOLS;
   int seen[size];
   char letter;
 
@@ -216,11 +216,11 @@ void traversePaths(boardPtr board, trieNodePtr trie, int row, int col, int noReu
 
   if (letter == '_') { // wildcard
     for (int j = 0; j < ALPHABET_SIZE; j++) {
-      traverse(board, root->children[j], row, col, seen, noReuse);
+      traverse(board, trie->children[j], row, col, seen, noReuse);
     }
   } else { // all other letters
-    pos = letter-'a';
-    traverse(board, root->children[pos], row, col, seen, noReuse);
+    int pos = letter-'a';
+    traverse(board, trie->children[pos], row, col, seen, noReuse);
   }
 }
 
