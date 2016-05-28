@@ -266,11 +266,11 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
       // traverse again using character logic
       if (nextLetter == '_') { // wildcard
         for (int i = 0; i < ALPHABET_SIZE; i++) {
-          traverse(board, trie->children[i], nextPos, p, c, updatedNext, n+1, noReuse);
+          traverse(board, trie->children[i], nextPos, lowerRow, lowerCol, updatedNext, n+1, noReuse);
         }
       } else { // non-wildcard
         int pos = nextLetter-'a';
-        traverse(board, trie->children[pos], nextPos, p, c, updatedNext, n+1, noReuse);
+        traverse(board, trie->children[pos], nextPos, lowerRow, lowerCol, updatedNext, n+1, noReuse);
       }
       lowerCol++;
     }
