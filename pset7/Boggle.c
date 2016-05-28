@@ -356,7 +356,7 @@ int main(int argc, char *argv[]) {
       if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
         // make sure all characters legal
         for(int k = 0; k < strlen(argv[i]); k++) {
-          if(!isalpha(arv[i][k])) {
+          if(!isalpha(argv[i][k])) {
             exit(EXIT_FAILURE);
           }
         }
