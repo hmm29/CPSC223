@@ -379,7 +379,7 @@ int main(int argc, char *argv[]) {
 
   // check for valid letters
   for(int k = 0; k < strlen(letters); k++) {
-    if(!isalpha(c) || !(c >= 'a' && c <= 'z')) {
+    if(!isalpha(letters[k]) || !(letters[k] >= 'a' && letters[k] <= 'z')) {
       break;
       exit(EXIT_FAILURE);
     }
