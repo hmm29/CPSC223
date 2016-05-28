@@ -264,11 +264,11 @@ void traverse(boardPtr board, trieNodePtr trie, int row,
       if(nRow >= 0 && nRow < board->NROWS && nCol >= 0 && nCol < board->NCOLS) {
         // do not stay on same tile
         if((nRow * board->NCOLS + nCol) == (row * board->NCOLS + col)) continue;
-        
+
+        nSeen[nRow * board->NCOLS + nCol] = 1;
         // noReuse condition
         if(noReuse && seen[nRow * board->NCOLS + nCol]) continue; 
 
-        nSeen[nRow * board->NCOLS + nCol] = 1;
         nextChar = board->grid[nRow * board->NCOLS + nCol];
 
         if (nextChar == '_') { // wildcard
@@ -354,6 +354,12 @@ int main(int argc, char *argv[]) {
       }
     } else if(i == argc-1) {
       if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
+        // make sure all characters legal
+        for(int k = 0; k < strlen(argv[i]); k++) {
+          if(!isalpha(arv[i][k])) {
+            exit(EXIT_FAILURE);
+          }
+        }
         letters = argv[i];
       } else {
         fprintf(stderr, "Usage: %s. Invalid arg: %s.\n", argv[0], argv[i]);
