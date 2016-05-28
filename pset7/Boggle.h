@@ -42,7 +42,8 @@
  boardPtr makeBoard(int NROWS, int NCOLS, char *letters);
  int getIndex(int row, int col, int NROWS, int NCOLS);
  void walk(boardPtr board, trieNodePtr root, int noReuse);
- void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse);
+ void traversePaths(boardPtr board, trieNodePtr trie, int row, int col, int noReuse);
+ void traverse(boardPtr board, trieNodePtr trie, int row, int col, int seen[], int noReuse);
  void printWords(trieNodePtr trie, int showNonBoggleWords);
 
  #endif

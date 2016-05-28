@@ -169,36 +169,6 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 }
 
 /*
- *  Function: getIndex
- *  --------------------
- *  getIndex of letter in board
- *
- *  row: row
- *  column: column
- *  NROWS: number of rows
- *  NCOLS: number of columns
- *
- */
-
-int getIndex(int row, int col, int NROWS, int NCOLS) {
-  if (row >= NROWS) {
-    row = NROWS - 1;
-  } 
-  else if(row <= 0) {
-    row = 0;
-  }
-
-  if (col >= NCOLS) {
-    col = NCOLS - 1;
-  } 
-  else if (col <= 0) {
-    col = 0;
-  }
-
-  return row * NCOLS + col;
-}
-
-/*
  *  Function: walk
  *  --------------------
  *  walk the Boggle board
@@ -210,27 +180,47 @@ int getIndex(int row, int col, int NROWS, int NCOLS) {
  */
 
 void walk(boardPtr board, trieNodePtr root, int noReuse) {
+  int row, col;
   // walk all letters on board
-
-   for(int row = 0; row < board->NROWS; row++) {
-    for (int col = 0; col < board->NCOLS; col++) {
-      int idx = row * board->NCOLS + col;
-      int next[10] = { idx };
-
-      char letter = board->grid[idx];
-      int pos;
-
-      // wildcard
-      if (letter == '_') {
-        for (int j = 0; j < ALPHABET_SIZE; j++) {
-          traverse(board, root->children[j], idx, row, col, next, 1, noReuse);
-        }
-      } else { // all other letters
-        pos = letter-'a';
-        traverse(board, root->children[pos], idx, row, col, next, 1, noReuse);
-      }
-
+   for(row = 0; row < board->NROWS; row++) {
+    for(col = 0; col < board->NCOLS; col++) {
+      traversePaths(board, trie, row, col, noReuse);
     }
+  }
+}
+
+/*
+ *  Function: traversePaths
+ *  --------------------
+ *  explore paths from current tile
+ *
+ *  board: the Boggle board
+ *  trie: the trie of input words
+ *  row: row number of idx
+ *  col: col number of idx
+ *  noReuse: flag to indicate whether board letters can be revisited
+ *
+ */
+
+void traversePaths(boardPtr board, trieNodePtr trie, int row, int col, int noReuse) {
+  int pos, size = board->NROWS * board->NCOLS;
+  int seen[size];
+  char letter;
+
+  for(int i=0; i < size; i++) {
+    seen[i] = 0;
+  }
+
+  seen[(row * board->NCOLS) + col] = 1;
+  letter = board->grid[(row * board->NCOLS) + col];
+
+  if (letter == '_') { // wildcard
+    for (int j = 0; j < ALPHABET_SIZE; j++) {
+      traverse(board, root->children[j], row, col, seen, noReuse);
+    }
+  } else { // all other letters
+    pos = letter-'a';
+    traverse(board, root->children[pos], row, col, seen, noReuse);
   }
 }
 
@@ -241,73 +231,55 @@ void walk(boardPtr board, trieNodePtr root, int noReuse) {
  *
  *  board: the Boggle board
  *  trie: the trie of input words
- *  idx: index of current letter
  *  row: row number of idx
  *  col: col number of idx
- *  next: array of next move options
- *  n: length of next
+ *  seen: array of seen tiles
  *  noReuse: flag to indicate whether board letters can be revisited
  *
  */
 
-void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int next[], int n, int noReuse) {
-  int nextPos, upperRow, upperCol, lowerRow, lowerCol, seen;
-  char nextLetter;
+void traverse(boardPtr board, trieNodePtr trie, int row, 
+  int col, int seen[], int noReuse) {
+  int nRow, nCol, size = board->NROWS * board->NCOLS;
+  int nSeen[size]; // updated seen array
+  char nextChar; // next board letter
 
+  // stop if no board or NULL trie node
   if(!board || !trie) return;
 
-  trie->count++; // increment count
+  // increment count at trie node
+  trie->count++;
 
-  // ensure next row is valid; upper and lower bounds
-  upperRow = row+1;
-  upperRow = (upperRow >= board->NROWS) ? board->NROWS-1 : upperRow;
-  upperCol = col+1;
-  upperCol = (upperCol >= board->NCOLS) ? board->NCOLS-1 : upperCol;
-  lowerRow = row-1;
-  lowerRow = (lowerRow < 0) ? 0 : lowerRow;
-
-  while(lowerRow <= upperRow) {
-    // ensure next column is valid
-    lowerCol = col-1;
-    lowerCol = (lowerCol < 0) ? 0 : lowerCol;
-
-    while(lowerCol <= upperCol) {
-      nextPos = getIndex(lowerRow, lowerCol, board->NROWS, board->NCOLS);
-
-      if (nextPos == idx) continue;  // skip if we get back to same time
-      if (noReuse) {
-        seen = 0;
-        // do not reuse or revisit previously visited letters in move set
-        for(int l = 0; l < n; l++) {
-          if (next[l] == nextPos) {
-            seen = 1;
-            break;
-          }
-        }
-        if(seen) continue;
-      }
-
-      int updatedNext[n + 1]; // resize
-      for (int i = 0; i < n; i++) { // copy over next next options list
-        updatedNext[i] = next[i]; 
-      }
-
-      updatedNext[n] = nextPos;
-      nextLetter = board->grid[nextPos];
-      // traverse again using character logic
-      if (nextLetter == '_') { // wildcard
-        for (int i = 0; i < ALPHABET_SIZE; i++) {
-          traverse(board, trie->children[i], nextPos, lowerRow, lowerCol, updatedNext, n+1, noReuse);
-        }
-      } else { // non-wildcard
-        int pos = nextLetter-'a';
-        traverse(board, trie->children[pos], nextPos, lowerRow, lowerCol, updatedNext, n+1, noReuse);
-      }
-      lowerCol++;
-    }
-    lowerRow++;
+  // copy seen array to new seen array
+  for(int i=0; i<size; i++) {
+    nSeen[i] = seen[i];
   }
-  return;
+
+  //check neighbors
+  for(int i=-1; i<2; i++) {
+    for(int j=-1; j<2; j++) {
+      nRow = row+i;
+      nCol = col+j;
+      // ensure the new board position is valid
+      if(nRow >= 0 && nRow < board->NROWS && nCol >= 0 && nCol < board->NCOLS) {
+        
+        // noReuse condition
+        if(noReuse && seen[nRow * board->NROWS + nCol]) continue; 
+
+        nSeen[nRow * board->NCOLS + nCol] = 1;
+        nextChar = board->grid[nRow * board->NCOLS + nCol];
+
+        if (nextChar == '_') { // wildcard
+          for (int i = 0; i < ALPHABET_SIZE; i++) {
+            traverse(board, trie->children[i], nRow, nCol, nSeen, noReuse);
+          }
+        } else { // non-wildcard
+          int pos = nextChar-'a';
+          traverse(board, trie->children[pos], nRow, nCol, nSeen, noReuse);
+        }
+      }
+    }
+  }
 }
 
 /*
