@@ -354,7 +354,6 @@ int main(int argc, char *argv[]) {
       }
     } else if(i == argc-1) {
       if(intArg == 0 && !letters && strlen(argv[i]) == NROWS * NCOLS) {
-      
         letters = argv[i];
       } else {
         fprintf(stderr, "Usage: %s. Invalid arg: %s.\n", argv[0], argv[i]);
@@ -376,6 +375,14 @@ int main(int argc, char *argv[]) {
   if(NROWS < 1 || NCOLS < 1 || !letters) {
     fprintf(stderr, "Usage: %s. Error occurred with Boggle setup.\n", argv[0]);
     exit(EXIT_FAILURE);
+  }
+
+  // check for valid letters
+  for(int k = 0; k < strlen(letters); k++) {
+    if(!isalpha(c) || !(c >= 'a' && c <= 'z')) {
+      break;
+      exit(EXIT_FAILURE);
+    }
   }
 
   // make board
