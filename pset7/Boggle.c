@@ -378,12 +378,12 @@ int main(int argc, char *argv[]) {
   }
 
   // check for valid letters
-  for(int k = 0; k < strlen(letters); k++) {
-    if(!isalpha(letters[k]) || !(letters[k] >= 'a' && letters[k] <= 'z')) {
-      break;
-      exit(EXIT_FAILURE);
+   for (int i = 0; i < strlen(letters); i++) {
+      if (!isalpha(letters[i]) && letters[i] != '_') {
+        fprintf(stderr, "Usage: %s. Invalid characters in board.\n", argv[0]);
+        exit(EXIT_FAILURE);
+      }
     }
-  }
 
   // make board
   boardPtr board = makeBoard(NROWS, NCOLS, letters);
