@@ -184,14 +184,14 @@ int getIndex(int row, int col, int NROWS, int NCOLS) {
   if (row >= NROWS) {
     row = NROWS - 1;
   } 
-  else if (row < 0) {
+  else if(row <= 0) {
     row = 0;
   }
 
   if (col >= NCOLS) {
     col = NCOLS - 1;
   } 
-  else if (col < 0) {
+  else if (col <= 0) {
     col = 0;
   }
 
