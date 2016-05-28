@@ -169,6 +169,36 @@ boardPtr makeBoard(int NROWS, int NCOLS, char *letters) {
 }
 
 /*
+ *  Function: getIndex
+ *  --------------------
+ *  getIndex of letter in board
+ *
+ *  row: row
+ *  column: column
+ *  NROWS: number of rows
+ *  NCOLS: number of columns
+ *
+ */
+
+int getIndex(int row, int column, int NROWS, int NCOLS) {
+  if (row >= NROWS) {
+    row = NROWS - 1;
+  } 
+  else if (row < 0) {
+    row = 0;
+  }
+
+  if (col >= NCOLS) {
+    col = NCOLS - 1;
+  } 
+  else if (col < 0) {
+    col = 0;
+  }
+
+  return row * NCOLS + col;
+}
+
+/*
  *  Function: walk
  *  --------------------
  *  walk the Boggle board
@@ -242,7 +272,7 @@ void traverse(boardPtr board, trieNodePtr trie, int idx, int row, int col, int n
     lowerCol = (lowerCol < 0) ? 0 : lowerCol;
 
     while(lowerCol <= upperCol) {
-      nextPos = lowerRow * board->NCOLS + lowerCol;
+      nextPos = getIndex(lowerRow, lowerCol, board->NROWS, board->NCOLS);
 
       if (nextPos == idx) continue;  // skip if we get back to same time
       if (noReuse) {
