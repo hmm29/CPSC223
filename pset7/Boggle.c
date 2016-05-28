@@ -262,9 +262,11 @@ void traverse(boardPtr board, trieNodePtr trie, int row,
       nCol = col+j;
       // ensure the new board position is valid
       if(nRow >= 0 && nRow < board->NROWS && nCol >= 0 && nCol < board->NCOLS) {
+        // do not stay on same tile
+        if((nRow * board->NCOLS + nCol) == (row * board->NCOLS + col)) continue;
         
         // noReuse condition
-        if(noReuse && seen[nRow * board->NROWS + nCol]) continue; 
+        if(noReuse && seen[nRow * board->NCOLS + nCol]) continue; 
 
         nSeen[nRow * board->NCOLS + nCol] = 1;
         nextChar = board->grid[nRow * board->NCOLS + nCol];
