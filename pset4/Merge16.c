@@ -18,6 +18,10 @@
 #include "/c/cs223/Hwk4/Queue.h"
 #include "Merge16.h"
 
+void countQ(Queue *q) {
+
+}
+
 void merge(Queue *q, int l, int m, int r) {
     int i, j, k;
     int n1 = m-1+1;
@@ -82,7 +86,7 @@ int main(int argc, char **argv) {
     }  
 
     // sort the queue with mergeSort
-    qSize = count(&Q);
+    qSize = countQ(&Q);
     mergeSort(&Q, 0, qSize-1);
 
     // output the Q

@@ -19,12 +19,12 @@ typedef struct node {
  // Set *Q to a new object of type Queue.  Return status.
 
 int createQ (Queue *q) {
-    if(!(q = malloc(sizeof(node)))) {
+    if(!(q = malloc(sizeof(Node)))) {
         return false;
     }
 
-    q->data = NULL;
-    q->next = q;
+    q->data = NULL;                             // initialize data
+    q->next = q;                                // make head point to itself
 
     return true;
 }
@@ -34,20 +34,28 @@ int createQ (Queue *q) {
 // copied.  *Q may change as a result.  Return status.
 
 int addQ (Queue *q, char *s) {
-    Node *new;
+    Node *new, *tmp;
 
-    if(!q || !s) {
+    if(!s) {
         return false;
     }
 
-    new->data = s;
+    if(!(new = malloc(sizeof(Node)))) {
+        return false;
+    }
 
-    if(isEmptyQ(q)) {
-        q = new;
-        q->next = q;
+    tmp = q;
+    new->data = &s;
+
+    if(isEmptyQ(q)) {                           // if queue is empty
+        q = new;                                // set q to new node
+        q->next = q;                            // make it point to itself
     } else {
-        new->next = q;
-        q = new;
+        while(tmp && tmp->next != q) {          // traverse to tail
+            tmp = tmp->next;
+        }
+        tmp->next = new;                        // append new node to tail       
+        new->next = q;                          // new tail points to head
     }
 
     return true;
@@ -66,10 +74,11 @@ int isEmptyQ (Queue *q) {
 // returns FALSE and leaves *S unchanged.)
 
 int headQ (Queue *q, char **s) {
-
     if(isEmptyQ(q)) {
         return false;
     }
+
+    **s = (*q)->data;
 
     return true;
 }
@@ -80,6 +89,27 @@ int headQ (Queue *q, char **s) {
 // returns FALSE and leaves *S unchanged.)
 
 int removeQ (Queue *q, char **s) {
+    Node *tmp;
+
+    if(isEmptyQ(q)) {
+        return false;
+    }
+
+    if(s) {
+        **s = (*q)->data;                                 // store string pointer
+    }
+
+    q->data = q->next = NULL;
+
+    tmp = q;
+
+    while(tmp && tmp->next != q) {                      // traverse to tail
+        tmp = tmp->next;
+    }
+
+    tmp->next = q->next;     
+    q = q->next;                          
+
     return true;
 }
 
@@ -88,15 +118,15 @@ int removeQ (Queue *q, char **s) {
 // the string pointers point).  Set *Q to NULL.  Return status.
 
 int destroyQ (Queue *q) {
-    node *doomed;
-    char **s;
-
     while(!isEmpty(q)) {
-        doomed = removeQ(q, s);
-        free(doomed);
+        if(!removeQ(q, NULL)) {
+            return false;
+        }
     }
 
+    *q = NULL;
     free(q);
+    
     return true;
 }
 

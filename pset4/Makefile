@@ -27,16 +27,9 @@ Merge16H: Merge16.o
 
 Merge16H.o: ${HWK3}/getLine.h ${HWK4}/Queue.h
 
-# Instructions to make demo, which demonstrates the use of the Queue ADT
-demo: demo.o Queue.o
-        ${CC} ${CFLAGS} -o $@ $^ ${HWK3}/getLine.o
-
-demo.o: ${HWK3}/getLine.h ${HWK4}/Queue.h
-
-
 # Delete executables and objects
 clean:
-      	/bin/rm -f Merge16 testQueue Merge16H demo *.o
+      	/bin/rm -f Merge16 testQueue Merge16H *.o
 
 
 
