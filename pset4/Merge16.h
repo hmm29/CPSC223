@@ -9,13 +9,12 @@
  #ifndef MERGE16_H
  #define MERGE16_H
 
- #include <stdio.h>
- #include <stdlib.h>
-
 // Print message to stderr and exit.
 #define DIE(msg) exit (fprintf (stderr, "%s\n", msg));
 
  // function prototypes
+ void merge(Queue *q, int l, int m, int r);
+ void mergeSort(Queue *q, int l, int r);
 
  #endif
  /* end MERGE16_H */

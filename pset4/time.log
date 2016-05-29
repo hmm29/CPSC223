@@ -5,8 +5,9 @@ Date    Started     Spent    Work Completed
 ----    -------     ----     --------------
 5/28    5:00       0:40     Begin planning solution to Merge16 and create files
 5/28    0:30       0:50     Review HW files and start drawing out solution
-5/28    11:05      1:00
+5/28    11:05      1:00     arg parsing
+5/28    12:05      0:40     begin implementing queue ADT
                     ----
-                    2:30     TOTAL Time Spent
+                    3:10     TOTAL Time Spent
 
 I discussed my solution with no one.
