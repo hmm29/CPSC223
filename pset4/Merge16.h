@@ -12,8 +12,10 @@
  #include <stdio.h>
  #include <stdlib.h>
 
-// function prototypes
- char *getLine(FILE *fp);
+// Print message to stderr and exit.
+#define DIE(msg) exit (fprintf (stderr, "%s\n", msg));
+
+ // function prototypes
 
  #endif
  /* end MERGE16_H */
