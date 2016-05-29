@@ -18,10 +18,6 @@
 #include "/c/cs223/Hwk4/Queue.h"
 #include "Merge16.h"
 
-void copyQueue(Queue *from, Queue *to) {
-    
-}
-
 void merge(Queue *q, int l, int m, int r) {
     int i, j, k;
     int n1 = m-1+1;
@@ -49,7 +45,7 @@ int main(int argc, char **argv) {
 
     int pos = 0;
     int len = INT_MAX;
-    int hasKeyInfo = 0;
+    int hasKey = 0;
     int qSize;
     char *ptr;
     char *line;
@@ -63,13 +59,13 @@ int main(int argc, char **argv) {
     }
 
     for (++argv; --argc; argv++) {
-        if(*argv[0] === '-' && !hasKeyInfo) {
+        if(*argv[0] === '-' && !hasKey) {
             pos = strtol(argv[0], &ptr, 10);
             if(strlen(ptr) && *ptr == ',') {
                 ptr++;
                 len = strtol(ptr, NULL, 10);
             }
-            hasKeyInfo = 1;
+            hasKey = 1;
             continue;
         } else if (fp = fopen(argv[0], 'r')) {
             while((line = getLine(fp))) {
@@ -86,7 +82,7 @@ int main(int argc, char **argv) {
     }  
 
     // sort the queue with mergeSort
-    qSize = sizeof(Q) / sizeof(node);
+    qSize = count(&Q);
     mergeSort(&Q, 0, qSize-1);
 
     // output the Q

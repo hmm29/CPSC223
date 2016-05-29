@@ -8,26 +8,25 @@
  * Harrison Miller
  ******************************************************************************/
 
-#include <stdio.h>
 #include <stdlib.h> 
 #include "/c/cs223/Hwk4/Queue.h"
 
 typedef struct node {
    int data;
    struct node* next;
- } node;
+ } Node;
 
  // Set *Q to a new object of type Queue.  Return status.
 
 int createQ (Queue *q) {
-    if(!(q = malloc(sizeof(Queue)))) {
-        return 0;
+    if(!(q = malloc(sizeof(node)))) {
+        return false;
     }
 
     q->data = NULL;
-    q->next = NULL;
+    q->next = q;
 
-    return 1;
+    return true;
 }
 
 
@@ -35,12 +34,23 @@ int createQ (Queue *q) {
 // copied.  *Q may change as a result.  Return status.
 
 int addQ (Queue *q, char *s) {
+    Node *new;
+
     if(!q || !s) {
-        return 0;
+        return false;
     }
 
+    new->data = s;
 
+    if(isEmptyQ(q)) {
+        q = new;
+        q->next = q;
+    } else {
+        new->next = q;
+        q = new;
+    }
 
+    return true;
 }
 
 
@@ -48,7 +58,7 @@ int addQ (Queue *q, char *s) {
 // result.
 
 int isEmptyQ (Queue *q) {
-
+    return !q;     
 }
 
 // Copy the string pointer at the head of Queue *Q to *S, but do not remove it
@@ -57,6 +67,11 @@ int isEmptyQ (Queue *q) {
 
 int headQ (Queue *q, char **s) {
 
+    if(isEmptyQ(q)) {
+        return false;
+    }
+
+    return true;
 }
 
 
@@ -65,7 +80,7 @@ int headQ (Queue *q, char **s) {
 // returns FALSE and leaves *S unchanged.)
 
 int removeQ (Queue *q, char **s) {
-
+    return true;
 }
 
 
@@ -80,8 +95,9 @@ int destroyQ (Queue *q) {
         doomed = removeQ(q, s);
         free(doomed);
     }
-    
+
     free(q);
+    return true;
 }
 
 
