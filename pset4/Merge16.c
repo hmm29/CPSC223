@@ -18,11 +18,20 @@
 #include "/c/cs223/Hwk4/Queue.h"
 #include "Merge16.h"
 
-void countQ(Queue *q) {
+int countQ(Queue *q) {
+    Node *tmp;
+    int count = 1;
 
+    if(isEmptyQ(q)) return 0;
+
+    for(tmp = q; tmp && tmp->next != q; tmp = tmp->next) {
+        count++;
+    }
+
+    return count;
 }
 
-void merge(Queue *q, int l, int m, int r) {
+void merge(Queue *q, int l, int m, int r, int pos, int len) {
     int i, j, k;
     int n1 = m-1+1;
     int n2 = r-m;
@@ -31,7 +40,7 @@ void merge(Queue *q, int l, int m, int r) {
     
 }
 
-void mergeSort(Queue *q, int l, int r) {
+void mergeSort(Queue *q, int l, int r, int pos, int len) {
     int mid;
 
     if(l < r) {
@@ -51,7 +60,7 @@ int main(int argc, char **argv) {
     int len = INT_MAX;
     int hasKey = 0;
     int qSize;
-    char *ptr;
+    char *ptr, *ptr1;
     char *line;
 
     if(argc < 2) {
@@ -63,11 +72,16 @@ int main(int argc, char **argv) {
     }
 
     for (++argv; --argc; argv++) {
-        if(*argv[0] === '-' && !hasKey) {
-            pos = strtol(argv[0], &ptr, 10);
-            if(strlen(ptr) && *ptr == ',') {
+        if(*argv[0] === '-' && isdigit(argv[0][1]) && !hasKey) {
+            pos = strtol(argv[0], &ptr, 10);            
+            if(strlen(ptr) && *ptr == ',') {            
                 ptr++;
-                len = strtol(ptr, NULL, 10);
+                len = strtol(ptr, &ptr1, 10);
+                if(strlen(ptr1)) {
+                    DIE("invalid LEN");
+                }
+            } else if (strlen(ptr)) {
+                DIE("invalid POS and/or LEN")
             }
             hasKey = 1;
             continue;
@@ -87,14 +101,14 @@ int main(int argc, char **argv) {
 
     // sort the queue with mergeSort
     qSize = countQ(&Q);
-    mergeSort(&Q, 0, qSize-1);
+    mergeSort(&Q, 0, --qSize, pos, len);
 
     // output the Q
     while(!isEmpty(&Q)) {
         if(!removeQ(&Q, &line)) {
             DIE("removeQ() failed");
         }
-        fprint("%s\n", line);
+        printf("%s\n", line);
         free(line);
     }
 

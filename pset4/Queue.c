@@ -12,19 +12,24 @@
 #include "/c/cs223/Hwk4/Queue.h"
 
 typedef struct node {
-   int data;
-   struct node* next;
+   char **data;
+   struct node *next;
  } Node;
 
  // Set *Q to a new object of type Queue.  Return status.
 
 int createQ (Queue *q) {
-    if(!(q = malloc(sizeof(Node)))) {
+    // queue already exists
+    if(!isEmptyQ(q)) {
         return false;
     }
 
-    q->data = NULL;                             // initialize data
-    q->next = q;                                // make head point to itself
+    if(!(q = malloc(sizeof(Queue)))) {
+        return false;
+    }
+
+    q->data = NULL;
+    q->next = q;
 
     return true;
 }
@@ -34,30 +39,27 @@ int createQ (Queue *q) {
 // copied.  *Q may change as a result.  Return status.
 
 int addQ (Queue *q, char *s) {
-    Node *new, *tmp;
+    Node *new;
 
     if(!s) {
         return false;
+    }
+
+    if(isEmptyQ(q)) {
+        createQ(q);
+        q->data = &s;
+        return true;
     }
 
     if(!(new = malloc(sizeof(Node)))) {
         return false;
     }
 
-    tmp = q;
     new->data = &s;
-
-    if(isEmptyQ(q)) {                           // if queue is empty
-        q = new;                                // set q to new node
-        q->next = q;                            // make it point to itself
-    } else {
-        while(tmp && tmp->next != q) {          // traverse to tail
-            tmp = tmp->next;
-        }
-        tmp->next = new;                        // append new node to tail       
-        new->next = q;                          // new tail points to head
-    }
-
+    new->next = q->next;
+    q->next = new;                                      
+    q = new;                                              
+    
     return true;
 }
 
@@ -77,9 +79,7 @@ int headQ (Queue *q, char **s) {
     if(isEmptyQ(q)) {
         return false;
     }
-
-    **s = (*q)->data;
-
+    s = q->next->data;
     return true;
 }
 
@@ -89,26 +89,17 @@ int headQ (Queue *q, char **s) {
 // returns FALSE and leaves *S unchanged.)
 
 int removeQ (Queue *q, char **s) {
-    Node *tmp;
-
     if(isEmptyQ(q)) {
         return false;
     }
 
     if(s) {
-        **s = (*q)->data;                                 // store string pointer
+        s = q->next->data;                            // store head string ptr
     }
 
-    q->data = q->next = NULL;
-
-    tmp = q;
-
-    while(tmp && tmp->next != q) {                      // traverse to tail
-        tmp = tmp->next;
-    }
-
-    tmp->next = q->next;     
-    q = q->next;                          
+    q->next->data = NULL;
+    q->next = q->next->next;
+    free(q->next);                     
 
     return true;
 }
@@ -124,9 +115,7 @@ int destroyQ (Queue *q) {
         }
     }
 
-    *q = NULL;
-    free(q);
-    
+    q = NULL;
     return true;
 }
 
