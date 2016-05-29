@@ -11,7 +11,9 @@ Date    Started     Spent    Work Completed
 5/29    11:33      1:00     queue ADT details
 5/29    11:35      1:00     queue ADT and make sure notes are applied
 5/29    1:39       1:00     finish the queue ADT
+5/29    3:00       1:00     finish merge sort functions
                    ----
-                   7:19     TOTAL Time Spent
+                   8:19     TOTAL Time Spent
 
 I discussed my solution with no one.
+Just figured out how to get keys and compare them without requiring char arrays.

@@ -13,9 +13,9 @@
 #define DIE(msg) exit (fprintf (stderr, "%s\n", msg));
 
  // function prototypes
- int countQ(Queue *q);
- void merge(Queue *q, int l, int m, int r, int pos, int len);
- void mergeSort(Queue *q, int l, int r, int pos, int len);
+ void frontBackSplit(Queue *q, Queue *front, Queue *back);
+ Queue* merge(Queue *q1, Queue *q2, int pos, int len);
+ void mergeSort(Queue *q, int pos, int len);
 
  #endif
  /* end MERGE16_H */

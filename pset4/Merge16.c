@@ -18,37 +18,75 @@
 #include "/c/cs223/Hwk4/Queue.h"
 #include "Merge16.h"
 
-int countQ(Queue *q) {
-    Node *tmp;
-    int count = 1;
+// Splits the nodes of the queue into front and back halves
+// Uses fast-slow pointer strategy
+void frontBackSplit(Queue *q, Queue *front, Queue *back) {
+    Queue *fast;
+    Queue *slow;
 
-    if(isEmptyQ(q)) return 0;
+    if(isEmpty(q) || q->next == q) {
+        return;
+    } else {
+        slow = q;
+        fast = q->next;
 
-    for(tmp = q; tmp && tmp->next != q; tmp = tmp->next) {
-        count++;
+        while(fast !== q) {
+            fast = fast->next;
+            slow = slow->next;
+            fast = fast->next;
+        }
+
+        front = q;
+        back = slow->next;
+        slow->next = q;
     }
-
-    return count;
 }
 
-void merge(Queue *q, int l, int m, int r, int pos, int len) {
-    int i, j, k;
-    int n1 = m-1+1;
-    int n2 = r-m;
-    Queue q1, q2;
+// Merges two queues into sorted order
 
-    
+Queue* merge(Queue *q1, Queue *q2, int pos, int len) {
+    Queue *res;
+
+    if(isEmpty(q1)) {
+        return q2;
+    } else if (isEmpty(q2)) {
+        return q1;
+    }
+
+    // move pointer to index pos in both strings
+    for(;pos;pos--) {
+        *(q1->data)++;
+        *(q2->data)++;
+    }
+
+    if(strncmp(*(q1->data), *(q2->data), len) <= 0) {
+        res = q1;
+        res->next = merge(q1->next, q2);
+    } else {
+        res = q2;
+        res->next = merge(q1, q2->next);
+    }
+
+    return res;
 }
 
-void mergeSort(Queue *q, int l, int r, int pos, int len) {
-    int mid;
+// Sorts the linked list by changing next pointers (not char **data) 
+// Time complexity: O(nLogn)
 
-    if(l < r) {
-        mid = l+(r-1)/2;                // get idx of middle elt
-        mergeSort(q, l, mid);           // sort left subqueue
-        mergeSort(q, mid+1, r);         // sort right subqueue
-        merge(q, l, mid, r);            // merge subqueues
+void mergeSort(Queue *q, int pos, int len) {
+    Queue *front = NULL, *back = NULL;
+
+    // base case: q of size 0 or 1
+    if(isEmpty(q) || q->next == q) {
+        return q;
     }
+
+    frontBackSplit(q, front, back);
+
+    mergeSort(front, pos, len);
+    mergeSort(back, pos, len);
+
+    q = merge(a, b, pos, len);
 }
 
 int main(int argc, char **argv) {
@@ -100,10 +138,9 @@ int main(int argc, char **argv) {
     }  
 
     // sort the queue with mergeSort
-    qSize = countQ(&Q);
-    mergeSort(&Q, 0, --qSize, pos, len);
+    mergeSort(&Q, pos, len);
 
-    // output the Q
+    // output the queue
     while(!isEmpty(&Q)) {
         if(!removeQ(&Q, &line)) {
             DIE("removeQ() failed");
