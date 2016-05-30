@@ -13,6 +13,6 @@
 #define DIE(msg) exit (fprintf (stderr, "%s\n", msg));
 
  // function prototypes
-
+ 
  #endif
  /* end PANCAKE_H */
