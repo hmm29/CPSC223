@@ -18,100 +18,41 @@
 #include "/c/cs223/Hwk4/Queue.h"
 #include "Merge16.h"
 
-// Splits the nodes of the queue into front and back halves
-// Uses tortoise-and-the-hare pointer strategy
-void frontBackSplit(Queue *q, Queue *front, Queue *back) {
-    Queue *fast, *slow;
-
-    if(isEmpty(q) || q->next == q) {
-        front = q;
-        back = NULL;
-    } else {
-        fast = slow = q;
-
-        while(fast->next != q && fast->next->next != q) {
-            fast = fast->next->next;
-            slow = slow->next;
-        }
-
-        if(fast->next->next == q) {
-            fast = fast->next;
-        }
-
-        front = q;
-        back = slow->next;
-        fast->next = slow->next;
-        slow->next = q;
-    }
+void removeNewline(char *s) {
+    while(*s && *s != '\n' && *s != '\r') s++;
+    *s = 0;
 }
 
-// Merges two queues into sorted order
-Queue* merge(Queue *q1, Queue *q2, int pos, int len) {
-    Queue *res = NULL;
+// Custom strcmp that compares keys
+int Strcmp(char *s1, char *s2, int pos, int len) {
 
-    if(isEmpty(q1)) {
-        return q2;
-    } else if (isEmpty(q2)) {
-        return q1;
-    }
-
-    // move pointer to index pos in both strings
-    for(;pos;pos--) {
-        *(q1->data)++;
-        *(q2->data)++;
-    }
-
-    // compare keys and proceed
-    if(strncmp(*(q1->data), *(q2->data), len) <= 0) {
-        res = q1;
-        res->next = merge(q1->next, q2);
-    } else {
-        res = q2;
-        res->next = merge(q1, q2->next);
-    }
-
-    return res;
-}
-
-// Sorts the queue by changing linked list next pointers (not char **data) 
-// Time complexity: O(nLogn)
-
-void mergeSort(Queue *q, int pos, int len) {
-    Queue *front, *back;
-
-    // base case: q of size 0 or 1
-    if(isEmpty(q) || q->next == q) {
-        return;
-    }
-
-    frontBackSplit(q, front, back);
-
-    mergeSort(front, pos, len);
-    mergeSort(back, pos, len);
-
-    q = merge(front, back, pos, len);
 }
 
 int main(int argc, char **argv) {
 
     FILE *fp;
-    Queue Q;
+    Queue Q1, Q2;
 
+    int times = 2;
+    int res;
+    int q1Count = 0; q2Count = 0;
     int pos = 0;
     int len = INT_MAX;
     int hasKey = 0;
-    int qSize;
     char *ptr, *ptr1;
-    char *line;
+    char *line, *nextLine;
 
     if(argc < 2) {
         DIE("usage: Merge16 [-POS[,LEN]] [filename]*");
     }
 
-    if(!createQ(&Q)) {
+    if(!createQ(&Q1) || !createQ(&Q2)) {
         DIE("createQ() failed");
     }
 
+    Queue *q = &Q1;
+
+    // arg parsing
     for (++argv; --argc; argv++) {
         if(*argv[0] == '-' && isdigit(argv[0][1]) && !hasKey) {
             pos = strtol(argv[0], &ptr, 10);            
@@ -126,12 +67,41 @@ int main(int argc, char **argv) {
             }
             hasKey = 1;
             continue;
+
         } else if (fp = fopen(argv[0], 'r')) {
+
             while((line = getLine(fp))) {
-                if(!addQ(&Q, line)) {
-                    DIE("addQ() failed");
-                }
+                  removeNewline(line);
+
+                  if(nextLine = getLine(fp)) {
+                    removeNewline(nextLine);
+                    res = Strcmp(line, nextLine, pos, len);
+                  } else {
+                    addQ(q, line);
+
+                    if(q == &Q1) q1Count++;
+                    else q2Count++;
+                  }
+
+                  if(res <= 0) {
+                    addQ(q, line);
+                    addQ(q, nextLine);
+                    q1Count++;
+                    q2Count++;
+                  } else {
+                    addQ(q, nextLine);
+                    addQ(q, line);
+                    q1Count++;
+                    q2Count++;
+                  }
+                  
+                  if(q == &Q1) {
+                    q = &Q2;
+                  } else if (q == &Q2) {
+                    q = &Q1;
+                  }
             }
+
             fclose(fp);
             continue;
         } else {
@@ -140,9 +110,53 @@ int main(int argc, char **argv) {
         break;
     }  
 
-    // sort the queue with mergeSort
-    mergeSort(&Q, pos, len);
 
+    int count = q1Count > q2Count ? q1Count : q2Count;
+    int bSize = 2;
+
+    while(count != bSize) {
+        // Merge process right here
+        for(int b=0; b<=count/bSize && count != bSize; b++) {
+            for(int p = 0; p < bSize; p++) {
+                if(headQ(&Q1, s1) && headQ(&Q2, s2)) {
+                    if(Strcmp(s1, s2, pos, len) <= 0) {
+                        removeQ(&Q1, s1);
+                        addQ(q, s1);
+                        removeQ(&Q2, s2);
+                        addQ(q, s2);
+                    } else {
+                        removeQ(&Q2, s2);
+                        addQ(q, s2);
+                        removeQ(&Q1, s1);
+                        addQ(q, s1);
+                    }
+
+                } else if (headQ(&Q1, s1)) {
+                    removeQ(&Q1, s1);
+                    addQ(q, s1);
+                } else if (headQ(&Q2, s2)) {
+                    removeQ(&Q2, s2);
+                    addQ(q, s2);
+                } else {
+                    break;
+                }
+            }
+
+            // Switch queues
+            if(q == &Q1) {
+                q = &Q2;
+            } else if (q == &Q2) {
+                q = &Q1;
+            }
+
+        }
+
+        count = 
+        bSize *= 2;
+    }
+
+
+    // Print queue
     // output the queue
     while(!isEmpty(&Q)) {
         if(!removeQ(&Q, &line)) {

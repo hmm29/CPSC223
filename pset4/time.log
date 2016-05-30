@@ -13,8 +13,9 @@ Date    Started     Spent    Work Completed
 5/29    1:39       1:00     finish the queue ADT
 5/29    3:00       1:00     finish merge sort functions
 5/29    8:00       0:30     frontBack split for circular linked list
+5/30    4:00       0:31     figure out addQ call efficiency and better queue usage
                    ----
-                   8:49     TOTAL Time Spent
+                   9:20     TOTAL Time Spent
 
-I discussed my solution with no one.
+I discussed my solution with Steven Rofrano.
 Just figured out how to get keys and compare them without requiring char arrays.
