@@ -19,33 +19,35 @@
 #include "Merge16.h"
 
 // Splits the nodes of the queue into front and back halves
-// Uses fast-slow pointer strategy
+// Uses tortoise-and-the-hare pointer strategy
 void frontBackSplit(Queue *q, Queue *front, Queue *back) {
-    Queue *fast;
-    Queue *slow;
+    Queue *fast, *slow;
 
     if(isEmpty(q) || q->next == q) {
-        return;
+        front = q;
+        back = NULL;
     } else {
-        slow = q;
-        fast = q->next;
+        fast = slow = q;
 
-        while(fast !== q) {
-            fast = fast->next;
+        while(fast->next != q && fast->next->next != q) {
+            fast = fast->next->next;
             slow = slow->next;
+        }
+
+        if(fast->next->next == q) {
             fast = fast->next;
         }
 
         front = q;
         back = slow->next;
+        fast->next = slow->next;
         slow->next = q;
     }
 }
 
 // Merges two queues into sorted order
-
 Queue* merge(Queue *q1, Queue *q2, int pos, int len) {
-    Queue *res;
+    Queue *res = NULL;
 
     if(isEmpty(q1)) {
         return q2;
@@ -59,6 +61,7 @@ Queue* merge(Queue *q1, Queue *q2, int pos, int len) {
         *(q2->data)++;
     }
 
+    // compare keys and proceed
     if(strncmp(*(q1->data), *(q2->data), len) <= 0) {
         res = q1;
         res->next = merge(q1->next, q2);
@@ -70,15 +73,15 @@ Queue* merge(Queue *q1, Queue *q2, int pos, int len) {
     return res;
 }
 
-// Sorts the linked list by changing next pointers (not char **data) 
+// Sorts the queue by changing linked list next pointers (not char **data) 
 // Time complexity: O(nLogn)
 
 void mergeSort(Queue *q, int pos, int len) {
-    Queue *front = NULL, *back = NULL;
+    Queue *front, *back;
 
     // base case: q of size 0 or 1
     if(isEmpty(q) || q->next == q) {
-        return q;
+        return;
     }
 
     frontBackSplit(q, front, back);
@@ -86,7 +89,7 @@ void mergeSort(Queue *q, int pos, int len) {
     mergeSort(front, pos, len);
     mergeSort(back, pos, len);
 
-    q = merge(a, b, pos, len);
+    q = merge(front, back, pos, len);
 }
 
 int main(int argc, char **argv) {
@@ -110,7 +113,7 @@ int main(int argc, char **argv) {
     }
 
     for (++argv; --argc; argv++) {
-        if(*argv[0] === '-' && isdigit(argv[0][1]) && !hasKey) {
+        if(*argv[0] == '-' && isdigit(argv[0][1]) && !hasKey) {
             pos = strtol(argv[0], &ptr, 10);            
             if(strlen(ptr) && *ptr == ',') {            
                 ptr++;
