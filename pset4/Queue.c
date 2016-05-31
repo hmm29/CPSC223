@@ -12,25 +12,14 @@
 #include "/c/cs223/Hwk4/Queue.h"
 
 typedef struct node {
-   char **data;
+   char *data;
    struct node *next;
  } Node;
 
  // Set *Q to a new object of type Queue.  Return status.
 
 int createQ (Queue *q) {
-    // queue already exists
-    if(!isEmptyQ(q)) {
-        return false;
-    }
-
-    if(!(q = malloc(sizeof(Queue)))) {
-        return false;
-    }
-
-    q->data = NULL;
-    q->next = q;
-
+    *q = NULL;
     return true;
 }
 
@@ -45,20 +34,19 @@ int addQ (Queue *q, char *s) {
         return false;
     }
 
-    if(isEmptyQ(q)) {
-        createQ(q);
-        q->data = &s;
-        return true;
-    }
-
     if(!(new = malloc(sizeof(Node)))) {
         return false;
     }
 
-    new->data = &s;
-    new->next = q->next;
-    q->next = new;                                      
-    q = new;                                              
+    new->data = s;
+
+    if(isEmptyQ(q)) {
+      new->next = new;
+    } else {
+	    new->next = (*q)->next;
+	    (*q)->next = new;                                      
+     }                                              
+    *q = new;
     
     return true;
 }
@@ -68,7 +56,7 @@ int addQ (Queue *q, char *s) {
 // result.
 
 int isEmptyQ (Queue *q) {
-    return !q;     
+    return !*q;     
 }
 
 // Copy the string pointer at the head of Queue *Q to *S, but do not remove it
@@ -79,7 +67,7 @@ int headQ (Queue *q, char **s) {
     if(isEmptyQ(q)) {
         return false;
     }
-    s = q->next->data;
+    *s = (*q)->next->data;
     return true;
 }
 
@@ -89,21 +77,28 @@ int headQ (Queue *q, char **s) {
 // returns FALSE and leaves *S unchanged.)
 
 int removeQ (Queue *q, char **s) {
+    Node *head = (*q)->next;
+    int isLast = 0;
+
+    if(head = *q) {
+	isLast = 1;
+    }
+
     if(isEmptyQ(q)) {
         return false;
     }
-
+ 
     if(s) {
-        s = q->next->data;                            // store head string ptr
+        *s = head->data;                            // store head string ptr
     }
 
-    q->next->data = NULL;
-    q->next = q->next->next;
-    free(q->next);                     
+    (*q)->next = head->next;
+    free(head);                     
+
+    if(isLast) *q = NULL;
 
     return true;
 }
-
 
 // Destroy the Queue *Q by freeing any storage it uses (but not that to which
 // the string pointers point).  Set *Q to NULL.  Return status.
@@ -115,7 +110,7 @@ int destroyQ (Queue *q) {
         }
     }
 
-    q = NULL;
+    *q = NULL;
     return true;
 }
 
