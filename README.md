@@ -2,7 +2,7 @@
 
 > "Programming, like composition, is an individual creative process in which you
   must reach your own understanding of the problem and discover a path to its
-  solution." 
+  solution." - Professor S. Eisenstat
 
 ## Contents
 
